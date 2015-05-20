@@ -1,0 +1,17 @@
+steps 2000
+N 100000
+N_Strains 1
+N_Infect 300
+N_Binding 30
+mutation 0
+b_mutation 1e-7
+Vg 0.3
+V0 1
+wan 1/(4*365.25)
+mu 1/(50*365.25)
+gamma 1/4
+p 2;
+r 2;
+a 0.7;
+b 3;
+c 0.5;
