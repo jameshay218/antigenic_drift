@@ -17,6 +17,9 @@ function  [pa] = readparams(filename)
    end
       if strcmp(pa_array(i),'N')
        pa.N = str2num(char(pa_array(i+1)));
+      end
+   if strcmp(pa_array(i),'seed')
+       pa.seed = str2num(char(pa_array(i+1)));
    end
    if strcmp(pa_array(i),'N_Strains')
        pa.N_Strains = str2num(char(pa_array(i+1)));

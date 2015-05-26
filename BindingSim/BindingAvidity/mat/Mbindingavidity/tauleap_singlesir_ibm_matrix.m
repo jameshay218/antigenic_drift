@@ -1,11 +1,12 @@
-function [DataX VirusesArray] = tauleap_singlesir_ibm_matrix(EndTime, DataX, Steps, V_bding, initViruses)
+function [DataXt VirusesArray] = tauleap_singlesir_ibm_matrix(EndTime, DataX, Steps, meta)
 %Tauleap method for single strain SIR reinfection model
 %Transmission rate b is is stored in Viruses.beta
 %When any variable becomes negative, devides the time_step by 2
-%Input: [EndTime, DataX, Steps]
+%Input: [EndTime, DataX, Steps, metadata]
 %   EndTime: time period
 %   DataX: initial condition
 %   Steps: total number of steps
+%   metadata: stores input file
 %Output: [TimeStep DataX]
 %   DataX: data status
 %   CurrentViruses: Current active viruses (replaces VirusArray)
@@ -36,30 +37,16 @@ clear VirusesArray;
 global VirusesArray;    %Store all historical viruses in array
 global CurrentViruses;  %Store currently existed virus strains in array
 maxvid = [0];       %Tracking the maximum number of virus ID
-
-%VirusesArray = []; Need to prelocate the memory, otherwise very slow
-VirusesArray = zeros(50E6,8); %what is the max capacity and max population size 20E6 too large
-%May 11, 2013 11E6
+metadata = meta;
+VirusesArray = zeros(10E6,8); %prelocae the memory
 CurrentViruses = [];
-
 %Load deltaV Matrix
-%dat = open('dat/deltaVMatrix_kc01.mat');
 dat = open(metadata.ibms.deltaV);
 deltaVMatrix = dat.deltaVMatrix;
-
-%Metadata: column names of Viruses
+%VirusCol: column names of Viruses
 VirusCol = struct('vid',1,'birth',2,'death',3,'parent',4,'infectionK',5,'beta',6,'initialV',7,'currentV',8);
-
-%Initialize Parameters
-filename = metadata.ibms.filename;
-params = InitParameters(['dat/' filename]);
-['read parameter file from ' 'dat/' filename];
-params.out_dir = metadata.ibms.out_dir;
-
 %Time unit
-time_step = 1; % Change to 1day to simulate 45 years. Jul 16,2013
-%iterations = Steps;
-
+time_step = Steps; % Change to 1day to simulate 45 years. Jul 16,2013
 %Rate matrix
 Rate_Matrix = [];
 Rate_Matrix_Str = {}; %store the events names
@@ -76,7 +63,7 @@ Sk = [0:params.N_Infect-1];
 
 %Initialize virus strains
 CurrentViruses = []; %current viral strains
-if metadata.ibms.initFlag == 1
+if metadata.ibms.initViruses == true
 %for i=1:10
 Iini = sum(I,2);
 for i=1:length(Iini)
@@ -109,12 +96,8 @@ for i=1:length(Iini)
     maxvid = maxvid + 1;
     end
 end
-elseif metadata.ibms.initFlag == 2
-    CurrentViruses = initViruses;
-    siz = length(initViruses(:,1)); %%%% This keeps the array size
-    VirusesArray(1:siz,:) = initViruses;
-    maxvid = siz;
-end
+
+
 
 %%%------------------------------------------------------------------------
 %%%---------------------Simulation of the events---------------------------
@@ -124,11 +107,9 @@ CurrTime = 1;
 
 %First column -> time
 DataS = [CurrTime S'];
-DataI = [0 I'];
-DataR = [0 R'];
-Data = [DataS DataI(2:params.N_Infect+1) DataR(2:params.N_Infect+1)];
-
-Viruses = [];
+DataI = [CurrTime I'];
+DataR = [CurrTime R'];
+DataXt = [DataS DataI(2:params.N_Infect+1) DataR(2:params.N_Infect+1)];
 
 while 1
  CurrTime;
@@ -137,10 +118,12 @@ while 1
  vpopsize = length(CurrentViruses(:,VirusCol.vid));
 
  if vpopsize < 2
-    %output_viruses(Viruses);
-    %Viruses(find([Viruses.death]~=0)) = []; %clear viruses after saving them
-    %output_sir(Data);
+    output_virus_transmission(VirusesArray);
+    output_sir(DataXt);
+    output_traits(CurrTime);
+    VirusesArray(find(VirusesArray(:,VirusCol.vid)==0),:) = [];
     disp('Viruses extinction');
+    disp "export"
     return;
  end
   
@@ -151,8 +134,8 @@ while 1
  DataI(end,2:params.N_Infect+1) = I';
  DataR(end+1,1) = CurrTime;
  DataR(end,2:params.N_Infect+1) = R';
- Data(end+1,1) = CurrTime;
- Data(end,2:params.N_Infect*3+1) = [S' I' R'];
+ DataXt(end+1,1) = CurrTime;
+ DataXt(end,2:params.N_Infect*3+1) = [S' I' R'];
  
 if CurrTime>1 & rem(CurrTime,20) == 0
  CurrTime
@@ -160,19 +143,20 @@ if CurrTime>1 & rem(CurrTime,20) == 0
  %PopTotal = sum(S)+sum(I)+sum(R)
 end
   if CurrTime >= EndTime
-    output_viruses2(VirusesArray);
-    output_sir(Data);
+    output_virus_transmission(VirusesArray);
+    output_sir(DataXt);
     output_traits(CurrTime);
     VirusesArray(find(VirusesArray(:,VirusCol.vid)==0),:) = [];
     disp "export"
-    Data = [];
+    DataXt = [];
     DataS = [];
     DataI = [];
     DataR = [];
     return;
+  end
  end
 end
-return;
+
 %%%------------------------End of Simulation-------------------------------
 
 
@@ -181,23 +165,18 @@ return;
 %%%------------------------------------------------------------------------
 %%%---------------------Iteration of tao leap Algorithm--------------------
 %%%------------------------------------------------------------------------
-function [time_step1]=Iterate(Parameters)
+function [time_step1] = Iterate(Parameters)
 time_step1=time_step;
 
-%Updating the binding avidity dynamics
-vpop = length(CurrentViruses(:,VirusCol.vid));
+%%Updating binding avidity V and beta
 vcurr = [];
-rowno_list = [];
-
-
-%Updating binding avidity V and beta
-vid_list = CurrentViruses(:,VirusCol.vid);
-vini_list = VirusesArray(vid_list,VirusCol.currentV);
-k_list = VirusesArray(vid_list,VirusCol.infectionK);
-vcurr_list = vini_list + getDeltaV(vini_list, k_list).*time_step;
+vid_list = CurrentViruses(:,VirusCol.vid);                 %viruses id
+vini_list = VirusesArray(vid_list,VirusCol.currentV);      %virus binding
+k_list = VirusesArray(vid_list,VirusCol.infectionK);       %immune status
+%calculate virus binding after one timestep using precalculated matrix
+%vcurr_list = vini_list + getDeltaV(vini_list, k_list).*time_step; 
+vcurr_list = vini_list + getDeltaV_ode(vini_list,k_list,time_step1);
 beta = get_beta_list(params.N_Infect-1,vcurr_list', params.p, params.r, params.a, params.b, params.c, params.nv);
-betamat = beta;
-rowno_list = vid_list;
 beta_c = num2cell(beta(:,1:length(vid_list))'); %same #row of currentviruses
 vcurr_c = num2cell(vcurr_list);
 VirusesArray(vid_list(:),VirusCol.beta) = beta(1,:); %save in vid, only store beta for naive
@@ -205,9 +184,8 @@ VirusesArray(vid_list(:),VirusCol.currentV) = vcurr_list(:,1);
 CurrentViruses(:,VirusCol.beta) = beta(1,:); %save in vid, only store beta for naive
 CurrentViruses(:,VirusCol.currentV) = vcurr_list(:,1);
 
-%Rate of each epidemiological events
+%%Define rate of each epidemiological events
 Ntot = sum(S)+sum(I)+sum(R);
-%Rate_Birth = params.mu*params.N;
 Rate_Birth = params.mu*Ntot;
 Rate_Death_S = params.mu*S; 
 Rate_Death_I = params.mu*I;
@@ -216,24 +194,22 @@ Rate_Recovery = params.gamma*I;
 Rate_Wanning = params.wan*R;
 I_total = sum(I);
 
-%%%Number of events happened
-%%%Birth
+%%Calculate number of events happened
+%Birth
 dBirth = poissrnd(Rate_Birth*time_step);
-%%%Death
+%Death
 %Death of Susceptible
 dDeath_S = poissrnd(Rate_Death_S*time_step);
 %Death of Recovered
 dDeath_R = poissrnd(Rate_Death_R*time_step);
 %Death of Infecteds 
 dDeath_I = zeros(params.N_Infect,1);
-
-%%If death and recovered happens for the same virus, what next?
-%%use multinomial
+%%use multinomial to prevent both 'death' and 'recovery' events occur for the same virus
 prob = [params.mu*time_step,params.gamma*time_step,1-params.mu*time_step-params.gamma*time_step];
 I_loss = mnrnd(1,prob,length(CurrentViruses(:,1)));
-I_indv = I_loss(:,1);
-R_indv = I_loss(:,2);
-de_id = find(I_indv==1); % is this right
+I_indv = I_loss(:,1); %death
+R_indv = I_loss(:,2); %recovery
+de_id = find(I_indv==1); %index of viruses among host died   
 d_list = CurrentViruses(de_id, VirusCol.infectionK); %return a list of k
 d_uni_list = unique(d_list);
 for i=1:length(d_uni_list)
@@ -241,10 +217,8 @@ for i=1:length(d_uni_list)
     dDeath_I(k) = dDeath_I(k)+length(d_list(d_list==k));
 end
 
-%%%Recovery
+%Recovery
 dRecover = zeros(params.N_Infect,1);
-%R_indv = poissrnd(Rate_Recovery*time_step);
-%R_indv = binornd(1,params.gamma*time_step, length(CurrentViruses(:,1)), 1); %recovered_ID, determines which infected individuals are going to be recovered
 rm_id = find(R_indv==1);
 k_list = CurrentViruses(rm_id, VirusCol.infectionK); %return a list of k
 k_uni_list = unique(k_list);
@@ -253,71 +227,47 @@ for i=1:length(k_uni_list)
     dRecover(k) = dRecover(k)+length(k_list(k_list==k));
 end
 
-%%%Infection
-Beta = betamat; %Just need to retrieve the beta matrix from the codes before
+%Infection
+Beta = beta; %Just need to retrieve the beta matrix from the codes before
 Rate_Infection = repmat(S,[1 length(Beta(1,:))]).*Beta/params.N;
 dInfection_indv = poissrnd(Rate_Infection*time_step);
 dInfection = sum(dInfection_indv,2); 
 dInfection_tot = sum(dInfection);
 
-%%%Wanning
-%dWanning = poissrnd(Rate_Wanning*time_step);
-%dWanning = [poissrnd(Rate_Wanning(1:50)*time_step);zeros(50,1)];
-%Rate_Wanning(1:10)'
-wanr = Rate_Wanning*time_step;
-%wanr(1:40)
-%dWanning = [randraw('Poisson',wanr(1),1) randraw('Poisson',wanr(2),1) randraw('Poisson',wanr(3),1) randraw('Poisson',wanr(4),1) randraw('Poisson',wanr(5),1) randraw('Poisson',wanr(6),1) randraw('Poisson',wanr(7),1) randraw('Poisson',wanr(8),1) randraw('Poisson',wanr(9),1) randraw('Poisson',wanr(10),1) randraw('Poisson',wanr(11),1) randraw('Poisson',wanr(12),1) randraw('Poisson',wanr(13),1) randraw('Poisson',wanr(14),1) randraw('Poisson',wanr(15),1) randraw('Poisson',wanr(16),1) randraw('Poisson',wanr(17),1) randraw('Poisson',wanr(18),1) randraw('Poisson',wanr(19),1) randraw('Poisson',wanr(20),1) randraw('Poisson',wanr(21),1) randraw('Poisson',wanr(22),1) randraw('Poisson',wanr(23),1) randraw('Poisson',wanr(24),1) randraw('Poisson',wanr(25),1) randraw('Poisson',wanr(26),1) randraw('Poisson',wanr(27),1) randraw('Poisson',wanr(28),1) randraw('Poisson',wanr(29),1) randraw('Poisson',wanr(30),1) randraw('Poisson',wanr(31),1) randraw('Poisson',wanr(32),1) randraw('Poisson',wanr(33),1) randraw('Poisson',wanr(34),1) randraw('Poisson',wanr(35),1) randraw('Poisson',wanr(36),1) randraw('Poisson',wanr(37),1) randraw('Poisson',wanr(38),1) randraw('Poisson',wanr(39),1) randraw('Poisson',wanr(40),1) zeros(1,60)]';
-%dWanning = [poidev(Rate_Wanning(1:40)*time_step);zeros(60,1)];
+%Wanning
 dWanning = poissrnd(Rate_Wanning*time_step);
-%dWanning = zeros(100,1);
-%loc_b = find(wanr==0);
-%for(i1=1:loc_b-1)
-% %if wanr(i) == 0
-%   %dWanning(i:end,1) = 0;
- %end
-% dWanning(i,1) = poissrnd(wanr(i));
-%end
-%dWanning = sum(dWanning_a,2);
-
-%dWanning_S = [0; dWanning(1:99)];
 dWanning_S = [0; dWanning(1:params.N_Infect-1)];
-%%Check whether any negative values from poisson distribution 
+
+%%Check whether any negative values would be generated before updating the event 
 if isNegative(dBirth, dDeath_S, dInfection_tot, dInfection, dDeath_I, dRecover, dDeath_R, dWanning, dWanning_S) == 1
         %time_step = time_step/2;
         return; %stop updating and return to start if there is negative values 
 end
 
-%%Updating the status
+%% Updating the epidemiological status
 PrevTime = CurrTime;
 CurrTime = PrevTime + time_step; %Tracking the current time
-%prevI=sum(I);
 S(1)=S(1)+dBirth; %1) Birth
 S=S-dDeath_S;     %2) Death from susceptible individuals
 I=I-dDeath_I;     %3) Death from infected individuals
 R=R-dDeath_R;     %4) Death from recovered individuals
 I=I+dInfection;   %5) New Infectious individuals
-%I(1,96:100) = I(1,96:100)+dInfection_List(1,101:105); %S20 reinfected to I20
 S=S-dInfection;   %6) Loss of susceptible individuals from Infection
 I=I-dRecover;     %7) Loss of infected individuals from Recovery
 R=R+dRecover;     %8) New recovered individuals
 R=R-dWanning;     %9) Loss if recovered individuals after immune wanning 
 S=S+dWanning_S;   %10)Susceptible individuals from immune waning
-%if CurrTime>1 & rem(CurrTime,10) == 0
-% CurrI=sum(I)
-%end
-SourceViruses = CurrentViruses(:, VirusCol.vid);
 
-%Updating transmission for each viral strain  
-number_new_viruses = sum(dInfection_indv); %sum of new viruses for each current active virus
-ns_list = find(number_new_viruses>0); %the index of the viruses who produce offsprings
+
+%% Updating transmission for each viral strain  
+SourceViruses = CurrentViruses(:, VirusCol.vid); %the source viruses
+number_new_viruses = sum(dInfection_indv); %number of the new viruses among each source viruses
+ns_list = find(number_new_viruses>0); %the index of the source viruses who produce offsprings
 
     %only search for viruses who produce offsprings
     for i =1:length(ns_list) %each source viruses     
-        ns = ns_list(i);
-        %if sum(dInfection_indv(:,ns))==0 %If there is no infection for this virus, skip it
-        %    continue;
-        %end
-        vcurr = CurrentViruses(ns,VirusCol.currentV);
+        ns = ns_list(i); %source index
+        vcurr = CurrentViruses(ns,VirusCol.currentV); %source binding avidity
         number_of_infected_by_virus = sum(dInfection_indv(:,ns));
         k_list1 = find(dInfection_indv(:,ns)>0);
         vid_array = [];
@@ -347,7 +297,7 @@ ns_list = find(number_new_viruses>0); %the index of the viruses who produce offs
         CurrentViruses(end+1:end+number_of_infected_by_virus,[VirusCol.vid VirusCol.infectionK VirusCol.beta]) = [vid_j',infectionK_j',zeros(1,number_of_infected_by_virus)']; %insert virus id into CurrentViruses (vid, infecitonK, beta)
         %Insert into VirusesArray
         VirusesArray(vid_j,:) = [vid_j', birth_j.*ones(1,number_of_infected_by_virus)', death_j.*ones(1,number_of_infected_by_virus)', parent_j.*ones(1,number_of_infected_by_virus)', infectionK_j', beta_j(1).*ones(1,number_of_infected_by_virus)', initialV_j.*ones(1,number_of_infected_by_virus)', currentV_j.*ones(1,number_of_infected_by_virus)']; %insert virus id into CurrentViruses (vid, infecitonK, beta)
-    end
+end
      
 %Updating Death from infection on CurrentViruses
 de_id1 = deathOfInfectds(PrevTime, de_id); %death_ID, determines which infected individuals are going to be died
@@ -355,38 +305,25 @@ de_id1 = deathOfInfectds(PrevTime, de_id); %death_ID, determines which infected 
 %Updating recovery (death time) for each viral strain
 rm_id1 = recovery(PrevTime, rm_id);
 
+%Clear the viruses
 removeViruses(de_id, rm_id);
-CurrentViruses;
 time_step1 = time_step;
 end
 %%---end of iteration---###
 
+%%% Sub functions for updating status
 function [de_id] = deathOfInfectds(CTime, de_id)
-    %for i=1:length(de_id)
-    %    CurrentViruses(de_id(i),VirusCol.death) = CTime;
-    %    vid = CurrentViruses(de_id(i),VirusCol.vid);
-    %    VirusesArray(find(VirusesArray(:,VirusCol.vid)==vid),VirusCol.death) = CTime;
-    %end
     CurrentViruses(de_id,VirusCol.death) = CTime;
     vid_list = CurrentViruses(de_id(:),VirusCol.vid);
     fx=find(ismember(VirusesArray(:,1),vid_list)==1);
     VirusesArray(fx,VirusCol.death) = CTime;
-    %CurrentViruses(de_id,:) = []; %shouldn't remove now. Should remove with reovery events
-    %Viruses(de_id) = [];
 end
 
 function [rm_id] = recovery(CTime, rm_id)
-    %for i=1:length(rm_id)
-    %    vid = CurrentViruses(rm_id(i),VirusCol.vid); %convert to vid
-    %    VirusesArray(vid,VirusCol.death) = CTime;
-    %end
-    
     CurrentViruses(rm_id,VirusCol.death) = CTime;
     vid_list = CurrentViruses(rm_id(:),VirusCol.vid);
     fx=find(ismember(VirusesArray(:,1),vid_list)==1);
     VirusesArray(fx,VirusCol.death) = CTime;
-    %CurrentViruses(rm_id,:) = [];
-    %Viruses(rm_id) = [];
 end
 
 function [] = removeViruses(de_id, rm_id)
@@ -436,6 +373,7 @@ function [pos]=isNegative(dBirth, dDeath_S, dInfection_tot, dInfection, dDeath_I
   
 end
 
+%%% Sub functions for saving output status
 function output_sir(Data)
     % create output directory
     out_dir = ['out/' datestr(now,10) datestr(now,5) datestr(now,7) '_' params.proj];
@@ -468,7 +406,7 @@ function output_traits(CurrTime)
 end
 
 
-function output_viruses2(VsArray)
+function output_virus_transmission(VsArray)
     % create output directory
     out_dir = ['out/' datestr(now,10) datestr(now,5) datestr(now,7) '_' params.proj];
     out_dir = params.out_dir
@@ -507,10 +445,8 @@ function plot_binding_avidity(x1,t)
     hold;
     meancharge_before = calculate_mean_proportion(x1);
     plot(t, meancharge_before);
-end    
 end
-
-
+end
 
 
 

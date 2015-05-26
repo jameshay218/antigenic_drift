@@ -18,7 +18,7 @@ kc = params.kc;
 V = x;
 %Beta = get_beta_list([0:params.N_Infect-1]',V, params.p, params.r, params.a, params.b, params.c);
 
-X_dot = kc*dBeta_dV(pars.k,V,params.p, params.r, params.a, params.b, params.c)';
+X_dot = kc*dBeta_dV(pars.k,V,params.p, params.r, params.a, params.b, params.c);
 end
 
 
