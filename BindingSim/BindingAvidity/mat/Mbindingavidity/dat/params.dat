@@ -1,6 +1,6 @@
 N 10000
 N_Strains 1
-N_Infect 20
+N_Infect 8
 N_Binding 30
 seed 30
 mutation 0
