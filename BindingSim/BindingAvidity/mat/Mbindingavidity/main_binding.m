@@ -40,5 +40,5 @@ total_days = 365*0.5;
 %% Plotting simulation log
 cal_meanbding(metadata);
 disp 'plot simulation log';
-plot_simulation('out/ibms/20150526/std')
+plot_simulation(out_dir);
 disp 'processes completed';
