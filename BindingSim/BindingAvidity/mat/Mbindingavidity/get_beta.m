@@ -2,7 +2,7 @@
 %The program calculate the changes of transmission per unit change in binding avidity 
 %input: k, the times of infection
 %       v, the binding avidity
-%output: dB(k,v)/dV
+%output: beta
 
 function  val = get_beta(k, v, p, r, a, b, c, n0)
    %p, r: parameters for transmission benefit
@@ -25,10 +25,8 @@ function  val = get_beta(k, v, p, r, a, b, c, n0)
      c = 0.5; %contact rate
    end
    P_Ab = exp(-p*(v+1));        % Probability to be recognized by antibodies
-   %P_Trans = (1-P_Ab).^(r*k);   % Probability to escape immunity
-   P_Trans = (1-P_Ab).^(r*k);   % Probability to escape immunity
-   P_Rep = exp(-a*v.^b);        % Probability to replicate
-   %val = c.*(P_Trans.*P_Rep);
+   P_Trans = (1-P_Ab).^(r*k);   % Probability to escape immunity (f(k,v) in RoySoc)
+   P_Rep = exp(-a*v.^b);        % Probability to replicate (g(v) in RoySoc)
    R0 = (P_Trans.*P_Rep).*n0;
    rho = 1 - R0.^-1;
    loc_r = find(rho<=0);

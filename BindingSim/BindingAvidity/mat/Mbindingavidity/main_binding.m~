@@ -1,5 +1,6 @@
 %% Declare variables
 global params;
+global VirusArray;
 params.filename = 'params.dat';
 %% Set file names for input parameters
 % ibms = individual based model simulation
@@ -51,7 +52,7 @@ time_step = 1;
 % Total simulation run time in days
 total_days = 365*0.5;
 
-% Calls main simulation function and returns disease state data and array of produced viruses
+% Calls main simulation function and returns array of produced viruses
 [DataX Viruses] = tauleap_singlesir_ibm(total_days,DataX,time_step,metadata);
 %% Plotting simulation log
 cal_meanbding(metadata);

@@ -150,8 +150,7 @@ while 1
         output_traits(CurrTime);
         VirusesArray(find(VirusesArray(:,VirusCol.vid)==0),:) = [];
         disp "export"
-        
-        % Clear temporary compartment states
+        % Clear temporary populat
         DataXt = [];
         DataS = [];
         DataI = [];
