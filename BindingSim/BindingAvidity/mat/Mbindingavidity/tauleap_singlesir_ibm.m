@@ -1,19 +1,21 @@
 function [DataXt VirusesArray] = tauleap_singlesir_ibm(EndTime, DataX, time_step, meta)
-%Tauleap method for single strain SIR reinfection model
-%This function tracks the evolution of receptor binding of viruses strians 
+%Tauleap method for single strain SIR reinfection model simulation
+%This function tracks the evolution of receptor binding of viruses strains 
 %in a population described by an SIR reinfection model 
 %Refer to section 2A in the paper (RoySoc2013)
-%Input: [EndTime, DataX, time_step, metadata]
-%   EndTime: time period
-%   DataX: initial condition
-%   time_step: total number of steps
-%   metadata: stores input file
+%Input: [EndTime, DataX, time_step, meta]
+%   EndTime: integer representing the final time point and therefore time
+%   period of the simulation
+%   DataX: initial conditions for the SIR compartments
+%   time_step: total number of steps within given time period
+%   meta: stores input file names
 %Output: (DataXt VirusesArray)
-%   DataX: time series states of SIR compartment (Xt)
-%   VirusesArray: traits for all active and historical viruses
+%   DataX: array containing time series states of SIR compartment (Xt)
+%   VirusesArray: array containing traits for all active and historical viruses
 
 %Clean version for bugs free
 %Written on Mar 22, 2013
+%Updated Jul 01, 2015 (JH)
 
 
 %List of Events:
@@ -28,28 +30,28 @@ function [DataXt VirusesArray] = tauleap_singlesir_ibm(EndTime, DataX, time_step
 %%%------------------------------------------------------------------------
 global params;      %Store parameters
 global metadata;    %Store input files names
-global VirusesArray;    %Store all historical viruses in array
-global CurrentViruses;  %Store currently existed virus strains in array
-maxvid = [0];       %Tracking the maximum number of virus ID
+global VirusesArray;    %Store all historical viruses in an array
+global CurrentViruses;  %Store current virus strains in array
+maxvid = [0];       %Tracking the maximum virus ID
 metadata = meta;
-VirusesArray = zeros(10E6,8); %preallocate the memory
-CurrentViruses = [];
+VirusesArray = zeros(10E6,8); %preallocate the memory for the virus array
+
 %Load deltaV Matrix (for deltaV, please refer to eq2.8 in RoySci)
 dat = open(metadata.ibms.deltaV);
 %VirusCol: column names of Viruses
 VirusCol = struct('vid',1,'birth',2,'death',3,'parent',4,'infectionK',5,'beta',6,'initialV',7,'currentV',8);
-%Time unit
+
 
 %%%------------------------------------------------------------------------
 %%%--------------------Step2. Declare local variables----------------------
 %%%------------------------------------------------------------------------
 
 %number of Sk, Ik, and Rk
-S = [];%%Create Susceptible groups from S(0)-S(k-1) where k = N_Infects (max number of prev. infection)
+S = [];%%Create Susceptible groups from S(0)-S(k-1) where k = N_Infects (max number of prev. infections)
 I = [];%%Create Infected groups from I(1)-I(k)
 R = [];%%Create Recovered groups from R(1)-R(k)
 S = DataX(1,1:params.N_Infect)';   
-I = DataX(1,params.N_Infect+1:params.N_Infect*2)';  %N_Infects immunne groups
+I = DataX(1,params.N_Infect+1:params.N_Infect*2)';  %N_Infects immune groups
 R = DataX(1,params.N_Infect*2+1:params.N_Infect*3)'; 
 Sk = [0:params.N_Infect-1];
 
@@ -61,11 +63,9 @@ Sk = [0:params.N_Infect-1];
 %Initialize virus strains
 CurrentViruses = []; %current viral strains
 if metadata.ibms.initVirusFlag == true
-Iini = sum(I,2);
-for i=1:length(Iini)
-    for j=1:Iini(i)
-    k=i; %Still working. Beta is a function of Sk and V
-    %v=0.1;
+
+for i=1:length(I) %For each infected compartment
+  for j=1:I(i) %For each infected individual in this compartment, create one new virus
     if exist('V_bding')
         v = V_bding;
     else
@@ -81,7 +81,7 @@ for i=1:length(Iini)
     death = 0;
     parent = 0;
     infectionK = i;
-    beta = beta(1);
+    beta = beta(i); 
     initialV = v;
     currentV = v;
     
@@ -89,7 +89,7 @@ for i=1:length(Iini)
     CurrentViruses(vid,:) = [vid, birth, death, parent, infectionK, beta, initialV, currentV];
     VirusesArray(vid,:) = [vid, birth, death, parent, infectionK, beta, initialV, currentV];
     maxvid = maxvid + 1;
-    end
+  end
 end
 
 
