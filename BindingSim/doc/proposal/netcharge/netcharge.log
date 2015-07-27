@@ -1,7 +1,9 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2014.4.3)  8 MAY 2015 15:12
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2014.4.3)  13 JUL 2015 18:19
 entering extended mode
-**immunehistory_model.tex
-(D:\Projects.Duke\BindingSimX\doc\tradeoff\immunehistory_model.tex
+**netcharge.tex
+
+(C:\Users\hy1613\Documents\GitHub\antigenic_drift\BindingSim\doc\proposal\netch
+arge\netcharge.tex
 LaTeX2e <2011/06/27>
 Babel <v3.8m> and hyphenation patterns for english, afrikaans, ancientgreek, ar
 abic, armenian, assamese, basque, bengali, bokmal, bulgarian, catalan, coptic, 
@@ -258,27 +260,32 @@ Package: kbordermatrix 2011/09/21 Bordered matrix with brackets
 \br@kwd=\skip55
 \k@bordht=\skip56
 )
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\url\url.sty"
+\Urlmuskip=\muskip11
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
 \c@Changes@AddCountper=\count117
 \c@Changes@DeleteCountper=\count118
 \c@Changes@ReplaceCountper=\count119
 
-(D:\Projects.Duke\BindingSimX\doc\tradeoff\immunehistory_model.aux
+(C:\Users\hy1613\Documents\GitHub\antigenic_drift\BindingSim\doc\proposal\netch
+arge\netcharge.aux
 
 LaTeX Warning: Label `simple_equation' multiply defined.
 
 )
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
  ("C:\Program Files (x86)\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count120
@@ -295,101 +302,49 @@ LaTeX Font Info:    ... okay on input line 15.
 )
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
-Missing character: There is no â in font cmr9!
-Missing character: There is no € in font cmr9!
-Missing character: There is no ™ in font cmr9!
-Missing character: There is no â in font cmr9!
-Missing character: There is no € in font cmr9!
-Missing character: There is no ™ in font cmr9!
-Missing character: There is no â in font cmr9!
-Missing character: There is no € in font cmr9!
-Missing character: There is no ˜ in font cmr9!
-Missing character: There is no â in font cmr9!
-Missing character: There is no € in font cmr9!
-Missing character: There is no ™ in font cmr9!
-Missing character: There is no â in font cmr9!
-Missing character: There is no € in font cmr9!
-Missing character: There is no ™ in font cmr9!
- [1
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ™ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ™ in font cmr10!
 
-{C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}] [2]
-<figure1.png, id=22, 549.85425pt x 240.29774pt>
-File: figure1.png Graphic file (type png)
- <use figure1.png>
-Package pdftex.def Info: figure1.png used on input line 89.
-(pdftex.def)             Requested size: 413.99895pt x 180.92685pt.
-
-Overfull \hbox (68.99895pt too wide) in paragraph at lines 89--90
-[][] 
- []
-
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-[3]
-Underfull \hbox (badness 10000) in paragraph at lines 100--106
+Underfull \hbox (badness 10000) in paragraph at lines 38--39
 
  []
 
-[4 <D:/Projects.Duke/BindingSimX/doc/tradeoff/figure1.png (PNG copy)>]
-(D:\Projects.Duke\BindingSimX\doc\tradeoff\immunehistory_model.bbl
-Underfull \hbox (badness 1286) in paragraph at lines 14--22
-[]\OT1/cmr/m/n/10 Hsiang-Yu Yuan and Ka-tia Koelle.  The evo-lu-tion-ary dy-nam
--ics of re-
- []
+[1
 
-
-Underfull \hbox (badness 4832) in paragraph at lines 14--22
-\OT1/cmr/m/n/10 cep-tor bind-ing avid-ity in in-fluenza A: a math-e-mat-i-cal m
-odel for
- []
-
-
-Underfull \hbox (badness 2318) in paragraph at lines 14--22
-\OT1/cmr/m/n/10 a new anti-genic drift hy-poth-e-sis.  \OT1/cmr/m/it/10 Philo-s
-oph-i-cal trans-ac-tions of the
- []
-
-
-Underfull \hbox (badness 4846) in paragraph at lines 14--22
-\OT1/cmr/m/it/10 Royal So-ci-ety of Lon-don. Se-ries B, Bi-o-log-i-cal sci-ence
-s\OT1/cmr/m/n/10 , 368(1614):
- []
-
-)
+{C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}]
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no “ in font cmr10!
+ [2]
 \Changes@OutFile=\write3
- [5] (D:\Projects.Duke\BindingSimX\doc\tradeoff\immunehistory_model.aux)
+ [3]
+(C:\Users\hy1613\Documents\GitHub\antigenic_drift\BindingSim\doc\proposal\netch
+arge\netcharge.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 4976 strings out of 493921
- 70716 string characters out of 3144874
- 239870 words of memory out of 3000000
- 8200 multiletter control sequences out of 15000+200000
- 9942 words of font info for 37 fonts, out of 3000000 for 9000
+ 5024 strings out of 493921
+ 71368 string characters out of 3144874
+ 240932 words of memory out of 3000000
+ 8250 multiletter control sequences out of 15000+200000
+ 9289 words of font info for 35 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
- 59i,16n,94p,835b,344s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 59i,6n,94p,1569b,197s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 <C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx9.pfb><C:
-/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/P
-rogram Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Pro
-gram Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Progra
-m Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Program F
-iles (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program File
-s (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Files (
-x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Program Files (x86
-)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Program Files (x86)/Mi
-KTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program Files (x86)/MiKTeX
- 2.9/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Program Files (x86)/MiKTeX 2.9
-/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files (x86)/MiKTeX 2.9/f
-onts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files (x86)/MiKTeX 2.9/font
-s/type1/public/amsfonts/cm/cmti10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/
-type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on immunehistory_model.pdf (5 pages, 232335 bytes).
+/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Pr
+ogram Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Progr
+am Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Program 
+Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on netcharge.pdf (3 pages, 85563 bytes).
 PDF statistics:
- 83 PDF objects out of 1000 (max. 8388607)
+ 36 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

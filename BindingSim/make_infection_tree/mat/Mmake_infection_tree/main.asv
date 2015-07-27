@@ -1,0 +1,48 @@
+function [] = main(tip)
+addpath(genpath('../plot_trait_change'));
+
+proj = '20130812_med/';
+
+[tree taxa] = annotate_tree(['dat/' proj 'indiv_genealogy_300.branch.tree']);
+[t, n, b, nm] = read_newick_seq(['dat/' proj 'indiv_genealogy_300.tree']);
+v = zeros(length(b),1)
+for i=1:length(taxa)
+    if i<=300
+        id = str2num(taxa(1,i).name);
+    else
+        id = i;
+    end
+    str = taxa(1,i).annotation;
+    str1 = regexp(str, 'Bindingscr.set=\"\d.\d+\"', 'match')
+    if ~isempty(char(str1))
+        v(id,1)=str2num(cell2mat(regexp(char(str1), '\d.\d+', 'match')));
+    else
+        v(id,1)=0;
+    end
+end
+pairs = string2pairs(['dat/' proj 'indiv_genealogy_300.topo.tree'],300);
+disp pairs
+
+distance_root = [];
+n_total = length(pairs);
+for i=1:length(pairs)
+    if i == 300
+      disp test
+    end
+    [lin]= getParentList(pairs, i);
+    distance = 0;
+    distance = sum(b(lin(1:end-1)));
+    %for j=1:length(lin)
+    %    if lin(j) == 0
+    %        break;
+    %    end
+    %    distance = distance + b(lin(j)); 
+    %end
+    distance_root(i,:) = distance;
+end
+
+save(['dat/' proj 'indiv_genealogy_300_taxa.mat'], '')
+disp distance
+[lin]= getParentList(pairs, tip);
+plot(distance_root(lin(1:end-1)),v(lin(1:end-1)),'.');
+end

@@ -57,16 +57,31 @@ where $e^{-p(V_{i}+1)}$ is the proportion that viruses cleared by antibodies and
     \end{split}
 \end{equation}
 \begin{equation}
-\space = [1-e^{-p(V_{i}+1)}]^{\Sigma_{j=1}^{k}\frac{1}{D+\alpha_{ji}}} \\
+\space = [1-e^{-p(V_{i}+1)}]^{\Sigma_{j=1}^{k}(rk-\delta_{ji})} \\
 \end{equation}
-%\Lambda = \frac{1}{\Sigma{\frac{1}{D_{i}+\alpha_{i}}}} 
-
-where $\alpha_{ji}$ is the antigenic distance between the the previous infecting strain $j$ and the challenging strain $i$.
-
-In order to evaluate the evolutionary dynamics of binding avidity, we made a simplified framework with certain assumptions. First, we consider individual viruses change on their viral receptor binding but have no individual differences on antigenicity. We assume a constant immune boosting rate. Each time when infection occurs, the immune boosting occurs which create the protection effect as antigenic distance D. We also assume the antigenic distance between the time of two consecutive infection is constant. Therefore, the antigenic distance between strain $j$ and $i$ becomes
 
 \begin{equation}
- \alpha_{ji} = \delta\cdot (k+1-j) \\
+    \label{simple_equation}
+    \begin{split}
+    f(H,V_{i}) &= \prod_{j=1}^{k} [1-e^{-p(V_{i}+1)}]^{\frac{1}{D+\alpha_{i}}} \
+    \end{split}
+\end{equation}
+\begin{equation}
+\space = [1-e^{-p(V_{i}+1)}]^{\frac{1}{\lambda}} \\
+\end{equation}
+\begin{equation}
+\lambda = \frac{1}{\Sigma{\frac{1}{D_{i}+\alpha_{i}}}} \\
+\end{equation}
+
+
+(Note: I will still prefer to use eq4, because we can project the immunity onto antigenic map)
+
+where $\delta_{ji}$ is the antigenic distance between the the previous infecting strain $j$ and the challenging strain $i$.
+
+In order to evaluate the evolutionary dynamics of binding avidity, we made a simplified framework with certain assumptions. First, we consider individual viruses change on their viral receptor binding but have no individual differences on antigenicity. We assume a constant immune boosting rate. Each time when infection occurs, the immune boosting occurs which create the protection effect as antigenic distance D. We also made an assumption here that the changes of antigenicity of viruses between the time of two consecutive infection is constant. Therefore, the antigenic distance between strain $j$ and $i$ becomes
+
+\begin{equation}
+ \delta_{ji} = \delta\cdot (k+1-j) \\
 \end{equation}
 
 The probability of within host virus infection per each virus becomes the product of virus survival and the cost of binding avidity (\citep{Yuan2013}). 
@@ -76,6 +91,10 @@ The probability of within host virus infection per each virus becomes the produc
 %   \Lambda = \frac{1}{\Sigma{\frac{1}{D_{i}+\alpha_{i}}}} 
 %   f(k,V_{i}) = [1-e^{-p(V_{i}+1)}]^{rk} \\
 \end{equation} 
+
+
+
+
 
 
 The probability of viral infection is (\citep{Keeling2008})

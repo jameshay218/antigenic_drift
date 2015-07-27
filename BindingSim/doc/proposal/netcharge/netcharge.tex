@@ -32,56 +32,6 @@
 
 
 \section{Materials and Methods}
-
-\subsection{Immune escape model}
-
-The host immunity would be boosted during an infection and protects the host from being infected again if contact with the viruses. Once contacted with the same viruses, the probability of the virus to survive in the presence of the host immunity is defined as
-\begin{equation}
-    \label{simple_equation}
-    f(V_{i}) = [1-e^{-p(V_{i}+1)}]^{\frac{1}{D}} \\
-\end{equation}
-
-where $D$ is the antigenic distance between the host immunity and the same viruses. When the infection history $H$ is considered, the probability of viruses survival becomes the survival of all cross-reactive immunity
-
-\begin{equation}
-    \label{simple_equation}
-    \begin{split}
-    f(H,V_{i}) &= \prod_{j=1}^{k} [1-e^{-p(V_{i}+1)}]^{\frac{1}{D+\alpha_{ji}}} \\
-    \end{split}
-\end{equation}
-\begin{equation}
-\space = [1-e^{-p(V_{i}+1)}]^{\Sigma_{j=1}^{k}\frac{1}{D+\alpha_{ji}}} \\
-\end{equation}
-%\Lambda = \frac{1}{\Sigma{\frac{1}{D_{i}+\alpha_{i}}}} 
-
-where $j$ indicates the virus strain caused previous infection and $\alpha_{ji}$ is the distance of antigenic drift between the the previous strain $j$ and the challenging strain $i$.
-
-In order to evaluate the evolutionary dynamics of binding avidity, we made a simplified framework with certain assumptions. First, we consider individual viruses change on their viral receptor binding but have no individual differences on antigenicity. We assume a constant immune boosting rate. Each time when infection occurs, the immune boosting occurs which create the protection effect as antigenic distance D. We also assume the antigenic distance between the time of two consecutive infection is constant. Therefore, the distance of antigenic drift between strain $j$ and $i$ becomes
-
-\begin{equation}
- \alpha_{ji} = \delta\cdot (k+1-j) \\
-\end{equation}
-
-The probability of within host virus infection per each virus becomes the product of virus survival and the cost of binding avidity (ref). 
-
-\begin{equation}
-  \phi(H_{k},V_{i}) = [1-e^{-p(V_{i}+1)}]^{\Sigma_{j=1}^{k}\frac{1}{D+\alpha_{ji}}} \cdot e^{-aV^{b}}
-%   \Lambda = \frac{1}{\Sigma{\frac{1}{D_{i}+\alpha_{i}}}} 
-%   f(k,V_{i}) = [1-e^{-p(V_{i}+1)}]^{rk} \\
-\end{equation} 
-
-
-The probability of viral infection is 
-\begin{equation}
-\rho=1-(\frac{1}{R_{in}})^{-v}
-=1-(\frac{1}{n \cdot \phi(H_{k},V_{i})})^{-v}
-\end{equation}
-where $R_{in}$ is within host reproductive number. We assume the constant number of offspring $n$ during replication for each virus 
- 
-[plot $R_{in}$] \\
-
-[plot $\rho$]
-                
                 
                 
                 \section{Markers of netcharge}
@@ -94,10 +44,7 @@ Chi square test to see whether binding avidity and netcharge are correlated.
 Binding Mutants source
 \url{$G:\MyPC2014Late\working\Projects.Duke\Projects\BindingAnal\validate_netcharge\validate_netcharge.xlsx}
 
-     \\
-     Check Adam J. Kucharski PLOS Biology paper. Estimating the Life Course of Influenza A (H3N2) Antibody Responses from CrossSectional Data
-     \\
-     If we use years 50 as a cutoff and test the regression from 3-50 and 51-100, what will show us?   
+[add](Check Adam J. Kucharski PLOS Biology paper. Estimating the Life Course of Influenza A (H3N2) Antibody Responses from CrossSectional Data) If we use years 50 as a cutoff and test the regression from 3-50 and 51-100, what will show us? 
                  
 [add]Studies show that the relationship between host age and immunity is not linear. Using serological data, the titres decrease from early children to mid-aged adults, then increase by age. 
 
