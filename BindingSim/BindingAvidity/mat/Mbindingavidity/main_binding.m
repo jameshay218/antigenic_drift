@@ -4,7 +4,6 @@ params.filename = 'params.dat';
 %% Set file names for input parameters
 % ibms = individual based model simulation
 metadata.ibms.proj = ['std'];
-metadata.ibms.deltaV = 'dat/deltaVMatrix_kc05.mat';
 metadata.ibms.parameterFile = ['dat/' params.filename];
 metadata.ibms.initVirusFlag = true; 
 %% Define output folder
