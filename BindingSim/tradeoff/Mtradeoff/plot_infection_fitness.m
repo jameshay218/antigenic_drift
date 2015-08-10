@@ -65,6 +65,7 @@ for k = 0:N_Reinfect-1
    elseif k == 0
        P_Trans_Pr = zeros(1,length(V));
    end
+   
    %subplot(2,2,1); plot(V,P_Trans,'color',cell2mat(colorm(k+1))); hold on;
    Trans_array(k+1,:) = P_Trans;
    Trans_Pr_array(k+1,:) = P_Trans_Pr;
@@ -77,6 +78,7 @@ Trans_array;
 %%%P_Rep_Pr: g'(V)
 P_Rep = exp(-a*V.^b);
 P_Rep_Pr = -a*b*exp(-a*V.^b).*(V.^(b-1));
+
 %subplot(2,2,2); plot(V, P_Rep,'color',[0 0 0]); hold on;
 %subplot(2,2,2); xlabel('Binding avidity V'); ylabel('Probability of succesfull replication')
 
