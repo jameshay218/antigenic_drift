@@ -26,7 +26,7 @@ function [DataXt VirusesArray] = tauleap_singlesir_ibm(EndTime, DataX, time_step
 %Wanning:       wR,             R=R-1, S=S+1
 
 %%%------------------------------------------------------------------------
-%%%--------------------Step1. Declare global variables---------------------
+%%%--------------------StepA.1. Declare global variables---------------------
 %%%------------------------------------------------------------------------
 global params;      %Store parameters
 global metadata;    %Store input files names
@@ -43,7 +43,7 @@ VirusCol = struct('vid',1,'birth',2,'death',3,'parent',4,'infectionK',5,'beta',6
 
 
 %%%------------------------------------------------------------------------
-%%%--------------------Step2. Declare local variables----------------------
+%%%--------------------StepA.2. Declare local variables----------------------
 %%%------------------------------------------------------------------------
 
 %number of Sk, Ik, and Rk
@@ -57,7 +57,7 @@ Sk = [0:params.N_Infect-1];
 
 
 %%%------------------------------------------------------------------------
-%%%--------------------Step3. Initialize virus strains---------------------
+%%---------------------StepA.3. Initialize virus strains---------------------
 %%%------------------------------------------------------------------------
 
 %Initialize virus strains
@@ -95,7 +95,7 @@ end
 
 
 %%%------------------------------------------------------------------------
-%% ---------------------Step4. Simulation of the events--------------------
+%%----------------------StepB. Simulation of the events--------------------
 %%%------------------------------------------------------------------------
 PrevTime = 0;
 CurrTime = 1;
@@ -166,29 +166,23 @@ end
 
 
 %%%------------------------------------------------------------------------
-%% ---------------------Iteration of tao leap Algorithm--------------------
+%%----------------------Iteration of tao leap Algorithm--------------------
 %%%------------------------------------------------------------------------
 
 function [time_step1] = Iterate(Parameters)
 time_step1=time_step;
 
-%% Updating binding avidity V
+%% Update binding avidity V
 vcurr = [];                                                %binding v of current viruses
 vid_list = CurrentViruses(:,VirusCol.vid);                 %viruses id
 vini_list = VirusesArray(vid_list,VirusCol.currentV);      %virus binding
 k_list = VirusesArray(vid_list,VirusCol.infectionK);       %immune status
 %calculate virus binding after one timestep using precalculated matrix
-%1)use precalculated array
+%1)use precalculated array %Currently disabled
 %vcurr_list = vini_list + getDeltaV(vini_list, k_list).*time_step;  
 %2)use ode simulation
 vcurr_list = vini_list + getDeltaV_ode(vini_list,k_list,time_step1);%use
-
-%% Updating transmission rate beta(k=0,V=vcurr)into viruses array
-beta = get_beta_list(params.N_Infect-1,vcurr_list', params.p, params.r, params.a, params.b, params.c, params.nv);
-%VirusesArray(vid_list(:),VirusCol.beta) = beta(1,:); %already save the
-%transmission rate
-VirusesArray(vid_list(:),VirusCol.currentV) = vcurr_list(:,1);
-%CurrentViruses(:,VirusCol.beta) = beta(1,:);              
+VirusesArray(vid_list(:),VirusCol.currentV) = vcurr_list(:,1);            
 CurrentViruses(:,VirusCol.currentV) = vcurr_list(:,1);
 
 %% Define rate of each epidemiological events
@@ -202,9 +196,9 @@ Rate_Wanning = params.wan*R;
 I_total = sum(I);
 
 %% Calculate number of events happened
-%Birth
+%% Birth
 dBirth = poissrnd(Rate_Birth*time_step);
-%Death
+%% Death
 %Death of Susceptible
 dDeath_S = poissrnd(Rate_Death_S*time_step);
 %Death of Recovered
@@ -212,7 +206,7 @@ dDeath_R = poissrnd(Rate_Death_R*time_step);
 %Death of Infecteds 
 dDeath_I = zeros(params.N_Infect,1);
 
-%%use multinomial to prevent both 'death' and 'recovery' events occur for the same virus
+%use multinomial to prevent both 'death' and 'recovery' events occur for the same virus
 %Update death and recovery at the SAME time after update transmission events
 prob = [params.mu*time_step,params.gamma*time_step,1-params.mu*time_step-params.gamma*time_step];
 I_loss = mnrnd(1,prob,length(CurrentViruses(:,1)));
@@ -225,7 +219,7 @@ for i=1:length(d_uni_list)
     k = d_uni_list(i);
     dDeath_I(k) = dDeath_I(k)+length(d_list(d_list==k));
 end
-%Recovery
+%% Recovery
 dRecover = zeros(params.N_Infect,1);
 rm_id = find(R_indv==1);
 k_list = CurrentViruses(rm_id, VirusCol.infectionK); %return a list of k
@@ -234,17 +228,18 @@ for i=1:length(k_uni_list)
     k = k_uni_list(i);
     dRecover(k) = dRecover(k)+length(k_list(k_list==k));
 end
-%Infection
+%% Infection
+beta = get_beta_list(params.N_Infect-1,vcurr_list', params.p, params.r, params.a, params.b, params.c, params.nv);
 Beta = beta; %Just need to retrieve the beta matrix from the codes before
 Rate_Infection = repmat(S,[1 length(Beta(1,:))]).*Beta/params.N;
 dInfection_indv = poissrnd(Rate_Infection*time_step);
 dInfection = sum(dInfection_indv,2); 
 dInfection_tot = sum(dInfection);
-%Wanning
+%% Wanning
 dWanning = poissrnd(Rate_Wanning*time_step);
 dWanning_S = [0; dWanning(1:params.N_Infect-1)];
 
-%% Check whether any negative values would be generated before updating the event 
+% Check whether any negative values would be generated before updating the event 
 if isNegative(dBirth, dDeath_S, dInfection_tot, dInfection, dDeath_I, dRecover, dDeath_R, dWanning, dWanning_S) == 1
         %time_step = time_step/2;
         return; %stop updating and return to start if there is negative values 
@@ -264,7 +259,7 @@ R=R+dRecover;     %8) New recovered individuals
 R=R-dWanning;     %9) Loss if recovered individuals after immune wanning 
 S=S+dWanning_S;   %10)Susceptible individuals from immune waning
 
-%% Updating transmission for each viral strain in CurrentViruses 
+%% Updating transmission tree for each viral strain in CurrentViruses 
 SourceViruses = CurrentViruses(:, VirusCol.vid);        %the source viruses
 number_new_viruses = sum(dInfection_indv);              %[Sk x Vi] number of the new viruses offsprings from each source viruses
 ns_list = find(number_new_viruses>0);                   %the index of the source viruses who produce offsprings>0
@@ -311,6 +306,8 @@ time_step1 = time_step;
 end
 %%---end of iteration---###
 
+%%%------------------------------------------------------------------------
+%%--------------------------Auxiliary functions----------------------------
 %% Sub functions to remove viruses
 function [de_id] = deathOfInfectds(CTime, de_id)
     CurrentViruses(de_id,VirusCol.death) = CTime;
