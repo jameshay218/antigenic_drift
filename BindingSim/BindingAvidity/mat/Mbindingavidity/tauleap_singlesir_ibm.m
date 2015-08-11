@@ -37,7 +37,7 @@ metadata = meta;
 VirusesArray = zeros(10E6,8); %preallocate the memory for the virus array
 
 %Load deltaV Matrix (for deltaV, please refer to eq2.8 in RoySci)
-dat = open(metadata.ibms.deltaV);
+%dat = open(metadata.ibms.deltaV); %Disable; Use ODE in this version
 %VirusCol: column names of Viruses
 VirusCol = struct('vid',1,'birth',2,'death',3,'parent',4,'infectionK',5,'beta',6,'initialV',7,'currentV',8);
 
