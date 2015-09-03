@@ -1,0 +1,82 @@
+\documentclass[a4paper,11pt,twoside]{article}
+\usepackage[left=2.5cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{mathtools}
+
+
+\newcommand{\HRule}{\rule{\linewidth}{0.4mm}}
+
+\setlength{\parindent}{0em}
+\setlength{\parskip}{0.5em}
+
+\begin{document}
+\begin{center}
+  \textbf{\LARGE The Effect of Influenza Receptor Binding Avidity on Antigenic Drift}\\[.5cm]
+  \textbf{\Large Shiny app description}\\[.5cm]
+\end{center}
+
+\section*{Shiny app details}
+Author: James Hay\\
+Last edited: 03/09/2015\\
+Title: Antigenic Drift Plotter\\
+Description: Dynamically plots the all plots related to the antigenic drift and binding avidity simulation. The side bar allows all model parameter to be adjusted in real time.\\
+Dependencies: Developed under R 3.2.1; ggplot2; gridExtra; shiny\\
+
+Use: This is a shiny app. Once the shiny library (and all other dependencies) have been installed, the app can be run in R with the following commands:\\
+
+library(shiny)\\
+runApp()\\
+
+Note that the working directory must be set to the directory that contains this file.\\
+
+\section*{Model Equations}
+\subsection*{Probability of Evading Immune System:}
+\begin{equation}
+  f(k,V_i) = [1-e^{-p(V_i+q)}]^{rk - \delta_{ji}}
+\end{equation}
+
+\subsection*{Probability of Successful Replication Within Host:}
+\begin{equation}
+g(V_i) = e^{-aV_i^b}
+\end{equation}
+
+\subsection*{Probability of Succesful Within Host Infection:}
+\begin{equation}
+\phi(H_k,V_i) = f(k,V_i) \cdot g(V) = [1-e^{-p(V_i+q)}]^{rk - \delta_{ji}} \cdot e^{-aV_i^b}
+\end{equation}
+
+\subsection*{Within Host Reproductive Number:}
+\begin{equation}
+  R_{in} = n \cdot \phi(H_k,V_i)
+\end{equation}
+
+\subsection*{Infectiousness:}
+\begin{equation}
+\rho = 1 - (\frac{1}{R_{in}})^{-v} = 1-(\frac{1}{\phi(H_k, V_i)})^{-nv}
+\end{equation}
+
+\subsection*{Transmission Rate:}
+\begin{equation}
+\beta = c \cdot \rho
+\end{equation}
+
+\section*{Parameter Descriptions}
+\begin{enumerate}
+\item $p$: parameter to control degree by which changes in binding avidity affect probability of escape from immune response
+\item $r$: parameter to control degree by which previous exposure reduce probability of immune escape
+\item $b$: parameter to control the shape of the relationship between probability of successful replication and changes in binding avidity
+\item $a$: controls rate of changes of relationship between probability of successful replication and change in binding avidity
+\item $c$: per day contact rate
+\item $n$: number of offspring per virus replication event
+\item $v$: number of virions initially transmitted
+\item $q$: parameter to control the shape of the relationship between binding avidity and immune escape (shift on the x-axis)
+\item $\delta$: constant antigenic distance between two viruses
+\end{enumerate}
+
+
+\end{document}

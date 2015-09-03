@@ -19,10 +19,10 @@ shinyUI(fluidPage(
                 numericInputRow("c","c:",value=1),br(),
                 numericInputRow("nv","nv:",value=2),br(),
                 numericInputRow("q","q:",value=1),br(),
-            numericInputRow("lifespan","Life span:",value=70),br(),
-            numericInputRow("infectious_period","Infectious Period:",value=5),br(),
+            #'numericInputRow("lifespan","Life span:",value=70),br(),
+            #'numericInputRow("infectious_period","Infectious Period:",value=5),br(),
             numericInputRow("N_reinfect","Number of Reinfections:",value=20),br(),
-            numericInputRow("D","D:",value=0.5),br(),
+            #'numericInputRow("D","D:",value=0.5),br(),
             numericInputRow("delta","delta:",value=0.2),br()
             ),
         

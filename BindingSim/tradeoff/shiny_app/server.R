@@ -4,14 +4,14 @@ library(gridExtra)
 
 shinyServer(function(inputs,output,session){
                 output$Main <- renderPlot({
-                    p = as.numeric(inputs$p)
-                    r = as.numeric(inputs$r)
-                    b = as.numeric(inputs$b)
-                    a =as.numeric(inputs$a)
-                    c = as.numeric(inputs$c)
-                    nv = as.numeric(inputs$nv)
-                    q = as.numeric(inputs$q)
-                    V = seq(0, 2, by = 0.005)
+                    p = as.numeric(inputs$p) #' parameter to control degree by which changes in binding avidity affect probability of escape from immune response
+                    r = as.numeric(inputs$r) #' parameter to control degree by which previous exposure reduce probability of immune escape
+                    b = as.numeric(inputs$b) #' parameter to control the shape of the relationship between probability of successful replication and changes in binding avidity
+                    a =as.numeric(inputs$a) #' controls rate of changes of relationship between probability of successful replication and change in binding avidity.
+                    c = as.numeric(inputs$c) #' per day contact rate
+                    nv = as.numeric(inputs$nv) #' average number of virus copies: n is number of offspring per virus replication, and v is number of virions initialyl transmitted
+                    q = as.numeric(inputs$q) #' parameter to control the shape of the relationship between binding avidity and immune escape (shift on the x-axis)
+                    V = seq(0, 2, by = 0.005) #' Bidning avidity
                     lifespan= as.numeric(inputs$lifespan)
                     infectious_period = as.numeric(inputs$infectious_period)
                     N_reinfect = as.numeric(inputs$N_reinfect)
@@ -26,22 +26,23 @@ shinyServer(function(inputs,output,session){
                     Trans_array <- NULL
                     Trans_Pr_array <- NULL
                     for(k in 0:(N_reinfect-1)){
-                        P_Ab = exp(-p*(V+q))
-                        P_s0 = 1-P_Ab
+                        P_Ab = exp(-p*(V+q)) #' probability of being targetted by immune system. As binding avidity increases, this probability decreases
+                        P_s0 = 1-P_Ab #' probability of escape
                         
-                        immK = r*k-delta
+                        immK = r*k-delta #' Strength of host immune respone. As k increases, virus must escape more antibodies. As delta increases, this effect diminishes as infecting virus is further from host immunity.
                         if(immK < 0) immK = 0
                         
-                        P_Trans = (P_s0)^(immK)
+                        P_Trans = (P_s0)^(immK) #' probability of escape from immunity
                         
-                        if(k >= 1) P_Trans_Pr = immK*p*((1-P_Ab)^(immK-1))*(P_Ab)
+                        if(k >= 1) P_Trans_Pr = immK*p*((1-P_Ab)^(immK-1))*(P_Ab) #' derivative of this. ie. rate of change of relationship between binding avidity and probability of immune escape
                         else P_Trans_Pr = rep(0, length(V))
                         Trans_array[[k+1]] <- P_Trans  
                         Trans_Pr_array[[k+1]] <- P_Trans_Pr
                     }
 
-                    P_Rep <- exp(-a*(V^b))
-                    P_Rep_Pr = -a*b*(V^(b-1))*exp(-a*(V^b))
+                    
+                    P_Rep <- exp(-a*(V^b)) #' probability of successful infection within a host. as binding avidity increases in a naive host, chance of successfully replicating decreases
+                    P_Rep_Pr = -a*b*(V^(b-1))*exp(-a*(V^b)) #' rate of change of this relationship
 
                     Rho_Trans_array <- NULL
                     B_Pr_array <- NULL
@@ -150,7 +151,7 @@ shinyServer(function(inputs,output,session){
                             ) +
                             scale_x_continuous(expand=c(0,0)) +
                                 scale_y_continuous(expand=c(0,0)) +
-                                    ylab("f'(k,V)") + 
+                                    ylab(expression(d*f/d*V)) + 
                                         xlab("Binding Avidity")
 
 
