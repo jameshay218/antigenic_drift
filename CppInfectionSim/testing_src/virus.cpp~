@@ -1,0 +1,7 @@
+#include "virus.hpp"
+
+using namespace std;
+
+int getId(){
+  return id;
+}

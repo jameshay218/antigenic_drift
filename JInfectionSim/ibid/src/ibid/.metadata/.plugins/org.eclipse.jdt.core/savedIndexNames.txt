@@ -1,0 +1,1 @@
+INDEX VERSION 1.126+/home/james/Documents/Antigenic_Drift/antigenic_drift/JInfectionSim/ibid/src/ibid/.metadata/.plugins/org.eclipse.jdt.core
