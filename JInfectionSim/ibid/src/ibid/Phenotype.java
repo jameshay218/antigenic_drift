@@ -5,6 +5,7 @@ package ibid;
 /* Multiple Viruses can reference a single Phenotype object */
 
 import static java.lang.Math.*;
+
 import java.util.*;
 
 public class Phenotype {
@@ -70,6 +71,7 @@ public class Phenotype {
 		double distB = (getTraitB() - p2d.getTraitB());	
 		double dist = (distA * distA) + (distB * distB);
 		dist = Math.sqrt(dist);
+		System.out.println(dist);
 		return dist;
 	}
 
@@ -85,6 +87,7 @@ public class Phenotype {
 	
 	public void mutate() {
 		traitA = 1;
+		System.out.println(traitA);
     }	
 
 	

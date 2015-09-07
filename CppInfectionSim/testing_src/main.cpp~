@@ -1,0 +1,11 @@
+#include <iostream>
+#include <vector>
+#include "virus.hpp"
+
+using namespace std;
+
+int main(int argc, char *argv[]){
+  virus test;
+  cout << "Test" << endl;
+  return 0;
+}

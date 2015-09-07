@@ -1,0 +1,7 @@
+#ifndef HOST_HPP
+#define HOST_HPP
+class Host{
+
+}
+
+#endif

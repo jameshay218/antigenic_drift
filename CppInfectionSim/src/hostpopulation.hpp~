@@ -1,0 +1,7 @@
+#ifndef HOSTPOPULATION_HPP
+#define HOSTPOPULATION_HPP
+class HostPopulation{
+
+}
+
+#endif
