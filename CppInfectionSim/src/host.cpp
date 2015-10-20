@@ -13,17 +13,27 @@ Host::Host(State _state, HostPopulation* _popn){
   popn = _popn;
 }
 
-void Host::infect(Virus* newInfection){
+Host::~Host(){
+  int j = infectionHistory.size();
+  for(int i = 0; i < j;++i){
+    delete infectionHistory[i];
+  }
+}
+
+void Host::infect(Virus* newInfection, int cur_t){
   state = Infected;
+  newInfection->updateK(infectionHistory.size()+1);
   if(currentInfection != NULL){
+    currentInfection->kill(cur_t);
     infectionHistory.push_back(currentInfection);
   }
   currentInfection = newInfection;
 }
 
-void Host::recover(){
+void Host::recover(int cur_t){
   state = Recovered;
   if(currentInfection != NULL){
+    currentInfection->kill(cur_t);
     infectionHistory.push_back(currentInfection);
   }
   currentInfection = NULL;
@@ -41,9 +51,10 @@ State Host::getState(){
   return(state);
 }
 
-void Host::die(){
+void Host::die(int cur_t){
   state = Dead;
   if(currentInfection != NULL){
+    currentInfection->kill(cur_t);
     infectionHistory.push_back(currentInfection);
   }
   currentInfection = NULL;

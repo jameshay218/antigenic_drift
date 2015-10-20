@@ -20,14 +20,14 @@ public:
   // Constructors
   Host();
   Host(State _state, HostPopulation* _popn);
-  ~Host(){};
+  ~Host();
 
   // Calculations/Events
   double calculateBeta();
-  void infect(Virus* newInfection);
-  void recover();
+  void infect(Virus* newInfection, int cur_t);
+  void recover(int cur_t);
   void wane();
-  void die();
+  void die(int cur_t);
 
   // Attribute Access
   Virus* getCurrentVirus();

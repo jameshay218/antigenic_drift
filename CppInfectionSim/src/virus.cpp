@@ -17,8 +17,10 @@ double Virus::_v;
 double Virus::_k;
 
 
-Virus::Virus(Virus* _parent, double _bindavid, double _distance, Host* _host){
+Virus::Virus(Virus* _parent, double _bindavid, double _distance, Host* _host, int _t){
   id = v_IDgenerator++;
+  birth = _t;
+  infectionK = 0;
   bindingavid = _bindavid;
   parent = _parent;
   level = parent->level + 1;
@@ -26,8 +28,10 @@ Virus::Virus(Virus* _parent, double _bindavid, double _distance, Host* _host){
   host = _host;
 }
 
-Virus::Virus(int _level, Virus* _parent, double _bindavid, double _distance, Host* _host){
+Virus::Virus(int _level, Virus* _parent, double _bindavid, double _distance, Host* _host, int _t){
   id = v_IDgenerator++;
+  birth = _t;
+  infectionK = 0;
   parent = _parent;
   bindingavid = _bindavid;
   level = _level;
@@ -54,6 +58,26 @@ double Virus::getDistance(){
 
 double Virus::getBindingAvid(){
   return bindingavid;
+}
+
+int Virus::getBirth(){
+  return birth;
+}
+
+int Virus::getDeath(){
+  return death;
+}
+
+int Virus::getK(){
+  return infectionK;
+}
+
+void Virus::updateK(int _k){
+  infectionK = _k;
+}
+
+void Virus::kill(int cur_t){
+  death = cur_t;
 }
 
 double Virus::calculateRho(){

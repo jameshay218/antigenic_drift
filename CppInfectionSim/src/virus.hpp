@@ -8,6 +8,9 @@ private:
   static int v_IDgenerator;
 
   int id;
+  int birth;
+  int death = -1;
+  int infectionK;
   Virus* parent;
   Host* host;
   double bindingavid;
@@ -28,22 +31,27 @@ public:
 
   // Constructors
   Virus();
-  Virus(Virus* _parent, double _bindavid, double _distance, Host* _host);
-  Virus(int _level, Virus* _parent, double _bindavid, double _distance, Host* _host);
+  Virus(Virus* _parent, double _bindavid, double _distance, Host* _host, int _t);
+  Virus(int _level, Virus* _parent, double _bindavid, double _distance, Host* _host, int _t);
   ~Virus(){};  // Don't really need to worry about pointers. VirusPopulation should take care of memory.
 
   // Accessing attributes
   int getId();
+  int getBirth();
+  int getDeath();
+  int getK();
   Virus* getParent(); 
   double getBindingAvid();
   double getDistance();
   int getLevel();
 
   // Calculations/events
+  void updateK(int _k);
   double calculateRho();
   void mutate();
   double probSurvival();
   double probReplication();
+  void kill(int cur_t);
 
 };
 
