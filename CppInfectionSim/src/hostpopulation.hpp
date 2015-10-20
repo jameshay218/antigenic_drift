@@ -4,6 +4,8 @@
 #include <vector>
 #include <random>
 #include <iostream>
+#include <fstream>
+#include <string>
 
 class Host;
 
@@ -44,6 +46,7 @@ public:
   
   // Print out current population status
   void printStatus();
+  void writeViruses(std::ofstream& output, std::string filename);
   
 };
 
