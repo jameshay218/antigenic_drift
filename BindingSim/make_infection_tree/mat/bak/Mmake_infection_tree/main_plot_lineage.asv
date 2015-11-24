@@ -1,8 +1,6 @@
 %Reconstruct phylogenies
 function void = main_simulate_genealogy_indiv_binding(void)
-p = path;
-p = path(p,'../lib/');
-p = path(p,'../Mbindingavidity/');
+
 %clear all; close all;
 
 %infile = 'dat/dat_x_trans_tmp';
@@ -25,52 +23,57 @@ p = path(p,'../Mbindingavidity/');
 %proj = '20130816_med_n8_c08'; %nv=4; c=0.9
 %proj = '20130819_lar_fixb28'; %beta=0.28
 %proj = '20130818_lar_n4_c07';  %nv=4; c=0.7
-proj = '20130827_lar_n4_c08_N5';
-%proj = '20130828_lar_n4_c08_kc01';
+%proj = '20130827_lar_n4_c08_N5';
+proj1 = '20130829_lar_n4_c08_kc05';
+proj2 = '20130829_lar_fixb_c08_kc05';
+lin_barray = {};
+lin_varray = {};
 
-%n_seqs = 400;
-%n_seqs = 300;
-n_seqs = 4;
+figure; hold on;
+plot_lineage(proj1,'b');
+plot_lineage(proj2,'r');
+figure;
+hist(cell2mat(lin_varray(1)),15)
+figure;
+hist(cell2mat(lin_varray(2)),15)
+disp 'plot the virus traits on the lineage.';
 
-infile = ['dat/' proj '/dat_x_trans_tmp']; %N=0.5x10^6; 5yrs
+
+function [] = plot_lineage(proj, color)
 traitfile = ['dat/' proj '/virus_traits'];
-filename_infectionTreeData = strcat(infile, '_', num2str(n_seqs), '_indiv_infectionTree');
-
-%[births, deaths, parent] = GetInfectionTree(infile);
-load(infile);
 load(traitfile);
-
-
-%parfile = 'dat/params.mat';
-%dat = load(parfile)
 global epi_params;
-%epi_params = dat.epi_params;
-%epi_params.tRange_min=1;
-%epi_params.tRange_stoch(1,1)=1;
 epi_params.tRange_stoch(1,1)=365*20;
 %epi_params.tRange_stoch(1,2)=365*29; %thesis version 365*29
 epi_params.tRange_stoch(1,2)=365*45; %final version 365*45 (1968-2013)
-%births = I_matrix(:,1);
-%deaths = I_matrix(:,2);
-%parent = I_matrix(:,3);
-
-count = length(dat_viruses(:,1));
-births = dat_viruses(:,2);
-deaths = dat_viruses(:,3);
-parent = dat_viruses(:,4);
-infectionK = dat_viruses(:,5);
-binding = dat_VirusesArray(:,7);
-bindingFinal = dat_VirusesArray(:,8);
-%births = dat_viruses(201:50000,2);
-%deaths = dat_viruses(201:50000,3);
-%parent = dat_viruses(201:50000,4)-200;
-
-locs = find(parent == 0); 
-parent(locs) = NaN;
-
-save(filename_infectionTreeData, 'births', 'deaths', 'parent', 'infectionK', 'binding', 'bindingFinal');
 
 
+count = length(dat_VirusesArray(:,1));
+vid = dat_VirusesArray(:,1);
+births = dat_VirusesArray(:,2);
+deaths = dat_VirusesArray(:,3);
+parents = dat_VirusesArray(:,4);
+initialV = dat_VirusesArray(:,7);
+finalV = dat_VirusesArray(:,8);
 
-%BuildTree_indiv_v2(filename_infectionTreeData, n_seqs);
-BuildTree_indiv_nexus(filename_infectionTreeData, n_seqs);
+
+n_total = length(parents);
+%tip = 27030039;
+tip = vid(end);
+lin = getParentList(parents, tip)';
+lin_birth = births(lin(1:end-1));
+loc_s = find(lin_birth>365*10);
+lin_e = lin(loc_s);
+
+lin_birth = births(lin_e(1:end-1));
+lin_initialV = initialV(lin_e(2:end-1));
+lin_initialV(end+1) = 0.5;
+plot(lin_birth,lin_initialV, color);
+lin_barray(end+1)={lin_birth};
+lin_varray(end+1)={lin_initialV};
+end
+%locs = find(parent == 0); 
+%parent(locs) = NaN;
+
+%save(filename_infectionTreeData, 'births', 'deaths', 'parent', 'binding');
+end

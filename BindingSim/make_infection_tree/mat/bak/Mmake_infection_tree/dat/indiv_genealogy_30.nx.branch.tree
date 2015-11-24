@@ -1,0 +1,160 @@
+#NEXUS
+
+Begin taxa;
+Dimensions ntax=30;
+Taxlabels
+sample1_9688_37.2989
+sample2_11732_55.935
+sample3_10169_60.0918
+sample4_11730_60.7211
+sample5_13512_66.6064
+sample6_13823_68.7297
+sample7_13367_69.317
+sample8_14861_73.6041
+sample9_16859_83.1423
+sample10_16550_84.1176
+sample11_16870_84.5989
+sample12_17556_87.7005
+sample13_16750_89.5306
+sample14_18043_96.6168
+sample15_19071_96.7308
+sample16_19885_101.7488
+sample17_19934_103.7348
+sample18_21814_109.7269
+sample19_22379_113.0932
+sample20_22803_117.8695
+sample21_23771_121.3089
+sample22_24911_129.4271
+sample23_24605_133.5425
+sample24_26441_138.6724
+sample25_27464_143.5204
+sample26_28070_148.9624
+sample27_28851_158.6346
+sample28_30528_167.5362
+sample29_33246_177.3094
+sample30_33199_177.6873
+;
+End;
+
+Begin trees;
+Translate
+1 sample1_9688_37.2989,
+2 sample2_11732_55.935,
+3 sample3_10169_60.0918,
+4 sample4_11730_60.7211,
+5 sample5_13512_66.6064,
+6 sample6_13823_68.7297,
+7 sample7_13367_69.317,
+8 sample8_14861_73.6041,
+9 sample9_16859_83.1423,
+10 sample10_16550_84.1176,
+11 sample11_16870_84.5989,
+12 sample12_17556_87.7005,
+13 sample13_16750_89.5306,
+14 sample14_18043_96.6168,
+15 sample15_19071_96.7308,
+16 sample16_19885_101.7488,
+17 sample17_19934_103.7348,
+18 sample18_21814_109.7269,
+19 sample19_22379_113.0932,
+20 sample20_22803_117.8695,
+21 sample21_23771_121.3089,
+22 sample22_24911_129.4271,
+23 sample23_24605_133.5425,
+24 sample24_26441_138.6724,
+25 sample25_27464_143.5204,
+26 sample26_28070_148.9624,
+27 sample27_28851_158.6346,
+28 sample28_30528_167.5362,
+29 sample29_33246_177.3094,
+30 sample30_33199_177.6873
+;
+tree TREE1 = [&R](
+(
+(
+(
+6[&annotation="",Netcharge.set="",Bindingscr.set="0.63205"]:0,
+(
+23[&annotation="",Netcharge.set="",Bindingscr.set="0.72845"]:10.5425,
+30[&annotation="",Netcharge.set="",Bindingscr.set="0.65507"]:54.6873)
+:53)
+:62,
+(
+2[&annotation="",Netcharge.set="",Bindingscr.set="0.62882"]:5.935,
+9[&annotation="",Netcharge.set="",Bindingscr.set="0.67239"]:33.1423)
+:42)
+:6,
+(
+5[&annotation="",Netcharge.set="",Bindingscr.set="0.68635"]:61.6064,
+(
+19[&annotation="",Netcharge.set="",Bindingscr.set="0.6768"]:44.0932,
+20[&annotation="",Netcharge.set="",Bindingscr.set="0.72826"]:48.8695)
+:64)
+:3)
+:17973.4017,
+(
+(
+(
+10[&annotation="",Netcharge.set="",Bindingscr.set="0.68635"]:75.1176,
+27[&annotation="",Netcharge.set="",Bindingscr.set="0.68635"]:149.6346)
+:2,
+(
+11[&annotation="",Netcharge.set="",Bindingscr.set="0.54814"]:75.5989,
+(
+26[&annotation="",Netcharge.set="",Bindingscr.set="0.72895"]:46.9624,
+28[&annotation="",Netcharge.set="",Bindingscr.set="0.53577"]:65.5362)
+:93)
+:2)
+:2801.3337,
+(
+(
+8[&annotation="",Netcharge.set="",Bindingscr.set="0.59015"]:587.7873,
+(
+1[&annotation="",Netcharge.set="",Bindingscr.set="0.3162"]:28.2989,
+3[&annotation="",Netcharge.set="",Bindingscr.set="0.042113"]:51.0918)
+:523.1832)
+:2188.0066,
+(
+(
+(
+18[&annotation="",Netcharge.set="",Bindingscr.set="0.68635"]:335.7163,
+(
+4[&annotation="",Netcharge.set="",Bindingscr.set="0.62882"]:57.7211,
+17[&annotation="",Netcharge.set="",Bindingscr.set="0.62882"]:100.7348)
+:228.9894)
+:1252.3504,
+(
+(
+(
+7[&annotation="",Netcharge.set="",Bindingscr.set="0.53578"]:5.317,
+21[&annotation="",Netcharge.set="",Bindingscr.set="0.68416"]:57.3089)
+:59,
+(
+29[&annotation="",Netcharge.set="",Bindingscr.set="0.70853"]:140.3094,
+(
+16[&annotation="",Netcharge.set="",Bindingscr.set="0.62886"]:13.7488,
+25[&annotation="",Netcharge.set="",Bindingscr.set="0.66536"]:55.5204)
+:51)
+:32)
+:1346.3132,
+(
+13[&annotation="",Netcharge.set="",Bindingscr.set="0.62882"]:1430.8439,
+24[&annotation="",Netcharge.set="",Bindingscr.set="0.72845"]:54.6724)
+:1425.3132)
+:137.0266)
+:403.8451,
+(
+(
+12[&annotation="",Netcharge.set="",Bindingscr.set="0.68751"]:34.7005,
+15[&annotation="",Netcharge.set="",Bindingscr.set="0.68648"]:43.7308)
+:1816.1686,
+(
+22[&annotation="",Netcharge.set="",Bindingscr.set="0.68844"]:60.9837,
+14[&annotation="",Netcharge.set="",Bindingscr.set="0.62882"]:28.1734)
+:1831.612)
+:119.0163)
+:820.0048)
+:92.144)
+:15177.068)
+;
+End;

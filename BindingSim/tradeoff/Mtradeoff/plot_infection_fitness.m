@@ -115,7 +115,7 @@ rho1 = max(Rho_Trans_array(2,:));
 rho2 = max(Rho_Trans_array(3,:));
 
 subplot(1,2,1);
-xlabel('binding avidity'); ylabel('probability of replication within a host');
+xlabel('binding avidity'); ylabel('probability of replication within a host (R_i_n)');
 subplot(1,2,2);
 xlabel('binding avidity'); ylabel('probability of infection between the hosts');
 line([0 2], [rho0 rho0], 'LineWidth',1.2, 'LineStyle','--');
