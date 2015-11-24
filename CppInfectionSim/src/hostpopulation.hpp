@@ -1,0 +1,53 @@
+#ifndef HOSTPOPULATION_HPP
+#define HOSTPOPULATION_HPP
+
+#include <vector>
+#include <random>
+#include <iostream>
+#include <fstream>
+#include <string>
+
+class Host;
+
+class HostPopulation{
+private:
+  std::vector<Host*> susceptibles;
+  std::vector<Host*> infecteds;
+  std::vector<Host*> recovereds;
+  std::vector<Host*> dead;
+  int day;
+  double contactRate;
+  double mu;
+  double wane;
+  double gamma;
+  std::default_random_engine generator;
+
+public:
+  // Constructors
+  HostPopulation();
+  HostPopulation(int initialS, int initialI, int initialR, int iniDay, double _contactRate, double _mu, double _wane, double _gamma);
+  ~HostPopulation();
+
+  // Manage population temporal dynamics
+  void stepForward(int new_day);
+  void grow();
+  void decline();
+  void contact();
+  void recoveries();
+  void waning();
+
+  // Get properties of HostPopulation
+  double getContactRate();
+  int getDay();
+  int countSusceptibles();
+  int countInfecteds();
+  int countRecovereds();
+  int countN();
+  
+  // Print out current population status
+  void printStatus();
+  void writeViruses(std::ofstream& output, std::string filename);
+  
+};
+
+#endif
