@@ -1,5 +1,5 @@
 function [seq_times, indiv_sampled] = GetIndividualsSampled_indiv(epi_params, births, deaths, n_tot_samples)
-indiv_sampled = [];
+
 if 1
     % set sampling time points, and pick random individuals who are
     % infected at those sampling time points.

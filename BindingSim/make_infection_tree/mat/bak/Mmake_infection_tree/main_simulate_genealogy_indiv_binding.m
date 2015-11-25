@@ -1,5 +1,5 @@
 %Reconstruct phylogenies
-function void = main_simulate_genealogy_indiv_binding(smpno)
+function void = main_simulate_genealogy_indiv_binding(smpno, proj)
 p = path;
 p = path(p,'lib/');
 %clear all; close all;
@@ -16,6 +16,8 @@ p = path(p,'lib/');
 %infile = 'dat/20130325/dat_x_trans_tmp'; %N=10^6
 %infile = 'dat/20130717/dat_x_trans_tmp'; %N=2x10^6
 %infile = 'dat/20130718/dat_x_trans_tmp'; %N=3x10^6; 45 yrs
+if exist('proj','var') 
+else
 %proj = '20130801';
 %proj = '20130809_med';
 %proj = '20130812_med'; %nv=16; r=2
@@ -26,6 +28,7 @@ p = path(p,'lib/');
 %proj = '20130818_lar_n4_c07';  %nv=4; c=0.7
 proj = '20130827_lar_n4_c08_N5';
 %proj = '20130828_lar_n4_c08_kc01';
+end
 
 %n_seqs = 400;
 %n_seqs = 300;
