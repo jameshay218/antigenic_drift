@@ -86,6 +86,7 @@ void HostPopulation::stepForward(int new_day){
    waning();
   
    // Mutations?
+   mutations();
    // Go through each host in infected vector and mutate its virus
 
 }
@@ -131,17 +132,18 @@ void HostPopulation::decline(){
 }
 
 void HostPopulation::contact(){
-  double newBindingAvid = 0.5;
-  double newDistance = 0.5;
   poisson_distribution<int> poisson(contactRate*countInfecteds()*countSusceptibles()/countN());
   int totalContacts = poisson(generator);
   int index1 = 0;
   int index2 = 0;
+  double tmp = 0;
   for(int i = 0; i < totalContacts; ++i){
     index1 = rand() % countInfecteds();
-    if((((rand() % 99) + 1)/100) <= infecteds[index1]->getCurrentVirus()->calculateRho()){
-      index2 = rand() % countSusceptibles();
-      Virus* newV = new Virus(infecteds[index1]->getCurrentVirus(), newBindingAvid, newDistance, susceptibles[index2], day);
+    tmp = ((double) rand() / (RAND_MAX));
+    index2 = rand() % countSusceptibles();
+    //cout << "Prob survival: " << infecteds[index1]->getCurrentVirus()->calculateRho(susceptibles[i]) << endl;
+    if(tmp <= infecteds[index1]->getCurrentVirus()->calculateRho(susceptibles[index2])){
+      Virus* newV = new Virus(infecteds[index1]->getCurrentVirus(), susceptibles[index2], day);
       susceptibles[index2]->infect(newV,day);
       infecteds.push_back(susceptibles[index2]);
       susceptibles.erase(susceptibles.begin() + index2);
@@ -173,6 +175,12 @@ void HostPopulation::waning(){
     }
 }
 
+void HostPopulation::mutations(){
+  int j = infecteds.size();
+  for(int i = 0; i < j; ++i){
+    infecteds[i]->getCurrentVirus()->mutate();
+  }
+}
 
 int HostPopulation::countSusceptibles(){
   return(susceptibles.size());
@@ -211,81 +219,31 @@ void HostPopulation::printStatus(){
 
 void HostPopulation::writeViruses(std::ofstream& output, std::string filename){
   output.open(filename);
-  int j = susceptibles.size();
   int x = 0;
-  output << "vid, birth, death, parent, infectionK" << endl;
-
-  for(int i = 0; i < j; ++i){
-    x = susceptibles[i]->getInfectionHistory().size();
-    if(x > 0){
-      for(int ii = 0; ii < x; ++ii){
-	output <<susceptibles[i]->getInfectionHistory()[ii]->getId() << ",";
-	output <<susceptibles[i]->getInfectionHistory()[ii]->getBirth() << ",";
-	output <<susceptibles[i]->getInfectionHistory()[ii]->getDeath() << ",";
-	if(susceptibles[i]->getInfectionHistory()[ii]->getParent()){
-	output <<susceptibles[i]->getInfectionHistory()[ii]->getParent()->getId() << ",";
-	} else {
-	  output << 0 << ",";
+  vector<vector<Host*>> tmp = {susceptibles, infecteds, recovereds, dead};
+  int q = tmp.size();  
+  int j = 0;
+  output << "vid, birth, death, parent, infectionK, bindingAvid, distance" << endl;
+  for(int y = 0; y < q; ++y){
+    j = tmp[y].size();
+    for(int i = 0; i < j; ++i){
+      x = tmp[y][i]->getInfectionHistory().size();
+      if(x > 0){
+	for(int ii = 0; ii < x; ++ii){
+	  output << tmp[y][i]->getInfectionHistory()[ii]->getId() << ",";
+	  output << tmp[y][i]->getInfectionHistory()[ii]->getBirth() << ",";
+	  output << tmp[y][i]->getInfectionHistory()[ii]->getDeath() << ",";
+	  if(tmp[y][i]->getInfectionHistory()[ii]->getParent()){
+	    output << tmp[y][i]->getInfectionHistory()[ii]->getParent()->getId() << ",";
+	  } else {
+	    output << 0 << ",";
+	  }
+	  output << tmp[y][i]->getInfectionHistory()[ii]->getK() << ",";
+	  output << tmp[y][i]->getInfectionHistory()[ii]->getBindingAvid() << ",";
+	  output << tmp[y][i]->getInfectionHistory()[ii]->getDistance() << endl;
 	}
-	output <<susceptibles[i]->getInfectionHistory()[ii]->getK() << endl;
       }
     }
   }
-
-  j = infecteds.size();
-  for(int i = 0; i < j; ++i){
-    x = infecteds[i]->getInfectionHistory().size();
-    if(x > 0){
-      for(int ii = 0; ii < x; ++ii){
-	output <<infecteds[i]->getInfectionHistory()[ii]->getId() << ",";
-	output <<infecteds[i]->getInfectionHistory()[ii]->getBirth() << ",";
-	output <<infecteds[i]->getInfectionHistory()[ii]->getDeath() << ",";
-	if(infecteds[i]->getInfectionHistory()[ii]->getParent()){
-	  output <<infecteds[i]->getInfectionHistory()[ii]->getParent()->getId() << ",";
-	} else {
-	  output << 0 << ",";
-	}
-	output <<infecteds[i]->getInfectionHistory()[ii]->getK() << endl;
-      }
-    }
-  }
-
- j = recovereds.size();
-  for(int i = 0; i < j; ++i){
-    x = recovereds[i]->getInfectionHistory().size();
-    if(x > 0){
-      for(int ii = 0; ii < x; ++ii){
-	output <<recovereds[i]->getInfectionHistory()[ii]->getId() << ",";
-	output <<recovereds[i]->getInfectionHistory()[ii]->getBirth() << ",";
-	output <<recovereds[i]->getInfectionHistory()[ii]->getDeath() << ",";
-	if(recovereds[i]->getInfectionHistory()[ii]->getParent()){
-	  output <<recovereds[i]->getInfectionHistory()[ii]->getParent()->getId() << ",";
-	} else {
-	  output << 0 << ",";
-	}
-	output <<recovereds[i]->getInfectionHistory()[ii]->getK() << endl;
-      }
-    }
-  }
-
- j = dead.size();
-  for(int i = 0; i < j; ++i){
-    x = dead[i]->getInfectionHistory().size();
-    if(x > 0){
-      for(int ii = 0; ii < x; ++ii){
-	output <<dead[i]->getInfectionHistory()[ii]->getId() << ",";
-	output <<dead[i]->getInfectionHistory()[ii]->getBirth() << ",";
-	output <<dead[i]->getInfectionHistory()[ii]->getDeath() << ",";
-	if(dead[i]->getInfectionHistory()[ii]->getParent()){
-	  output <<dead[i]->getInfectionHistory()[ii]->getParent()->getId() << ",";
-	} else {
-	  output << 0 << ",";
-	}
-	output <<dead[i]->getInfectionHistory()[ii]->getK() << endl;
-      }
-    }
-  }
-
-
   output.close();
 }

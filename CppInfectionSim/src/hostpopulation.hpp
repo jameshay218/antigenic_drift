@@ -35,6 +35,7 @@ public:
   void contact();
   void recoveries();
   void waning();
+  void mutations();
 
   // Get properties of HostPopulation
   double getContactRate();
