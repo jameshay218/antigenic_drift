@@ -13,6 +13,7 @@ private:
   int infectionK;
   Virus* parent;
   Host* host;
+  double bindingavid_ini;
   double bindingavid;
   double distanceToParent;
   int level;
@@ -31,8 +32,8 @@ public:
 
   // Constructors
   Virus();
-  Virus(Virus* _parent, double _bindavid, double _distance, Host* _host, int _t);
-  Virus(int _level, Virus* _parent, double _bindavid, double _distance, Host* _host, int _t);
+  Virus(Virus* _parent, Host* _host, int _t);
+  Virus(int _level, Virus* _parent, double _bindingavid, double _distance, Host* _host, int _t);
   ~Virus(){};  // Don't really need to worry about pointers. VirusPopulation should take care of memory.
 
   // Accessing attributes
@@ -42,14 +43,15 @@ public:
   int getK();
   Virus* getParent(); 
   double getBindingAvid();
+  double getIniBindingAvid();
   double getDistance();
   int getLevel();
 
   // Calculations/events
   void updateK(int _k);
-  double calculateRho();
+  double calculateRho(Host* _host);
   void mutate();
-  double probSurvival();
+  double probSurvival(Host* _host);
   double probReplication();
   void kill(int cur_t);
 

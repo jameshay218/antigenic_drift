@@ -65,5 +65,5 @@ void Host::wane(){
 }
 
 double Host::calculateBeta(){
-  return(popn->getContactRate()*currentInfection->calculateRho());
+  return(popn->getContactRate()*currentInfection->calculateRho(this));
 }
