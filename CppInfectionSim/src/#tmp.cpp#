@@ -1,0 +1,86 @@
+
+
+
+  for(int i = 0; i < j; ++i){
+    x = susceptibles[i]->getInfectionHistory().size();
+    if(x > 0){
+      for(int ii = 0; ii < x; ++ii){
+	output <<susceptibles[i]->getInfectionHistory()[ii]->getId() << ",";
+	output <<susceptibles[i]->getInfectionHistory()[ii]->getBirth() << ",";
+	output <<susceptibles[i]->getInfectionHistory()[ii]->getDeath() << ",";
+	if(susceptibles[i]->getInfectionHistory()[ii]->getParent()){
+	output <<susceptibles[i]->getInfectionHistory()[ii]->getParent()->getId() << ",";
+	} else {
+	  output << 0 << ",";
+	}
+	output <<susceptibles[i]->getInfectionHistory()[ii]->getK() << ",";
+	output <<susceptibles[i]->getInfectionHistory()[ii]->getBindingAvid() << ",";
+	output <<susceptibles[i]->getInfectionHistory()[ii]->getDistance() << endl;
+
+      }
+    }
+  }
+
+  j = infecteds.size();
+  for(int i = 0; i < j; ++i){
+    x = infecteds[i]->getInfectionHistory().size();
+    if(x > 0){
+      for(int ii = 0; ii < x; ++ii){
+	output <<infecteds[i]->getInfectionHistory()[ii]->getId() << ",";
+	output <<infecteds[i]->getInfectionHistory()[ii]->getBirth() << ",";
+	output <<infecteds[i]->getInfectionHistory()[ii]->getDeath() << ",";
+	if(infecteds[i]->getInfectionHistory()[ii]->getParent()){
+	  output <<infecteds[i]->getInfectionHistory()[ii]->getParent()->getId() << ",";
+	} else {
+	  output << 0 << ",";
+	}
+	output <<infecteds[i]->getInfectionHistory()[ii]->getK() << ",";
+	output <<infecteds[i]->getInfectionHistory()[ii]->getBindingAvid() << ",";
+	output <<infecteds[i]->getInfectionHistory()[ii]->getDistance() << endl;
+      }
+    }
+  }
+
+ j = recovereds.size();
+  for(int i = 0; i < j; ++i){
+    x = recovereds[i]->getInfectionHistory().size();
+    if(x > 0){
+      for(int ii = 0; ii < x; ++ii){
+	output <<recovereds[i]->getInfectionHistory()[ii]->getId() << ",";
+	output <<recovereds[i]->getInfectionHistory()[ii]->getBirth() << ",";
+	output <<recovereds[i]->getInfectionHistory()[ii]->getDeath() << ",";
+	if(recovereds[i]->getInfectionHistory()[ii]->getParent()){
+	  output <<recovereds[i]->getInfectionHistory()[ii]->getParent()->getId() << ",";
+	} else {
+	  output << 0 << ",";
+	}
+	output <<recovereds[i]->getInfectionHistory()[ii]->getK() << ",";
+	output <<recovereds[i]->getInfectionHistory()[ii]->getBindingAvid() << ",";
+	output <<recovereds[i]->getInfectionHistory()[ii]->getDistance() << endl;
+      }
+    }
+  }
+
+ j = dead.size();
+  for(int i = 0; i < j; ++i){
+    x = dead[i]->getInfectionHistory().size();
+    if(x > 0){
+      for(int ii = 0; ii < x; ++ii){
+	output <<dead[i]->getInfectionHistory()[ii]->getId() << ",";
+	output <<dead[i]->getInfectionHistory()[ii]->getBirth() << ",";
+	output <<dead[i]->getInfectionHistory()[ii]->getDeath() << ",";
+	if(dead[i]->getInfectionHistory()[ii]->getParent()){
+	  output <<dead[i]->getInfectionHistory()[ii]->getParent()->getId() << ",";
+	} else {
+	  output << 0 << ",";
+	}
+	output <<dead[i]->getInfectionHistory()[ii]->getK() << ",";
+	output <<dead[i]->getInfectionHistory()[ii]->getBindingAvid() << ",";
+	output <<dead[i]->getInfectionHistory()[ii]->getDistance() << endl;
+      }
+    }
+  }
+
+
+  output.close();
+}
