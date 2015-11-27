@@ -18,7 +18,7 @@ HostPopulation::HostPopulation(){
 HostPopulation::HostPopulation(int initialS, int initialI, int initialR, int iniDay, double _contactRate, double _mu, double _wane, double _gamma){
   Host* H;
   Virus* V;
-  double iniBindingAvid = 0.5;
+  double iniBindingAvid = 0;
 
   day = iniDay;
   contactRate = _contactRate;
@@ -74,7 +74,7 @@ void HostPopulation::stepForward(int new_day){
   grow();
 
   // Deaths from all compartments
-   decline();
+  decline();
 
   // Infected population grows from transmission
   contact();
@@ -83,10 +83,11 @@ void HostPopulation::stepForward(int new_day){
   recoveries();
 
   // Some immunity wanes
-   waning();
+  waning();
   
-   // Mutations?
-   // Go through each host in infected vector and mutate its virus
+  // Mutations?
+  //mutations();
+  // Go through each host in infected vector and mutate its virus
 
 }
 
@@ -106,73 +107,111 @@ void HostPopulation::decline(){
   poisson_distribution<int> poissonR(mu*countRecovereds());
   int newDeaths = poissonS(generator);
   int index;
+  
   for(int i = 0; i < newDeaths; ++i){
-    index = rand() % countSusceptibles();
-    dead.push_back(susceptibles[index]);
-    susceptibles[index]->die(day);
-    susceptibles.erase(susceptibles.begin()+index);
+    if(countSusceptibles() > 0){
+      index = rand() % countSusceptibles();
+      dead.push_back(susceptibles[index]);
+      susceptibles[index]->die(day);
+      susceptibles.erase(susceptibles.begin()+index);
+    }
   }
-
   newDeaths = poissonI(generator);
+
   for(int i = 0; i < newDeaths; ++i){
-    index = rand() % countInfecteds();
-    dead.push_back(infecteds[index]);
-    infecteds[index]->die(day);
-    infecteds.erase(infecteds.begin()+index);
+    if(countInfecteds() > 0){
+      index = rand() % countInfecteds();
+      dead.push_back(infecteds[index]);
+      infecteds[index]->die(day);
+      infecteds.erase(infecteds.begin()+index);
+    }
   }
 
   newDeaths = poissonR(generator);
-  for(int i = 0; i < newDeaths; ++i){
-    index = rand() % countRecovereds();
-    dead.push_back(recovereds[index]);
-    recovereds[index]->die(day);
-    recovereds.erase(recovereds.begin()+index);
+
+    for(int i = 0; i < newDeaths; ++i){
+      if(countRecovereds() > 0){
+      index = rand() % countRecovereds();
+      dead.push_back(recovereds[index]);
+      recovereds[index]->die(day);
+      recovereds.erase(recovereds.begin()+index);
+    }
   }
 }
 
 void HostPopulation::contact(){
-  double newBindingAvid = 0.5;
-  double newDistance = 0.5;
   poisson_distribution<int> poisson(contactRate*countInfecteds()*countSusceptibles()/countN());
+  //cout << contactRate << endl;
+  //cout << countInfecteds() << endl;
+  //cout << countSusceptibles() << endl;
+  //cout << countN() << endl;
+  //  cout << "1: " << countInfecteds()*countSusceptibles() << endl;
+  //cout << "2: " << countInfecteds()*countSusceptibles()/countN() << endl;
+  //cout << "Test: " << contactRate*countInfecteds()*countSusceptibles()/countN() << endl;
   int totalContacts = poisson(generator);
   int index1 = 0;
   int index2 = 0;
-  for(int i = 0; i < totalContacts; ++i){
-    index1 = rand() % countInfecteds();
-    if((((rand() % 99) + 1)/100) <= infecteds[index1]->getCurrentVirus()->calculateRho()){
+  double tmp = 0;
+  double number_success = 0;
+  // cout << "Number of contacts: " << totalContacts << endl;
+    for(int i = 0; i < totalContacts; ++i){
+      if(countInfecteds() > 0){
+      index1 = rand() % countInfecteds();
+      tmp = ((double) rand() / (RAND_MAX));
       index2 = rand() % countSusceptibles();
-      Virus* newV = new Virus(infecteds[index1]->getCurrentVirus(), newBindingAvid, newDistance, susceptibles[index2], day);
-      susceptibles[index2]->infect(newV,day);
-      infecteds.push_back(susceptibles[index2]);
-      susceptibles.erase(susceptibles.begin() + index2);
+      //cout << "Prob survival: " << infecteds[index1]->getCurrentVirus()->calculateRho(susceptibles[i]) << endl;
+      if(tmp <= infecteds[index1]->getCurrentVirus()->calculateRho(susceptibles[index2])){
+	Virus* newV = new Virus(infecteds[index1]->getCurrentVirus(), susceptibles[index2], day);
+	susceptibles[index2]->infect(newV,day);
+	infecteds.push_back(susceptibles[index2]);
+	susceptibles.erase(susceptibles.begin() + index2);
+	number_success++;
+      }
     }
   }
+    //  cout << "Number of successful infections: " << number_success << endl;
+
+    cout << "Beta: " << (number_success/totalContacts)*contactRate << endl;
 }
 
 void HostPopulation::recoveries(){
   poisson_distribution<int> poisson(gamma*countInfecteds());
   int noRecovered = poisson(generator);
   int index = 0;
-  for(int i = 0; i < noRecovered; ++i){
-    index = rand() % countInfecteds();
-    recovereds.push_back(infecteds[index]);
-    infecteds[index]->recover(day);
-    infecteds.erase(infecteds.begin()+index);    
-  }
-}
-
-void HostPopulation::waning(){
-  poisson_distribution<int> poisson(wane*countRecovereds());
-  int noWane = poisson(generator);
-  int index = 0;
-    for(int i = 0; i < noWane; ++i){
-    index = rand() % countRecovereds();
-    susceptibles.push_back(recovereds[index]);
-    recovereds[index]->wane();
-    recovereds.erase(recovereds.begin()+index);    
+ 
+    for(int i = 0; i < noRecovered; ++i){
+      if(countInfecteds() > 0){
+      index = rand() % countInfecteds();
+      recovereds.push_back(infecteds[index]);
+      infecteds[index]->recover(day);
+      infecteds.erase(infecteds.begin()+index);    
+      }
     }
 }
 
+void HostPopulation::waning(){
+   poisson_distribution<int> poisson(wane*countRecovereds());
+  int noWane = poisson(generator);
+  int index = 0;
+
+  for(int i = 0; i < noWane; ++i){
+    if(countRecovereds() > 0){
+      index = rand() % countRecovereds();
+      susceptibles.push_back(recovereds[index]);
+      recovereds[index]->wane();
+      recovereds.erase(recovereds.begin()+index);    
+    }
+  }
+}
+
+void HostPopulation::mutations(){
+  int j = infecteds.size();
+  if(j > 0){
+    for(int i = 0; i < j; ++i){
+      infecteds[i]->getCurrentVirus()->mutate();
+    }
+  }
+}
 
 int HostPopulation::countSusceptibles(){
   return(susceptibles.size());
@@ -211,81 +250,32 @@ void HostPopulation::printStatus(){
 
 void HostPopulation::writeViruses(std::ofstream& output, std::string filename){
   output.open(filename);
-  int j = susceptibles.size();
   int x = 0;
-  output << "vid, birth, death, parent, infectionK" << endl;
-
-  for(int i = 0; i < j; ++i){
-    x = susceptibles[i]->getInfectionHistory().size();
-    if(x > 0){
-      for(int ii = 0; ii < x; ++ii){
-	output <<susceptibles[i]->getInfectionHistory()[ii]->getId() << ",";
-	output <<susceptibles[i]->getInfectionHistory()[ii]->getBirth() << ",";
-	output <<susceptibles[i]->getInfectionHistory()[ii]->getDeath() << ",";
-	if(susceptibles[i]->getInfectionHistory()[ii]->getParent()){
-	output <<susceptibles[i]->getInfectionHistory()[ii]->getParent()->getId() << ",";
-	} else {
-	  output << 0 << ",";
+  vector<vector<Host*>> tmp = {susceptibles, infecteds, recovereds, dead};
+  int q = tmp.size();  
+  int j = 0;
+  output << "vid, birth, death, parent, infectionK, bindingAvid, distance, immK" << endl;
+  for(int y = 0; y < q; ++y){
+    j = tmp[y].size();
+    for(int i = 0; i < j; ++i){
+      x = tmp[y][i]->getInfectionHistory().size();
+      if(x > 0){
+	for(int ii = 0; ii < x; ++ii){
+	  output << tmp[y][i]->getInfectionHistory()[ii]->getId() << ",";
+	  output << tmp[y][i]->getInfectionHistory()[ii]->getBirth() << ",";
+	  output << tmp[y][i]->getInfectionHistory()[ii]->getDeath() << ",";
+	  if(tmp[y][i]->getInfectionHistory()[ii]->getParent()){
+	    output << tmp[y][i]->getInfectionHistory()[ii]->getParent()->getId() << ",";
+	  } else {
+	    output << 0 << ",";
+	  }
+	  output << tmp[y][i]->getInfectionHistory()[ii]->getK() << ",";
+	  output << tmp[y][i]->getInfectionHistory()[ii]->getBindingAvid() << ",";
+	  output << tmp[y][i]->getInfectionHistory()[ii]->getDistance() << ",";
+	  output << tmp[y][i]->getInfectionHistory()[ii]->getImmK() << endl;
 	}
-	output <<susceptibles[i]->getInfectionHistory()[ii]->getK() << endl;
       }
     }
   }
-
-  j = infecteds.size();
-  for(int i = 0; i < j; ++i){
-    x = infecteds[i]->getInfectionHistory().size();
-    if(x > 0){
-      for(int ii = 0; ii < x; ++ii){
-	output <<infecteds[i]->getInfectionHistory()[ii]->getId() << ",";
-	output <<infecteds[i]->getInfectionHistory()[ii]->getBirth() << ",";
-	output <<infecteds[i]->getInfectionHistory()[ii]->getDeath() << ",";
-	if(infecteds[i]->getInfectionHistory()[ii]->getParent()){
-	  output <<infecteds[i]->getInfectionHistory()[ii]->getParent()->getId() << ",";
-	} else {
-	  output << 0 << ",";
-	}
-	output <<infecteds[i]->getInfectionHistory()[ii]->getK() << endl;
-      }
-    }
-  }
-
- j = recovereds.size();
-  for(int i = 0; i < j; ++i){
-    x = recovereds[i]->getInfectionHistory().size();
-    if(x > 0){
-      for(int ii = 0; ii < x; ++ii){
-	output <<recovereds[i]->getInfectionHistory()[ii]->getId() << ",";
-	output <<recovereds[i]->getInfectionHistory()[ii]->getBirth() << ",";
-	output <<recovereds[i]->getInfectionHistory()[ii]->getDeath() << ",";
-	if(recovereds[i]->getInfectionHistory()[ii]->getParent()){
-	  output <<recovereds[i]->getInfectionHistory()[ii]->getParent()->getId() << ",";
-	} else {
-	  output << 0 << ",";
-	}
-	output <<recovereds[i]->getInfectionHistory()[ii]->getK() << endl;
-      }
-    }
-  }
-
- j = dead.size();
-  for(int i = 0; i < j; ++i){
-    x = dead[i]->getInfectionHistory().size();
-    if(x > 0){
-      for(int ii = 0; ii < x; ++ii){
-	output <<dead[i]->getInfectionHistory()[ii]->getId() << ",";
-	output <<dead[i]->getInfectionHistory()[ii]->getBirth() << ",";
-	output <<dead[i]->getInfectionHistory()[ii]->getDeath() << ",";
-	if(dead[i]->getInfectionHistory()[ii]->getParent()){
-	  output <<dead[i]->getInfectionHistory()[ii]->getParent()->getId() << ",";
-	} else {
-	  output << 0 << ",";
-	}
-	output <<dead[i]->getInfectionHistory()[ii]->getK() << endl;
-      }
-    }
-  }
-
-
   output.close();
 }

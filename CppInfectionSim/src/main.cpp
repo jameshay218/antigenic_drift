@@ -14,15 +14,18 @@
 using namespace std;
 
 int main(int argc, char *argv[]){
+  srand(time(NULL));
   ofstream output ("output.csv");
   ofstream voutput;
   int day = 1;
   int final_day = 500;
-  HostPopulation* hpop = new HostPopulation(100000,10,0,0,0.05,0.001,0.01,0.01);
+
+  HostPopulation* hpop = new HostPopulation(900000,10,1000000-900000-1,0,0.75,(1.0/(40.0*365.0)),0,0.2);
 
   while(day <= final_day){
     hpop->stepForward(day);
     hpop->printStatus();
+    cout << endl;
     
     output << hpop->countSusceptibles() << "," << hpop->countInfecteds() << "," << hpop->countRecovereds() << endl;
     

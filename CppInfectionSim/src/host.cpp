@@ -5,12 +5,14 @@ using namespace std;
 Host::Host(){
   state = Susceptible;
   currentInfection = NULL;
+  hostK = 0;
 }
 
 Host::Host(State _state, HostPopulation* _popn){
   state = _state;
   currentInfection = NULL;
   popn = _popn;
+  hostK = 0;
 }
 
 Host::~Host(){
@@ -22,6 +24,7 @@ Host::~Host(){
 
 void Host::infect(Virus* newInfection, int cur_t){
   state = Infected;
+
   newInfection->updateK(infectionHistory.size()+1);
   if(currentInfection != NULL){
     currentInfection->kill(cur_t);
@@ -32,6 +35,11 @@ void Host::infect(Virus* newInfection, int cur_t){
 
 void Host::recover(int cur_t){
   state = Recovered;
+
+  poisson_distribution<int> poisson(5);
+  int boost = poisson(popn->generator);
+  hostK += boost;
+
   if(currentInfection != NULL){
     currentInfection->kill(cur_t);
     infectionHistory.push_back(currentInfection);
@@ -65,5 +73,13 @@ void Host::wane(){
 }
 
 double Host::calculateBeta(){
-  return(popn->getContactRate()*currentInfection->calculateRho());
+  return(popn->getContactRate()*currentInfection->calculateRho(this));
+}
+
+double Host::get_hostK(){
+  return(hostK);
+}
+
+default_random_engine Host::get_generator(){
+  return(popn->generator);
 }

@@ -20,9 +20,11 @@ private:
   double mu;
   double wane;
   double gamma;
-  std::default_random_engine generator;
+
 
 public:
+  std::default_random_engine generator;
+
   // Constructors
   HostPopulation();
   HostPopulation(int initialS, int initialI, int initialR, int iniDay, double _contactRate, double _mu, double _wane, double _gamma);
@@ -35,6 +37,7 @@ public:
   void contact();
   void recoveries();
   void waning();
+  void mutations();
 
   // Get properties of HostPopulation
   double getContactRate();
