@@ -14,9 +14,11 @@ private:
   State state;
   std::vector<Virus*> infectionHistory;
   Virus* currentInfection;
-  HostPopulation* popn;
+
+  double hostK;
 
 public:
+  HostPopulation* popn;
   // Constructors
   Host();
   Host(State _state, HostPopulation* _popn);
@@ -28,11 +30,13 @@ public:
   void recover(int cur_t);
   void wane();
   void die(int cur_t);
+  double get_hostK();
 
   // Attribute Access
   Virus* getCurrentVirus();
   std::vector<Virus*> getInfectionHistory();
   State getState();
+  std::default_random_engine get_generator();
 
 };
 

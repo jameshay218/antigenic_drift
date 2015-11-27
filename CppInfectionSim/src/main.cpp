@@ -18,8 +18,9 @@ int main(int argc, char *argv[]){
   ofstream output ("output.csv");
   ofstream voutput;
   int day = 1;
-  int final_day = 1000;
-  HostPopulation* hpop = new HostPopulation(90000,70,9930,0,0.9,(1.0/(40.0*365.0)),0.04,0.263);
+  int final_day = 500;
+
+  HostPopulation* hpop = new HostPopulation(900000,10,1000000-900000-1,0,0.75,(1.0/(40.0*365.0)),0,0.2);
 
   while(day <= final_day){
     hpop->stepForward(day);
