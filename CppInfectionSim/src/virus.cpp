@@ -7,31 +7,34 @@
 using namespace std;
 
 int Virus::v_IDgenerator;
-double Virus::_p=4;
-double Virus::_r=1;
-double Virus::_q=1;
+double Virus::_p=3.0;
+double Virus::_r=50.0;
+double Virus::_q=1.0;
 double Virus::_a=0.7;
-double Virus::_b=3;
-double Virus::_n=2;
-double Virus::_v=2;
+double Virus::_b=3.0;
+double Virus::_n=2.0;
+double Virus::_v=2.0;
 double Virus::_prob_mut = 0.1;
 double Virus::_exp_dist = 1;
 double Virus::_kc = 0.5;
-double Virus::_V_to_d = 1;
+double Virus::_V_to_d = 1000;
 
-Virus::Virus(Virus* _parent, Host* _host, int _t){
+Virus::Virus(Virus* _parent, Host* _host, int _t, double _immK, double _tmpK){
   id = v_IDgenerator++;
   birth = _t;
-  infectionK = 0;
+  infectionK = _host->getInfectionHistory().size();
   bindingavid = bindingavid_ini = _parent->getBindingAvid();
   parent = _parent;
   level = parent->level + 1;
   distanceToParent = 0;
+  if(_parent != NULL) distRoot = _parent->getDistRoot();
+  else distRoot = 0;
   host = _host;
-  immK = tmpK = 0;
+  immK = _immK;
+  tmpK = _tmpK;
 }
 
-Virus::Virus(int _level, Virus* _parent, double _bindingavid, double _distance, Host* _host, int _t){
+Virus::Virus(int _level, Virus* _parent, double _bindingavid, double _distance, Host* _host, int _t, double _immK, double _tmpK){
   id = v_IDgenerator++;
   birth = _t;
   infectionK = 0;
@@ -39,8 +42,11 @@ Virus::Virus(int _level, Virus* _parent, double _bindingavid, double _distance, 
   bindingavid = bindingavid_ini = _bindingavid;
   level = _level;
   distanceToParent = _distance;
+  if(_parent != NULL) distRoot = _parent->getDistRoot() + _distance;
+  else distRoot = 0;
   host = _host;
-  immK = tmpK = 0;
+  immK = _immK;
+  tmpK = _tmpK;
 }
 
 
@@ -63,6 +69,10 @@ double Virus::getDistance(){
   return distanceToParent;
 }
 
+int Virus::getHostK(){
+  return(host->get_hostK());
+}
+
 double Virus::getBindingAvid(){
   return bindingavid;
 }
@@ -80,13 +90,16 @@ int Virus::getDeath(){
   return death;
 }
 
+Host* Virus::getHost(){
+  return(host);
+}
+
 int Virus::getK(){
   return infectionK;
 }
 
-void Virus::updateK(int k){
-  infectionK = k;
-  immK = tmpK;
+int Virus::getTmpImmK(){
+  return tmpK;
 }
 
 void Virus::kill(int cur_t){
@@ -98,17 +111,22 @@ double Virus::calculateRho(Host* _host){
 }
 
 void Virus::mutate(){
-  double tmp = bindingavid_change(host);
+  /*double tmp = bindingavid_change(host);
+  cout << tmp << endl;
   bindingavid += tmp;
   distanceToParent += _V_to_d*fabs(tmp);
+  distRoot += _V_to_d*fabs(tmp);*/
+  //cout << tmp << endl;
   // Below was old code for antigenic drift
-  /*  double tmp = ((double) rand() / (RAND_MAX));
-  double prob_mut = 0.1;
-  std::exponential_distribution<double> dist(1);
+  double tmp = ((double) rand() / (RAND_MAX));
+  double prob_mut =1;
+  std::exponential_distribution<double> dist(35);
   double change = dist(host->popn->generator);
   if(tmp <= prob_mut){
     distanceToParent += change;
-    }*/
+    distRoot += change;
+    //    cout << "Change: " << change << endl;
+  }
 }
 
 double Virus::probSurvival(Host* _host){
@@ -124,14 +142,13 @@ double Virus::probSurvival(Host* _host){
       }
     }
   }
-  else{
-    //   cout << "Host k: " << _host->get_hostK() << endl;
-    //   cout << tmp << endl;
-  }
-  tmpK = _r*_host->get_hostK() - tmp;
+  tmpK = _r*_host->get_hostK() - 100*tmp;
   if(tmpK < 0){ tmpK = 0;}
   tmp = pow((1 - exp(-_p*(bindingavid + _q))), tmpK);
   return(tmp);
+}
+double Virus::getDistRoot(){
+  return(distRoot);
 }
 
 double Virus::d_probSurvival(Host* _host){
@@ -148,7 +165,6 @@ double Virus::d_probReplication(){
 
 double Virus::bindingavid_change(Host* _host){
   double dV = probSurvival(_host)*d_probReplication() + probReplication()*d_probSurvival(_host);
-  cout << d_probSurvival(_host) << endl;
   return(dV*_kc);
 }
 

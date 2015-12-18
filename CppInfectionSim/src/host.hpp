@@ -22,6 +22,7 @@ public:
   // Constructors
   Host();
   Host(State _state, HostPopulation* _popn);
+  Host(State _state, HostPopulation* _popn, int _k);
   ~Host();
 
   // Calculations/Events
@@ -31,6 +32,11 @@ public:
   void wane();
   void die(int cur_t);
   double get_hostK();
+
+  bool isInfected();
+  bool isDead();
+  bool isSusceptible();
+  bool isRecovered();
 
   // Attribute Access
   Virus* getCurrentVirus();
