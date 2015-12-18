@@ -50,7 +50,7 @@ load(traitfile);
 global epi_params;
 
 epi_params.tRange_stoch(1,1)=365*0.1;
-epi_params.tRange_stoch(1,2)=365*0.5; %final version 365*45 (1968-2013)
+epi_params.tRange_stoch(1,2)=365*0.4; %final version 365*45 (1968-2013)
 
 
 count = length(dat_viruses(:,1));
