@@ -6,6 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <algorithm>
 
 class Host;
 
@@ -15,6 +16,12 @@ private:
   std::vector<Host*> infecteds;
   std::vector<Host*> recovereds;
   std::vector<Host*> dead;
+
+  std::vector<Host*> new_infecteds;
+  std::vector<Host*> new_recovereds;
+  std::vector<Host*> new_susceptibles;
+  std::vector<Host*> new_births;
+
   int day;
   double contactRate;
   double mu;
@@ -38,6 +45,7 @@ public:
   void recoveries();
   void waning();
   void mutations();
+  void updateCompartments();
 
   // Get properties of HostPopulation
   double getContactRate();
@@ -50,7 +58,7 @@ public:
   // Print out current population status
   void printStatus();
   void writeViruses(std::ofstream& output, std::string filename);
-  
+  void virusPairwiseMatrix(std::ofstream& output, std::string filename, int sampSize);
 };
 
 #endif
