@@ -15,17 +15,45 @@ Host::Host(State _state, HostPopulation* _popn){
   hostK = 0;
 }
 
+
+Host::Host(State _state, HostPopulation* _popn, int _k){
+  state = _state;
+  currentInfection = NULL;
+  popn = _popn;
+  hostK = _k;
+}
+
+
 Host::~Host(){
   int j = infectionHistory.size();
   for(int i = 0; i < j;++i){
-    delete infectionHistory[i];
+    if(infectionHistory[i] != NULL){
+      delete infectionHistory[i];
+    }
   }
+}
+
+bool Host::isInfected(){
+  return(state == 1);
+}
+
+bool Host::isDead(){
+  return(state==3);
+}
+
+bool Host::isRecovered(){
+  return(state==2);
+}
+
+bool Host::isSusceptible(){
+  return(state==0);
 }
 
 void Host::infect(Virus* newInfection, int cur_t){
   state = Infected;
 
-  newInfection->updateK(infectionHistory.size()+1);
+  //newInfection->updateK(infectionHistory.size()+1);
+
   if(currentInfection != NULL){
     currentInfection->kill(cur_t);
     infectionHistory.push_back(currentInfection);
@@ -36,7 +64,7 @@ void Host::infect(Virus* newInfection, int cur_t){
 void Host::recover(int cur_t){
   state = Recovered;
 
-  poisson_distribution<int> poisson(5);
+  poisson_distribution<int> poisson(10);
   int boost = poisson(popn->generator);
   hostK += boost;
 
