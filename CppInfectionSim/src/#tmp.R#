@@ -1,0 +1,19 @@
+library(episim)
+
+Nage <- 2 # Number of different age classes
+Ntitre <- 2 # Number of different titre classes
+C1 <- matrix(c(2,0.7,3,1),nrow=Nage,ncol=Nage) # Generates a non-normalised contact matrix giving contact rates between AGE CLASSES (not titre classes, as we assume that these are unobserved)
+R0 <- 1.5 # Disease specific R0, as discussed previously
+N11 <- 1000 # Number of people in age class 1, titre class 1..
+N12 <- 2000
+N21 <- 700
+N22 <- 2300
+
+Ns <- matrix(c(N11,N21,N12,N22),nrow=Nage,ncol=Ntitre) # Populations must be in a matrix matching the desired output structure
+
+alphas <- c(1,0.7) # Vector of proportional immunity granted for each titre class
+
+A <- epi_final_size(C1, R0, Ns, alphas) # Calculates attack rate using final size equation
+A1 <- epi_ode_size(C1, R0, 1/3,Ns, alphas) # Calculates attack rate using ODE model
+
+
