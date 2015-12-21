@@ -1,5 +1,5 @@
 %Reconstruct phylogenies
-function void = main_generate_tree(smpno, proj, starttime, endtime)
+function void = main_generate_tree_withtraits(filename, smpno, proj, starttime, endtime)
 p = path;
 p = path(p,'lib/');
 %clear all; close all;
@@ -15,32 +15,43 @@ end
 
 n_seqs = str2num(smpno);
 
-infile = ['dat/' proj '/dat_x_trans_tmp']; %N=0.5x10^6; 5yrs
-traitfile = ['dat/' proj '/virus_traits'];
+%read from matlab
+infile = ['dat/' proj '/' filename];
 filename_infectionTreeData = strcat(infile, '_', num2str(n_seqs), '_indiv_infectionTree');
 
-%[births, deaths, parent] = GetInfectionTree(infile);
-load(infile);
-load(traitfile);
-count = length(dat_viruses(:,1));
+%%[births, deaths, parent] = GetInfectionTree(infile);
+%load(infile);
+%count = length(dat_viruses(:,1));
+%births = dat_viruses(:,2);
+%deaths = dat_viruses(:,3);
+%parent = dat_viruses(:,4);
+%infectionK = dat_viruses(:,5);
+%binding = dat_VirusesArray(:,7);
+%bindingFinal = dat_VirusesArray(:,8); 
+
+%read from csv file
+M = csvread([infile '.csv'],2);
+dat_viruses = M;
+vid	= dat_viruses(:,1);
 births = dat_viruses(:,2);
 deaths = dat_viruses(:,3);
 parent = dat_viruses(:,4);
-infectionK = dat_viruses(:,5);
-binding = dat_VirusesArray(:,7);
-bindingFinal = dat_VirusesArray(:,8); 
+infectionK = dat_viruses(:,9);
+binding = dat_viruses(:,5);
+bindingFinal = dat_viruses(:,6);
 
 
-%parfile = 'dat/params.mat';
-%dat = load(parfile)
+
+
+%Declare global parameters
 global epi_params;
 if exist('starttime','var') 
-    starttime = str2num('starttime');
+    starttime = str2num(starttime);
 else
     starttime = 30;
 end
 if exist('endtime','var') 
-    endtime = str2num('endtime');
+    endtime = str2num(endtime);
 else
     endtime = max(deaths)-10;
 end
