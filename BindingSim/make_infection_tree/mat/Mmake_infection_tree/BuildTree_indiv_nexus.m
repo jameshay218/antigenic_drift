@@ -51,8 +51,8 @@ while length(curr_indiv)>0
     
     % curr_indiv: sampled individuals
     % parentLineages: parental lineages of sampled individuals   
-    % coal_daughters: two external tips from sampled individuals
-    % coal_parent: internal node from unsampled individuals
+    % coal_daughters: two external tips (vid) from sampled individuals
+    % coal_parent: internal node (vid) from unsampled individuals
     [coal_daughters, coal_parent, timeOfCoalescence] = FindMostRecentCoalescence_indiv(curr_indiv, parentLineages, births, deaths);
     %if coal_daughters(1) == coal_daughters(2)
     %  parent_index = find(curr_indiv==coal_parent);
@@ -169,7 +169,7 @@ while 1
     
     %colesce2
     recovery_rate = 1/5; % in days
-    num_infected = 500;
+    num_infected = 100;
     lambda_val = n_seqs*(n_seqs-1)*recovery_rate/num_infected;
     branch_length = exprnd(1/lambda_val);
     timeOfCoalescence = min([complete_seq_times(indiv1_index) complete_seq_times(indiv2_index)]) - branch_length;
