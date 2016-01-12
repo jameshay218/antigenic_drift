@@ -15,10 +15,10 @@ HostPopulation::HostPopulation(){
     
 }
 
-HostPopulation::HostPopulation(int initialS, int initialI, int initialR, int iniDay, double _contactRate, double _mu, double _wane, double _gamma){
+HostPopulation::HostPopulation(int initialS, int initialI, int initialR, int iniDay, double _contactRate, double _mu, double _wane, double _gamma, double _iniBindingAvid){
   Host* H;
   Virus* V;
-  double iniBindingAvid = 0.8;
+  double iniBindingAvid = _iniBindingAvid;
   int _k = 0;
   generator.seed(time(NULL));
   day = iniDay;
@@ -45,31 +45,30 @@ HostPopulation::HostPopulation(int initialS, int initialI, int initialR, int ini
 }
 
 HostPopulation::~HostPopulation(){
-  cout << "Host Population Destructor" << endl;
+  //  cout << "Host Population Destructor" << endl;
   int j = susceptibles.size();
   for(int i = 0; i < j; ++i){
     delete susceptibles[i];
   }
-  cout << "S deleted" << endl;
+  //  cout << "S deleted" << endl;
   j = infecteds.size();
   for(int i = 0; i < j; ++i){
     delete infecteds[i];
   }
-  cout << "I deleted" << endl;
+  //  cout << "I deleted" << endl;
   j = recovereds.size();
   for(int i = 0; i < j; ++i){
     delete recovereds[i];
   }
-  cout << "R deleted" << endl;
+  //  cout << "R deleted" << endl;
   j = dead.size();
   for(int i = 0; i < j; ++i){
     if(!dead[i]->isDead()){
-      cout << dead[i]->getState() << endl;
- cout << "uh oh" << endl;
+      //  cout << dead[i]->getState() << endl;
     }
     delete dead[i];
   }
-  cout << "D deleted" << endl;
+  //  cout << "D deleted" << endl;
 }
 
 
@@ -187,7 +186,7 @@ void HostPopulation::contact(){
       }
     }
   }
-  cout << "Beta: " << number_success/totalContacts << endl;
+  //  cout << "Beta: " << number_success/totalContacts << endl;
 }
 
 void HostPopulation::recoveries(){

@@ -34,7 +34,7 @@ public:
 
   // Constructors
   HostPopulation();
-  HostPopulation(int initialS, int initialI, int initialR, int iniDay, double _contactRate, double _mu, double _wane, double _gamma);
+  HostPopulation(int initialS, int initialI, int initialR, int iniDay, double _contactRate, double _mu, double _wane, double _gamma, double _iniBindingAvid);
   ~HostPopulation();
 
   // Manage population temporal dynamics
