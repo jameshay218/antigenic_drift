@@ -24,9 +24,10 @@ int main(int argc, char *argv[]){
   //  ofstream output(filename);
   ofstream voutput, voutput2;
   int day = 1;
-  int final_day = 1000;
+  int final_day = 100;
+  Virus::set_p(3.1);
   
-  HostPopulation* hpop = new HostPopulation(900000,100,1000000-900000-100,0,1.5,1.0/(40.0*365.0),1.0/25.0,0.333);
+  HostPopulation* hpop = new HostPopulation(900000,100,1000000-900000-100,0,1.5,1.0/(40.0*365.0),1.0/25.0,0.333, 0.8);
   while(day <= final_day){
     hpop->stepForward(day);
     hpop->printStatus();
