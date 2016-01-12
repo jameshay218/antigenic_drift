@@ -288,6 +288,8 @@ void HostPopulation::printStatus(){
 
 
 void HostPopulation::writeViruses(std::ofstream& output, std::string filename){
+  cout << "#########################" << endl;
+  cout << "Writing viruses to csv..." << endl;
   output.open(filename);
   int x = 0;
   vector<vector<Host*>> tmp = {susceptibles, infecteds, recovereds, dead};
@@ -305,15 +307,15 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename){
       }
     }
   }
+  cout << "Sorting viruses..." << endl;
   sort(viruses.begin(),viruses.end(),[](Virus* lhs, Virus* rhs){
       return(lhs->getId() < rhs->getId());
     });
-
-  output << "hostK, host_infections, vid, birth, death, parentid, infection_no, bindingAvidIni, bindingAvidFinal, distance_to_parent, immK, distRoot" << endl;
+  cout << "Writing output..." << endl;
+  output << "vid, birth, death, parentid, bindingAvidityIni, bindingAvidityFinal, infection_no, distance_to_parent, hostK, host_infections, immK, distRoot" << endl;
+  //  output << "hostK, host_infections, vid, birth, death, parentid, infection_no, bindingAvidIni, bindingAvidFinal, distance_to_parent, immK, distRoot" << endl;
   j = viruses.size();
   for(int i = 0; i < j;++i){
-    output << viruses[i]->getHostK() << ",";
-    output << viruses[i]->getHost()->getInfectionHistory().size() << ",";
     output << viruses[i]->getId() << ",";
     output << viruses[i]->getBirth() << ",";
     output << viruses[i]->getDeath() << ",";
@@ -322,19 +324,25 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename){
     } else {
       output << 0 << ",";
     }
-    output << viruses[i]->getK() << ",";
     output << viruses[i]->getIniBindingAvid() << ",";
     output << viruses[i]->getBindingAvid() << ",";
+    output << viruses[i]->getK() << ",";
     output << viruses[i]->getDistance() << ",";
+    output << viruses[i]->getHostK() << ",";
+    output << viruses[i]->getHost()->getInfectionHistory().size() << ",";
     output << viruses[i]->getImmK() << ",";
     output << viruses[i]->getDistRoot() << endl;
   }
 
   output.close();
+  cout << "Writing viruses complete" << endl;
+  cout << "#########################" << endl;
+  cout << endl;
 }
 
 void HostPopulation::virusPairwiseMatrix(std::ofstream& output, std::string filename, int sampSize){
-  cout << "Here: " << endl;
+  cout << "#########################" << endl;
+  cout << "Writing pairwise matrix" << endl;
   vector<Host*> hosts;
   vector<Virus*> viruses;
   vector<int> sampIndices;
@@ -386,5 +394,7 @@ void HostPopulation::virusPairwiseMatrix(std::ofstream& output, std::string file
     }
     output << endl;
   }
+  cout << "Pairwise output complete" << endl;
+  cout << "#########################" << endl;
 }  
   

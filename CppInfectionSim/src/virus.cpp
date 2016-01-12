@@ -120,7 +120,7 @@ void Virus::mutate(){
   // Below was old code for antigenic drift
   double tmp = ((double) rand() / (RAND_MAX));
   double prob_mut =1;
-  std::exponential_distribution<double> dist(35);
+  std::exponential_distribution<double> dist(45);
   double change = dist(host->popn->generator);
   if(tmp <= prob_mut){
     distanceToParent += change;

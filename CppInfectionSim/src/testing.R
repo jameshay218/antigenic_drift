@@ -88,36 +88,36 @@ plot(sim[,2],ylim=c(0,200000),type='l',col="blue",lwd=3)
 #lines(sim[,2],col="red")
 #lines(y1[,3],col="green",lwd=5)
 
-greb <- read.csv("voutput.csv")
-#greb <- greb[sample(nrow(greb),10000,FALSE),]
+#greb <- read.csv("voutput.csv")
+#greb <- greb[sample(nrow(greb),1000,FALSE),]
 #plot(greb$distRoot~greb$birth)
 #plot(greb$immK~greb$birth)
 # 
 # 
 # grebbons <- NULL
 # for(i in 1:10){
-#   grebbons[[i]] <- 1 - 1/(4*y(seq(0,2,by=0.01),c(3,1,45,(i-1)*10,1000,0.7,3)))
+#   grebbons[[i]] <- 1 - 1/(4*y(seq(0,2,by=0.01),c(3,1,20,(i-1)*10,10,0.7,3)))
 # }
 # 
 # plot(grebbons[[1]],type='l',ylim=c(0,1),col=1,lwd=2)
 # for(i in 2:length(grebbons)) lines(grebbons[[i]],lwd=2,col=i)
 # 
-grebbons <- read.csv("voutput2.csv")
-grebbons <- grebbons[,2:ncol(grebbons)]
-test <- unlist(grebbons)
-test <- na.omit(test)
-hist(test)
-
-greb1 <- greb[sample(nrow(greb),100,FALSE),]
-for(i in 1:nrow(greb1)){
-  target <- 0
-  next_id <- greb1[i,"vid"]
-  dist <- 0
-  print(paste("Stored distance to root: ",greb1[i,"distRoot"],sep=""))
-while(greb[greb$vid == next_id,"vid"] != target){
-  
-  dist <- dist + greb[greb$vid==next_id,"distance_to_parent"]
-  next_id <- greb[greb$vid==next_id,"parentid"]
-}
-print(dist)
-}
+# grebbons <- read.csv("voutput2.csv")
+# grebbons <- grebbons[,2:ncol(grebbons)]
+# test <- unlist(grebbons)
+# test <- na.omit(test)
+# hist(test)
+# 
+# greb1 <- greb[sample(nrow(greb),100,FALSE),]
+# for(i in 1:nrow(greb1)){
+#   target <- 0
+#   next_id <- greb1[i,"vid"]
+#   dist <- 0
+#   print(paste("Stored distance to root: ",greb1[i,"distRoot"],sep=""))
+# while(greb[greb$vid == next_id,"vid"] != target){
+#   
+#   dist <- dist + greb[greb$vid==next_id,"distance_to_parent"]
+#   next_id <- greb[greb$vid==next_id,"parentid"]
+# }
+# print(dist)
+# }
