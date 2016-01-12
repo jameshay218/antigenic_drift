@@ -6,7 +6,7 @@
 
 using namespace std;
 
-int Virus::v_IDgenerator;
+int Virus::v_IDgenerator = 1;
 double Virus::_p=3.0;
 double Virus::_r=50.0;
 double Virus::_q=1.0;
@@ -18,6 +18,58 @@ double Virus::_prob_mut = 0.1;
 double Virus::_exp_dist = 1;
 double Virus::_kc = 0.5;
 double Virus::_V_to_d = 1000;
+
+void Virus::set_default(){
+  _p=3.0;
+  _r=50.0;
+  _q=1.0;
+  _a=0.7;
+  _b=3.0;
+  _n=2.0;
+  _v=2.0;
+  _prob_mut = 0.1;
+  _exp_dist = 1;
+  _kc = 0.5;
+  _V_to_d = 1000;
+}
+
+void Virus::set_p(double new_p){
+  _p = new_p;
+}
+void Virus::set_r(double new_r){
+  _r = new_r;
+}
+void Virus::set_q(double new_q){
+  _q = new_q;
+}
+void Virus::set_a(double new_a){
+  _a = new_a;
+}
+void Virus::set_b(double new_b){
+  _b = new_b;
+}
+void Virus::set_n(double new_n){
+  _n = new_n;
+}
+void Virus::set_v(double new_v){
+  _v = new_v;
+}
+void Virus::set_prob_mut(double new_probMut){
+  _prob_mut = new_probMut;
+}
+void Virus::set_exp_dist(double new_exp){
+  _exp_dist = new_exp;
+}
+void Virus::set_kc(double new_kc){
+  _kc = new_kc;
+}
+void Virus::set_VtoD(double new_VtoD){
+  _V_to_d = new_VtoD;
+}
+
+
+
+
 
 Virus::Virus(Virus* _parent, Host* _host, int _t, double _immK, double _tmpK){
   id = v_IDgenerator++;

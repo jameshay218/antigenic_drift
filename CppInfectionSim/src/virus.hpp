@@ -71,6 +71,19 @@ public:
   double bindingavid_change(Host* _host);
   void kill(int cur_t);
 
+  // Change static member variables
+  static void set_default();
+  static void set_p(double _new_p);
+  static void set_r(double new_r);
+  static void set_q(double new_q);
+  static void set_a(double new_a);
+  static void set_b(double new_b);
+  static void set_n(double new_n);
+  static void set_v(double new_v);
+  static void set_prob_mut(double new_probMut);
+  static void set_exp_dist(double new_exp);
+  static void set_kc(double new_kc);
+  static void set_VtoD(double new_VtoD);
 };
 
 #endif
