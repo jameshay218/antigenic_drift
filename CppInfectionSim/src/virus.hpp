@@ -35,6 +35,7 @@ public:
   static double _exp_dist;
   static double _kc;
   static double _V_to_d;
+  static int _scenario;
 
   static double getAntigenicDistance(Virus* A, Virus* B);
 
@@ -84,6 +85,7 @@ public:
   static void set_exp_dist(double new_exp);
   static void set_kc(double new_kc);
   static void set_VtoD(double new_VtoD);
+  static void set_scenario(int _scen);
 };
 
 #endif

@@ -28,7 +28,7 @@ shinyServer(
             I0 <- as.numeric(inputs$i0)
             R0 <- as.numeric(inputs$r0)
 
-            contactRate <- as.numeric(inputs$c)
+            contactRate <- as.numeric(inputs$contact)
             mu <- 1/(as.numeric(inputs$mu)*365)
             wane <- 1/as.numeric(inputs$wane)
             gamma <- 1/as.numeric(inputs$gamma)
@@ -44,24 +44,32 @@ shinyServer(
             n = as.numeric(inputs$n)
             v = as.numeric(inputs$v)
 
-            probMut = 0.1
-            expDist = 1
-            kc = 0.5
-            VtoD = 1000
+            probMut = inputs$probMut
+            expDist = inputs$expDist
+            kc = inputs$kc
+            VtoD = inputs$VtoD
 
             viruspars <- c(p,r,q,a,b,n,v,probMut,expDist,kc,VtoD)
+            print("Host pars:")
+            print(hostpars)
+            print("Virus pars:")
+            print(viruspars)
             if(length(inputs$scenarios) > 0){
                 for(i in inputs$scenarios){
-                    run_simulation(flags,hostpars,viruspars,0,inputs$dur,c("scenario_1_SIR.csv","voutput1.csv","voutput2.csv"),VERBOSE, i)
-                }
+                    filename1 <- paste("scenario_",i,"_SIR.csv",sep="")
+                    filename2 <- paste("voutput1_",i,".csv",sep="")
+                    filename3 <- paste("voutput2_",i,".csv",sep="")
+                    filenames <- c(filename1, filename2, filename3)
+                    run_simulation(flags,hostpars,viruspars,0,inputs$dur,filenames,VERBOSE, i)                }
             }
-              
+            
             
         })
 
         output$sim_main_1<- renderPlot({
+            inputs$run
             if(1 %in% inputs$scenarios){
-                N <- as.numeric(inputs$s0) +as.numeric(inputs$i0) +  as.numeric(inputs$r0)
+                N <- isolate(inputs$s0) + isolate(inputs$i0) +  isolate(inputs$r0)
                 dat <- read.csv("scenario_1_SIR.csv",header=0)
                 dat <- cbind(seq(1,nrow(dat),by=1),dat)
                 colnames(dat) <- c("t","S","I","R")
@@ -72,6 +80,7 @@ shinyServer(
                     xlab("Time (days)") +
                     ylab("Number Individuals") +
                     scale_y_continuous(limits=c(0,N),expand=c(0,0))+
+                    scale_x_continuous(limits=c(0,inputs$dur+1),expand=c(0,0))+
                     theme(
                         text=element_text(colour="gray20",size=14),
                         plot.title=element_text(size=28),
@@ -93,8 +102,9 @@ shinyServer(
         })
 
          output$sim_main_3<- renderPlot({
+                         inputs$run
             if(3 %in% inputs$scenarios){
-                N <- as.numeric(inputs$s0) +as.numeric(inputs$i0) +  as.numeric(inputs$r0)
+                N <- isolate(inputs$s0) +isolate(inputs$i0) +  isolate(inputs$r0)
                 dat <- read.csv("scenario_3_SIR.csv",header=0)
                 dat <- cbind(seq(1,nrow(dat),by=1),dat)
                 colnames(dat) <- c("t","S","I","R")
@@ -105,6 +115,7 @@ shinyServer(
                     xlab("Time (days)") +
                     ylab("Number Individuals") +
                     scale_y_continuous(limits=c(0,N),expand=c(0,0))+
+                    scale_x_continuous(limits=c(0,inputs$dur+1),expand=c(0,0))+
                     theme(
                         text=element_text(colour="gray20",size=14),
                         plot.title=element_text(size=28),
@@ -125,8 +136,9 @@ shinyServer(
             }
         })
         output$sim_main_4<- renderPlot({
+                        inputs$run
             if(4 %in% inputs$scenarios){
-                N <- as.numeric(inputs$s0) +as.numeric(inputs$i0) +  as.numeric(inputs$r0)
+                N <- isolate(inputs$s0) +isolate(inputs$i0) +  isolate(inputs$r0)
                 dat <- read.csv("scenario_4_SIR.csv",header=0)
                 dat <- cbind(seq(1,nrow(dat),by=1),dat)
                 colnames(dat) <- c("t","S","I","R")
@@ -137,6 +149,7 @@ shinyServer(
                     xlab("Time (days)") +
                     ylab("Number Individuals") +
                     scale_y_continuous(limits=c(0,N),expand=c(0,0))+
+                    scale_x_continuous(limits=c(0,inputs$dur+1),expand=c(0,0))+
                     theme(
                         text=element_text(colour="gray20",size=14),
                         plot.title=element_text(size=28),
@@ -157,8 +170,9 @@ shinyServer(
             }
         })
         output$sim_main_2<- renderPlot({
+                        inputs$run
             if(2 %in% inputs$scenarios){
-                N <- as.numeric(inputs$s0) +as.numeric(inputs$i0) +  as.numeric(inputs$r0)
+                N <- isolate(inputs$s0) +isolate(inputs$i0) +  isolate(inputs$r0)
                 dat <- read.csv("scenario_2_SIR.csv",header=0)
                 dat <- cbind(seq(1,nrow(dat),by=1),dat)
                 colnames(dat) <- c("t","S","I","R")
@@ -169,6 +183,7 @@ shinyServer(
                     xlab("Time (days)") +
                     ylab("Number Individuals") +
                     scale_y_continuous(limits=c(0,N),expand=c(0,0))+
+                    scale_x_continuous(limits=c(0,inputs$dur+1),expand=c(0,0))+
                     theme(
                         text=element_text(colour="gray20",size=14),
                         plot.title=element_text(size=28),

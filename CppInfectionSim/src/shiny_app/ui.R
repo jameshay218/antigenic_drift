@@ -45,11 +45,16 @@ shinyUI(
                             numericInput("i0", "I0", 100),
                             numericInput("r0", "R0", 50000),
 
-                            numericInput("c", "Contact Rate", 1.5),
+                            numericInput("contact", "Contact Rate", 1.5),
                             numericInput("mu", "Birth and Death Rate (ie. life expectancy in years)", 40),
                             numericInput("wane", "Waning Rate (waning immunity in days)", 25),
                             numericInput("gamma", "Recovery Time (in days)", 3),
                             numericInput("iniBinding", "Initial Binding Avidity ", 0.8),
+                            h3(strong("Virus Parameters")),
+                            numericInput("probMut","Probability of a Mutation",0.1),
+                            numericInput("expDist","Shape of mutation distribution (exponential)",1),
+                            numericInput("kc","Rate of binding avidity change",0.5),
+                            numericInput("VtoD","Impact of binding avidity change on antigenic distance",0.1),
                             checkboxGroupInput(
                                 "scenarios",
                                 h3(strong("Scenarios")),
@@ -58,30 +63,41 @@ shinyUI(
                                     "No drift; adaptive binding avidity; adaptive antigenic change" = 2,
                                     "Random drift; adaptive binding avidity; adaptive antigenic change" = 3,
                                     "Random drift; adaptive binding avidity; no adaptive antigenic change" = 4
-                                    ),
+                                ),
                                 selected=1
                             ),
                             h3(strong("Actions")),
                             actionButton("run","Run Simulation"),
                             actionButton("download","Download Results"),
                             actionButton("download_plots","Download Plots")                           
-                            
-                            
-                            ),
+                        ),
                         mainPanel(
-                            h3(strong("Scenario 1: Random drift; fixed binding avidity")),
-                            plotOutput("sim_main_1"),
-                            h3(strong("Scenario 2: No drift; adaptive binding avidity; adaptive antigenic change")),
-                            plotOutput("sim_main_2"),
-                            h3(strong("Scenario 3: Random drift; adaptive binding avidity; adaptive antigenic change")),
-                            plotOutput("sim_main_3"),
-                            h3(strong("Scenario 4: Random drift; adaptive binding avidity; no adaptive antigenic change")),
-                            plotOutput("sim_main_4")
+                            fluidRow(
+                                column(6,
+                                       h4(strong("Scenario 1: Random drift; fixed binding avidity")),
+                                       plotOutput("sim_main_1")
+                                       ),
+                                column(6,
+                                       h4(strong("Scenario 2: No drift; adaptive binding avidity; adaptive antigenic change")),
+                                       plotOutput("sim_main_2")
+                                       )
+                            ),
+                            fluidRow(
+                                column(6,
+                                       h4(strong("Scenario 3: Random drift; adaptive binding avidity; adaptive antigenic change")),
+                                       plotOutput("sim_main_3")
+                                       ),
+                                column(6,
+                                       h4(strong("Scenario 4: Random drift; adaptive binding avidity; no adaptive antigenic change")),
+                                       plotOutput("sim_main_4")
+                                       )
+                            )
                         )
                         ),
                tabPanel("Phylogeny")
                )
 )
+
 
 
 
