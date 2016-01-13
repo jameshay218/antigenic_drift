@@ -18,6 +18,7 @@ double Virus::_prob_mut = 0.1;
 double Virus::_exp_dist = 1;
 double Virus::_kc = 0.5;
 double Virus::_V_to_d = 1000;
+int Virus::_scenario = 1;
 
 void Virus::set_default(){
   _p=3.0;
@@ -31,6 +32,10 @@ void Virus::set_default(){
   _exp_dist = 1;
   _kc = 0.5;
   _V_to_d = 1000;
+  _scenario = 1;
+}
+void Virus::set_scenario(int _scen){
+  _scenario = _scen;
 }
 
 void Virus::set_p(double new_p){
@@ -163,21 +168,45 @@ double Virus::calculateRho(Host* _host){
 }
 
 void Virus::mutate(){
-  /*double tmp = bindingavid_change(host);
-  cout << tmp << endl;
-  bindingavid += tmp;
-  distanceToParent += _V_to_d*fabs(tmp);
-  distRoot += _V_to_d*fabs(tmp);*/
-  //cout << tmp << endl;
-  // Below was old code for antigenic drift
+  double bindingAvidChange;
+  double change;
   double tmp = ((double) rand() / (RAND_MAX));
-  double prob_mut =1;
   std::exponential_distribution<double> dist(45);
-  double change = dist(host->popn->generator);
-  if(tmp <= prob_mut){
-    distanceToParent += change;
-    distRoot += change;
-    //    cout << "Change: " << change << endl;
+
+  switch (_scenario){
+  case 1: 
+    if(tmp <= _prob_mut){
+      change = dist(host->popn->generator);
+      distanceToParent += change;
+      distRoot += change;
+    }
+    break;
+  case 2:
+    bindingAvidChange = bindingavid_change(host);
+    bindingavid += bindingAvidChange;
+    break;
+  case 3:
+    if(tmp <= _prob_mut){
+      change = dist(host->popn->generator);
+      distanceToParent += change;
+      distRoot += change;
+    }
+    bindingAvidChange = bindingavid_change(host);
+    bindingavid += bindingAvidChange;
+    distanceToParent += _V_to_d*fabs(bindingAvidChange);
+    distRoot += _V_to_d*fabs(bindingAvidChange);
+    break;
+  case 4:
+    if(tmp <= _prob_mut){
+      change = dist(host->popn->generator);
+      distanceToParent += change;
+      distRoot += change;
+    }
+    bindingAvidChange = bindingavid_change(host);
+    bindingavid += bindingAvidChange;
+    break;
+  default:
+    break;
   }
 }
 
