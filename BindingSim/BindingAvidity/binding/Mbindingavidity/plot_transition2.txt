@@ -1,0 +1,23 @@
+cut = 1000;
+virus = dat_VirusesArray(cut:end,:);
+histogram(virus(:,5)-(virus(:,11)-virus(:,10)-virus(:,9)),100)
+
+figure;
+hold on
+virus = dat_VirusesArray;
+for d = 1:5:700
+        vid = find(virus(:,2)>d & virus(:,2)<d+10);
+	immuneJ = virus(vid,5)-(virus(vid,11)-virus(vid,10)-virus(vid,9)); 
+        immuneJ(find(immuneJ<0)) = 0;
+        plot(d+10,mean(immuneJ),'k.');
+        plot(d+10,mean(virus(vid,7)),'.'); 
+end
+
+
+
+
+
+
+immuneK = virus(:,5);
+vid_parent = virus(:,4);
+Drift()

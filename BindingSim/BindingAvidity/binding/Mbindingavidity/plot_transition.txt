@@ -1,0 +1,95 @@
+figure;
+plot(dat_VirusesArray(:,2), dat_VirusesArray(:,end),'.'); %drift
+hold on;
+
+
+vid = find(dat_VirusesArray(:,9)>5);
+x1 = vid;
+y1 = dat_VirusesArray(vid,11);
+x2 = dat_VirusesArray(vid,4);
+rmid = find(x2==0);
+x1(rmid) = [];
+y1(rmid) = [];
+x2(rmid) = [];
+y2 = dat_VirusesArray(x2,11);
+for i = 1:length(x2)
+	plot([x2(i) x1(i)],[y2(i) y1(i)],'g-');
+end
+
+%%-- ByProduct
+for i = 1: 1000
+vid = round((total-1)*rand(1,1));
+x1 = vid;
+y1 = dat_VirusesArray(vid,10);
+x2 = dat_VirusesArray(vid,4);
+y2 = dat_VirusesArray(x2,11);
+y1 = y1 + y2;
+plot([x2 x1],[y2 y1],'r-');
+end
+
+
+%%-- Total drift
+total = length(dat_VirusesArray(:,1))
+for i = 1: 1000
+vid = round((total-1)*rand(1,1));
+x1 = vid;
+y1 = dat_VirusesArray(vid,11);
+x2 = dat_VirusesArray(vid,4);
+y2 = dat_VirusesArray(x2,11);
+plot([x1 x2],[y1 y2],'r-');
+end
+
+
+
+
+
+
+for i = 1: 1000
+vid = round((380500-1)*rand(1,1));
+x1 = vid;
+y1 = dat_VirusesArray(vid,11);
+
+children = find(dat_VirusesArray(vid,4)==x1);
+if isempty(children) %virus that goes extinction
+	plot(x1,y1,'g.');
+end
+end
+
+
+%%-- Binding avidity
+
+total = length(dat_VirusesArray(:,1))
+for i = 1: 1000
+vid = round((total-1)*rand(1,1));
+x1 = vid;
+y1 = dat_VirusesArray(vid,7);
+x2 = dat_VirusesArray(vid,4);
+y2 = dat_VirusesArray(x2,7);
+plot([x1 x2],[y1 y2],'r-');
+end
+
+%-- Plot Binding avidity by days
+figure;
+plot(dat_VirusesArray(:,2), dat_VirusesArray(:,7),'.');
+
+%-- Plot Immune Status by days
+figure;
+immuneJ = dat_VirusesArray(:,5) - (dat_VirusesArray(:,end)-dat_VirusesArray(:,10));
+immuneJ(find(immuneJ<0)) = 0;
+plot(dat_VirusesArray(:,2), immuneJ),'.';
+
+figure;
+D=1:36;
+J=1:20;
+sero = zeros(D(end),J(end));
+for d=1:D(end) 
+   sday = d*10;
+   eday = (d+1)*10;
+   for j=1:J(end)
+        id = find(dat_VirusesArray(:,2)>sday & dat_VirusesArray(:,2)<eday);
+        immuneJ = dat_VirusesArray(:,5) - (dat_VirusesArray(:,end)-dat_VirusesArray(:,10));
+        sero(d,j) = numel(immuneJ(id));
+  end
+end
+[X,Y] = meshgrid(D,J);
+h = surf(X,Y,sero');

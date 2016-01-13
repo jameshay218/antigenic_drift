@@ -1,0 +1,35 @@
+#NEXUS
+
+Begin taxa;
+Dimensions ntax=5;
+Taxlabels
+sample1_79307_37.0414
+sample2_81167_56.1275
+sample3_81794_103.1666
+sample4_156543_192.3748
+sample5_156564_196.5587
+;
+End;
+
+Begin trees;
+Translate
+1 sample1_79307_37.0414,
+2 sample2_81167_56.1275,
+3 sample3_81794_103.1666,
+4 sample4_156543_192.3748,
+5 sample5_156564_196.5587
+;
+tree TREE1 = [&R](
+1[&AntigenicDrift="1.1533",Netcharge.set="",Bindingscr.set="0.8"]:961.2256,
+(
+3[&AntigenicDrift="2.5484",Netcharge.set="",Bindingscr.set="0.8"]:54.1666,
+(
+2[&AntigenicDrift="1.2129",Netcharge.set="",Bindingscr.set="0.8"]:0,
+(
+4[&AntigenicDrift="4.4746",Netcharge.set="",Bindingscr.set="0.8"]:21.3748,
+5[&AntigenicDrift="4.2244",Netcharge.set="",Bindingscr.set="0.8"]:25.5587)
+:113)
+:9)
+:973.1841)
+;
+End;

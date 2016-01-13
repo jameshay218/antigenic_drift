@@ -1,0 +1,61 @@
+<<<<<<< HEAD
+11/01/2016
+gentree.exe 
+4 arguments: infile, smpno, starttime, endtime.
+usage: gentree [infile] [smpno] [starttime] [endtime]
+example: gentree voutput_small 30 10 200
+
+output:
+Two types of the output files: 1. the tree figure, 2. the tree text files 
+Tree figure file name: [infile]_tree_[smpno].jpg
+Tree text file name: [infile]_tree_[smpno].nx.branch.tree
+
+
+create gentree.exe to integrate with C
+
+05/11/2015
+compile matlab codes
+mcc -m main_generate_tree.m annotate_tree.m branch2pair.m BuildTree_coal.m BuildTree_indiv_nexus.m calNetCharge.m calNetChargePhylogeny.m FindMostRecentCoalescence_indiv.m GetIndividualsLineages_indiv.m GetIndividualsSampled_coal.m GetIndividualsSampled_indiv.m GetInfectionTree.m  getParentList.m GetSampleLineage.m lib/dBeta_dV.m lib/getVChange_ode.m lib/ode2.m lib/odef_v_change.m -o gentree
+=======
+05/11/2015
+compile matlab codes
+mcc -m main_generate_tree.m annotate_tree.m branch2pair.m BuildTree_coal.m BuildTree_indiv_nexus.m calNetCharge.m calNetChargePhylogeny.m FindMostRecentCoalescence_indiv.m GetIndividualsLineages_indiv.m GetIndividualsSampled_coal.m GetIndividualsSampled_indiv.m GetInfectionTree.m  getParentList.m GetSampleLineage.m lib/dBeta_dV.m lib/getVChange_ode.m lib/ode2.m lib/odef_v_change.m -o myexe
+>>>>>>> ca2a392d1917ea7e07a21caa046c6ef60b579d07
+
+
+
+% how to write string to file
+fid=fopen('test.txt', 'w');
+seq = {'abc\n', 'bcdefg\n'} 
+fprintf(fid, cell2mat(seq));
+fclose all;
+
+
+latest tip=281
+node = 272 (592)
+
+latest tip=281
+node = 272 (592)
+pair_1.mat
+
+
+sample136
+tip=291
+pair_2.mat
+
+latest tip=286
+node = 230  (530)
+pair_3.mat
+
+latest tip=296
+node = 159 (459)
+pair4.mat
+
+latest tip=300 (20618934)
+node = 175(475)
+pair5.mat
+
+
+
+4035170
+4000000

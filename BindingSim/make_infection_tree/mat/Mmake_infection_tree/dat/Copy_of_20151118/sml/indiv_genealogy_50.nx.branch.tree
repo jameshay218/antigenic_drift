@@ -1,0 +1,260 @@
+#NEXUS
+
+Begin taxa;
+Dimensions ntax=50;
+Taxlabels
+sample1_9750_40.0006
+sample2_14865_41.9412
+sample3_8924_46.5669
+sample4_19106_48.2508
+sample5_19258_53.3801
+sample6_25511_66.6784
+sample7_24918_68.872
+sample8_24912_69.6877
+sample9_25617_70.1165
+sample10_26209_74.8191
+sample11_27278_76.5193
+sample12_27580_89.2076
+sample13_28672_90.537
+sample14_23024_91.0406
+sample15_28737_91.8295
+sample16_29330_102.485
+sample17_29207_104.6027
+sample18_29477_105.3521
+sample19_29449_107.2017
+sample20_29537_107.4533
+sample21_29508_108.0121
+sample22_29470_108.5658
+sample23_29066_109.0283
+sample24_29299_109.3162
+sample25_29862_113.788
+sample26_29255_117.2285
+sample27_29969_119.7779
+sample28_30100_122.0814
+sample29_30256_128.0926
+sample30_30331_129.7938
+sample31_30343_130.5232
+sample32_30417_131.8535
+sample33_30345_134.9202
+sample34_30494_138.8633
+sample35_30603_141.9101
+sample36_30620_143.1075
+sample37_30643_143.9255
+sample38_30539_146.0679
+sample39_30623_147.5823
+sample40_30725_154.3227
+sample41_30744_155.3678
+sample42_30687_163.5587
+sample43_30814_165.4898
+sample44_30787_167.1222
+sample45_30825_167.6366
+sample46_30832_169.2721
+sample47_30845_172.9608
+sample48_30874_175.3388
+sample49_30906_177.0031
+sample50_30879_182.0647
+;
+End;
+
+Begin trees;
+Translate
+1 sample1_9750_40.0006,
+2 sample2_14865_41.9412,
+3 sample3_8924_46.5669,
+4 sample4_19106_48.2508,
+5 sample5_19258_53.3801,
+6 sample6_25511_66.6784,
+7 sample7_24918_68.872,
+8 sample8_24912_69.6877,
+9 sample9_25617_70.1165,
+10 sample10_26209_74.8191,
+11 sample11_27278_76.5193,
+12 sample12_27580_89.2076,
+13 sample13_28672_90.537,
+14 sample14_23024_91.0406,
+15 sample15_28737_91.8295,
+16 sample16_29330_102.485,
+17 sample17_29207_104.6027,
+18 sample18_29477_105.3521,
+19 sample19_29449_107.2017,
+20 sample20_29537_107.4533,
+21 sample21_29508_108.0121,
+22 sample22_29470_108.5658,
+23 sample23_29066_109.0283,
+24 sample24_29299_109.3162,
+25 sample25_29862_113.788,
+26 sample26_29255_117.2285,
+27 sample27_29969_119.7779,
+28 sample28_30100_122.0814,
+29 sample29_30256_128.0926,
+30 sample30_30331_129.7938,
+31 sample31_30343_130.5232,
+32 sample32_30417_131.8535,
+33 sample33_30345_134.9202,
+34 sample34_30494_138.8633,
+35 sample35_30603_141.9101,
+36 sample36_30620_143.1075,
+37 sample37_30643_143.9255,
+38 sample38_30539_146.0679,
+39 sample39_30623_147.5823,
+40 sample40_30725_154.3227,
+41 sample41_30744_155.3678,
+42 sample42_30687_163.5587,
+43 sample43_30814_165.4898,
+44 sample44_30787_167.1222,
+45 sample45_30825_167.6366,
+46 sample46_30832_169.2721,
+47 sample47_30845_172.9608,
+48 sample48_30874_175.3388,
+49 sample49_30906_177.0031,
+50 sample50_30879_182.0647
+;
+tree TREE1 = [&R](
+(
+(
+(
+(
+(
+8[&annotation="",Netcharge.set="",Bindingscr.set="0.81323"]:55.6877,
+11[&annotation="",Netcharge.set="",Bindingscr.set="0.77826"]:62.5193)
+:420.524,
+(
+(
+13[&annotation="",Netcharge.set="",Bindingscr.set="0.82226"]:7.537,
+(
+46[&annotation="",Netcharge.set="",Bindingscr.set="0.78669"]:0,
+50[&annotation="",Netcharge.set="",Bindingscr.set="0.86913"]:10.0647)
+:89)
+:81,
+(
+(
+27[&annotation="",Netcharge.set="",Bindingscr.set="0.68632"]:16.7779,
+(
+(
+37[&annotation="",Netcharge.set="",Bindingscr.set="0.75679"]:2.9255,
+39[&annotation="",Netcharge.set="",Bindingscr.set="0.8843"]:6.5823)
+:37,
+(
+30[&annotation="",Netcharge.set="",Bindingscr.set="0.63531"]:20.7938,
+40[&annotation="",Netcharge.set="",Bindingscr.set="0.6288"]:45.3227)
+:5)
+:1)
+:97,
+(
+(
+(
+44[&annotation="",Netcharge.set="",Bindingscr.set="0.53577"]:20.1222,
+48[&annotation="",Netcharge.set="",Bindingscr.set="0.88121"]:28.3388)
+:60,
+(
+16[&annotation="",Netcharge.set="",Bindingscr.set="0.83297"]:1.485,
+25[&annotation="",Netcharge.set="",Bindingscr.set="0.8586"]:12.788)
+:14)
+:78,
+(
+1[&annotation="",Netcharge.set="",Bindingscr.set="0.62882"]:22.0006,
+(
+10[&annotation="",Netcharge.set="",Bindingscr.set="0.81323"]:40.8191,
+(
+23[&annotation="",Netcharge.set="",Bindingscr.set="0.071176"]:45.0283,
+(
+(
+33[&annotation="",Netcharge.set="",Bindingscr.set="0.8843"]:35.9202,
+(
+29[&annotation="",Netcharge.set="",Bindingscr.set="0.78955"]:6.0926,
+(
+(
+35[&annotation="",Netcharge.set="",Bindingscr.set="0.77703"]:4.9101,
+(
+41[&annotation="",Netcharge.set="",Bindingscr.set="0.89696"]:2.3678,
+45[&annotation="",Netcharge.set="",Bindingscr.set="0.88221"]:14.6366)
+:16)
+:13,
+(
+32[&annotation="",Netcharge.set="",Bindingscr.set="0.85721"]:0.85345,
+(
+38[&annotation="",Netcharge.set="",Bindingscr.set="0.834"]:8.0679,
+43[&annotation="",Netcharge.set="",Bindingscr.set="0.8176"]:27.4898)
+:7)
+:7)
+:2)
+:23)
+:24,
+(
+18[&annotation="",Netcharge.set="",Bindingscr.set="0.80384"]:8.3521,
+22[&annotation="",Netcharge.set="",Bindingscr.set="0.89816"]:11.5658)
+:22)
+:11)
+:30)
+:16)
+:9)
+:3)
+:4)
+:408.524)
+:864.5001,
+(
+36[&annotation="",Netcharge.set="",Bindingscr.set="0.74569"]:755.398,
+(
+(
+31[&annotation="",Netcharge.set="",Bindingscr.set="0.72345"]:178.8864,
+(
+19[&annotation="",Netcharge.set="",Bindingscr.set="0.78951"]:72.2017,
+21[&annotation="",Netcharge.set="",Bindingscr.set="0.93401"]:73.0121)
+:83.3632)
+:70.8803,
+5[&annotation="",Netcharge.set="",Bindingscr.set="0.76181"]:172.6236)
+:493.047)
+:658.7336)
+:946.0851,
+26[&annotation="",Netcharge.set="",Bindingscr.set="0.78952"]:2334.3376)
+:3147.6402,
+15[&annotation="",Netcharge.set="",Bindingscr.set="0.89205"]:5456.5789)
+:49982.7999,
+(
+(
+(
+(
+14[&annotation="",Netcharge.set="",Bindingscr.set="0.65625"]:905.8181,
+(
+(
+24[&annotation="",Netcharge.set="",Bindingscr.set="0.86913"]:510.3855,
+6[&annotation="",Netcharge.set="",Bindingscr.set="0.69758"]:467.7477)
+:37.2415,
+20[&annotation="",Netcharge.set="",Bindingscr.set="0.82933"]:545.7641)
+:376.4667)
+:1709.3203,
+(
+2[&annotation="",Netcharge.set="",Bindingscr.set="0.52316"]:37.9412,
+(
+9[&annotation="",Netcharge.set="",Bindingscr.set="0.2109"]:58.1165,
+(
+42[&annotation="",Netcharge.set="",Bindingscr.set="0.81324"]:0,
+(
+47[&annotation="",Netcharge.set="",Bindingscr.set="0.83399"]:0,
+49[&annotation="",Netcharge.set="",Bindingscr.set="0.24987"]:4.0031)
+:9)
+:152)
+:8)
+:2528.0978)
+:695.1275,
+3[&annotation="",Netcharge.set="",Bindingscr.set="0.046072"]:3265.7922)
+:6661.0865,
+(
+(
+7[&annotation="",Netcharge.set="",Bindingscr.set="0.72845"]:516.6293,
+(
+4[&annotation="",Netcharge.set="",Bindingscr.set="0.6454"]:102.3614,
+34[&annotation="",Netcharge.set="",Bindingscr.set="0.020753"]:192.9738)
+:393.6468)
+:77.1458,
+(
+12[&annotation="",Netcharge.set="",Bindingscr.set="0.91111"]:124.175,
+(
+17[&annotation="",Netcharge.set="",Bindingscr.set="0.81323"]:89.6027,
+28[&annotation="",Netcharge.set="",Bindingscr.set="0.88418"]:107.0814)
+:49.9674)
+:489.9356)
+:9355.4088)
+:45467.2374)
+;
+End;

@@ -1,0 +1,123 @@
+﻿Merge branch 'master' of https://github.com/jameshay218/antigenic_drift
+
+# Conflicts:
+#	BindingSim/make_infection_tree/mat/Mmake_infection_tree/BuildTree_indiv_nexus.m
+#	BindingSim/make_infection_tree/mat/Mmake_infection_tree/main_generate_tree.m
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch and 'origin/master' have diverged,
+# and have 4 and 10 different commits each, respectively.
+#   (use "git pull" to merge the remote branch into yours)
+#
+# All conflicts fixed but you are still merging.
+#
+# Changes to be committed:
+#	new file:   BindingSim/BindingAvidity/binding/Mbindingavidity/deltaVMatrix.csv
+#	modified:   BindingSim/make_infection_tree/mat/Mmake_infection_tree/BuildTree_indiv_nexus.m
+#	modified:   BindingSim/make_infection_tree/mat/Mmake_infection_tree/GetIndividualsLineages_indiv.m
+#	modified:   BindingSim/make_infection_tree/mat/Mmake_infection_tree/GetIndividualsSampled_indiv.m
+#	new file:   BindingSim/make_infection_tree/mat/Mmake_infection_tree/dat/c15-model3-bp1/dat_x_trans_tmp.mat
+#	new file:   BindingSim/make_infection_tree/mat/Mmake_infection_tree/dat/c15-model3-bp1/virus_traits.mat
+#	new file:   BindingSim/make_infection_tree/mat/Mmake_infection_tree/dat/mod01/tree_100.mat
+#	new file:   BindingSim/make_infection_tree/mat/Mmake_infection_tree/dat/mod01/voutput_small.csv
+#	new file:   BindingSim/make_infection_tree/mat/Mmake_infection_tree/dat/mod01/voutput_small.csv_100_indiv_infectionTree
+#	new file:   BindingSim/make_infection_tree/mat/Mmake_infection_tree/dat/mod01/voutput_small_100_indiv_infectionTree.mat
+#	modified:   BindingSim/make_infection_tree/mat/Mmake_infection_tree/main_generate_tree.m
+#	new file:   BindingSim/make_infection_tree/mat/Mmake_infection_tree/main_generate_tree_withtraits.m
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/BuildTree_coal.m
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/BuildTree_indiv.m
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/BuildTree_indiv_nexus.asv
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/BuildTree_indiv_nexus.m
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/BuildTree_indiv_nexus.m.20130830
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/BuildTree_indiv_nexus_allnodes.m
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/BuildTree_indiv_v2.asv
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/BuildTree_indiv_v2.m
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/FindMostRecentCoalescence_indiv.m
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/GetIndividualsLineages_indiv.m
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/GetIndividualsSampled_coal.m
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/GetIndividualsSampled_indiv.m
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/GetInfectionTree.m
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/GetSampleLineage.m
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/annotate_tree.asv
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/annotate_tree.m
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/branch2pair.asv
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/branch2pair.m
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/calNetCharge.m
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/calNetChargePhylogeny.m
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/dat/dat_x_trans_tmp.mat
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/dat/dat_x_trans_tmp_30_indiv_infectionTree.mat
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/dat/indiv_genealogy_30.allnodes.tree
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/dat/indiv_genealogy_30.nx.branch.tree
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/dat/indiv_genealogy_30.tree
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/dat/tree_30.mat
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/dat/virus_traits.mat
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/dat_x_trans_tmp.mat
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/getParentList.asv
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/getParentList.m
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/lib/dBeta_dV.m
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/lib/getVChange_ode.m
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/lib/ode2.m
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/lib/odef_v_change.asv
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/lib/odef_v_change.m
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/main.asv
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/main.m
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/main_genereta_tree.asv
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/main_genereta_tree.m
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/main_multiple.m
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/main_plot_lineage.asv
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/main_plot_lineage.m
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/main_simulate_genealogy_indiv.m
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/main_simulate_genealogy_indiv_binding.asv
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/main_simulate_genealogy_indiv_binding.m
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/main_simulate_genealogy_indiv_binding_allnodes.m
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/main_simulate_genealogy_indiv_binding_fb.m
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/notes.txt
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/read_newick_seq.asv
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/test.tree
+#	deleted:    BindingSim/make_infection_tree/mat/bak/Mmake_infection_tree/test.txt
+#	new file:   CppInfectionSim/src/#tmp.R#
+#	new file:   CppInfectionSim/src/Rplot.png
+#	new file:   CppInfectionSim/src/Rplot01.png
+#	new file:   CppInfectionSim/src/Rplot02.png
+#	new file:   CppInfectionSim/src/Rplot03.png
+#	modified:   CppInfectionSim/src/host.cpp
+#	modified:   CppInfectionSim/src/host.hpp
+#	modified:   CppInfectionSim/src/host.o
+#	modified:   CppInfectionSim/src/hostpopulation.cpp
+#	modified:   CppInfectionSim/src/hostpopulation.hpp
+#	modified:   CppInfectionSim/src/hostpopulation.o
+#	modified:   CppInfectionSim/src/main
+#	modified:   CppInfectionSim/src/main.cpp
+#	modified:   CppInfectionSim/src/main.o
+#	modified:   CppInfectionSim/src/output.csv
+#	new file:   CppInfectionSim/src/testing.R
+#	modified:   CppInfectionSim/src/virus.cpp
+#	modified:   CppInfectionSim/src/virus.hpp
+#	modified:   CppInfectionSim/src/virus.o
+#	modified:   CppInfectionSim/src/voutput.csv
+#	new file:   CppInfectionSim/src/voutput2.csv
+#	deleted:    CppInfectionSim/testing_src/virus.cpp~
+#	deleted:    CppInfectionSim/testing_src/virus.hpp~
+#
+# Changes not staged for commit:
+#	modified:   BindingSim/readme.txt
+#	modified:   CppInfectionSim/testing_src/Virus.cpp~
+#	modified:   CppInfectionSim/testing_src/Virus.hpp~
+#
+# Untracked files:
+#	BindingSim/make_infection_tree/mat/Mmake_infection_tree/BuildTree_indiv_nexus.asv
+#	BindingSim/make_infection_tree/mat/Mmake_infection_tree/dat/20151123/m1-str/dat_x_trans_tmp_50_indiv_infectionTree.mat
+#	BindingSim/make_infection_tree/mat/Mmake_infection_tree/dat/20151123/m1-str/indiv_genealogy_50.allnodes.tree
+#	BindingSim/make_infection_tree/mat/Mmake_infection_tree/dat/20151123/m1-str/indiv_genealogy_50.nx.branch.tree
+#	BindingSim/make_infection_tree/mat/Mmake_infection_tree/dat/20151123/m1-str/indiv_genealogy_50.tree
+#	BindingSim/make_infection_tree/mat/Mmake_infection_tree/dat/20151123/m1-str/tree_50.mat
+#
+
