@@ -21,7 +21,6 @@ using namespace std;
 
 //[[Rcpp::export]]
 int run_simulation_cpp(Rcpp::IntegerVector flags, Rcpp::NumericVector hostPopn, Rcpp::NumericVector virusPars, int day, int final_day,vector<string> output_files, bool VERBOSE,int scenario){
-  cout << "Scenario: " << scenario << endl;
   bool save_SIR = flags[0];
   bool save_viruses = flags[1];
   bool save_pairwise_viruses = flags[2];
@@ -62,56 +61,58 @@ Virus::set_prob_mut(probMut);
 Virus::set_exp_dist(expDist);
 Virus::set_kc(kc);
 Virus::set_VtoD(VtoD);
+ Virus::set_scenario(scenario);
 
 
 if(use_time) int start = clock();
 srand(time(NULL));
-string filename;
-ofstream output (output_files[0]);
-ofstream voutput;
-ofstream voutput2;
-if(VERBOSE){
-cout << "Params: " << endl;
-cout << "S0: " << S0 << endl;
-cout << "I0: " << I0 << endl;
-cout << "R0: " << I0 << endl;
-cout << "contact: " << contactRate << endl;
-cout << "mu: " << mu << endl;
-cout << "wane: " << wane << endl;
-cout << "gamma: " << gamma << endl;
-cout << "iniBinding: " << iniBinding << endl;
-}
-HostPopulation* hpop = new HostPopulation(
-S0,
-  I0,
-  R0,
-  start_day,
-  contactRate,
-  mu,
-  wane,
-  gamma,
-  iniBinding
-  );
+ string filename;
+ ofstream output (output_files[0]);
+ ofstream voutput;
+ ofstream voutput2;
+ if(VERBOSE){
+   cout << "Params: " << endl;
+   cout << "S0: " << S0 << endl;
+   cout << "I0: " << I0 << endl;
+   cout << "R0: " << I0 << endl;
+   cout << "contact: " << contactRate << endl;
+   cout << "mu: " << mu << endl;
+   cout << "wane: " << wane << endl;
+   cout << "gamma: " << gamma << endl;
+   cout << "iniBinding: " << iniBinding << endl;
+   cout << "Scenario: " << scenario << endl;
+ }
+ HostPopulation* hpop = new HostPopulation(
+					   S0,
+					   I0,
+					   R0,
+					   start_day,
+					   contactRate,
+					   mu,
+					   wane,
+					   gamma,
+					   iniBinding
+					   );
 
-while(day <= final_day){
-hpop->stepForward(day);
-if(VERBOSE){
-hpop->printStatus();
-cout << endl;
-}
+ while(day <= final_day){
+   hpop->stepForward(day);
+   if(VERBOSE){
+     hpop->printStatus();
+     cout << endl;
+   }
     
-if(save_SIR) output << hpop->countSusceptibles() << "," << hpop->countInfecteds() << "," << hpop->countRecovereds() << endl;
+   if(save_SIR) output << hpop->countSusceptibles() << "," << hpop->countInfecteds() << "," << hpop->countRecovereds() << endl;
     
-    day++;
-  }
-  if(save_viruses) hpop->writeViruses(voutput, output_files[1]);
-if(save_pairwise_viruses) hpop->virusPairwiseMatrix(voutput2, output_files[2],1000);
-delete hpop;
-if(save_SIR) output.close();
+   day++;
+ }
+ if(save_viruses) hpop->writeViruses(voutput, output_files[1]);
+ if(save_pairwise_viruses) hpop->virusPairwiseMatrix(voutput2, output_files[2],1000);
+ delete hpop;
+ if(save_SIR) output.close();
   
-if(use_time){
-int stop = clock();
-cout << "Time elapsed: " << (stop-start)/double(CLOCKS_PER_SEC) << " Seconds" << endl;
-}
-  return 0;
+ if(use_time){
+   int stop = clock();
+   cout << "Time elapsed: " << (stop-start)/double(CLOCKS_PER_SEC) << " Seconds" << endl;
+ }
+ return 0;
 }

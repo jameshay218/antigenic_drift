@@ -28,7 +28,6 @@ private:
   double wane;
   double gamma;
 
-
 public:
   std::default_random_engine generator;
 
@@ -54,7 +53,7 @@ public:
   int countInfecteds();
   int countRecovereds();
   int countN();
-  
+
   // Print out current population status
   void printStatus();
   void writeViruses(std::ofstream& output, std::string filename);
