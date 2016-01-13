@@ -71,7 +71,6 @@ HostPopulation::~HostPopulation(){
   //  cout << "D deleted" << endl;
 }
 
-
 void HostPopulation::stepForward(int new_day){
   // Current day is changed
   day = new_day;
