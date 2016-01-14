@@ -1,2 +1,0 @@
-Binding Mutants source
-G:\MyPC2014Late\working\Projects.Duke\Projects\BindingAnal\validate_netcharge\validate_netcharge.xlsx
