@@ -1,0 +1,54 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{changes}
+\usepackage{lipsum}% <- For dummy text
+\usepackage{subcaption}
+\usepackage{natbib}
+\usepackage{setspace}
+\usepackage{tablefootnote}
+\usepackage{amsmath}% http://ctan.org/pkg/amsmath
+\usepackage{kbordermatrix}% http://www.hss.caltech.edu/~kcb/TeX/kbordermatrix.sty
+\usepackage{url}
+
+\captionsetup{compatibility=false}
+\definechangesauthor[name={Per cusse}, color=orange]{per}
+
+     
+\begin{document}
+\title{Phylogenetic Analysis}
+\author{Hsiang-Yu Yuan}
+\maketitle
+
+\bibliographystyle{plainnat}
+\nocite{*}
+
+\doublespacing
+\begin{abstract}
+\end{abstract}
+
+
+
+
+
+
+\section{Materials and Methods}
+                
+                
+                \section{Markers of netcharge}
+                Provided that virus is isolated towards the end of a host’s infectious period, the binding avidity hypothesis for influenza’s antigenic drift predicts a positive relationship between host immune status and the binding avidity of the virus isolated from the host. In our first analysis, we tested this prediction using influenza viral sequences isolated from New York State as part of an Influenza Genome Sequencing Project [20], along with metadata on host age. The sequence data, publicly available from the Influenza Virus Resource Database, consisted of a total of 686 full-length influenza A/H3N2 HA sequences and a total of 44 full-length influenza A/H1N1 HA sequences isolated across New York State between 1993 and 2006. For each of these viral isolates, the exact date of isolation and age of the individual from whom the virus was isolated were also downloaded.\\
+                 
+
+[add]Since currently we still lack of binding avidity data for most of the virus strains. We are investigating whether netcharge is a good marker. 
+Testing of the correlation of Binding avidity and Netcharge
+Chi square test to see whether binding avidity and netcharge are correlated.
+Binding Mutants source
+\url{$G:\MyPC2014Late\working\Projects.Duke\Projects\BindingAnal\validate_netcharge\validate_netcharge.xlsx}
+
+[add](Check Adam J. Kucharski PLOS Biology paper. Estimating the Life Course of Influenza A (H3N2) Antibody Responses from CrossSectional Data) If we use years 50 as a cutoff and test the regression from 3-50 and 51-100, what will show us? 
+                 
+[add]Studies show that the relationship between host age and immunity is not linear. Using serological data, the titres decrease from early children to mid-aged adults, then increase by age. 
+
+
+We used host age as a proxy for host immune status, while recognizing that it is an imperfect and only rough proxy. Our choice of host age for host immune status stems from several factors. First, it is well known that children are highly susceptible to infection with influenza because they lack prior exposure to the virus and because they have yet to develop a mature immune system exhibiting a full polyclonal response [21–23]. As individuals grow older, each subsequent infection results in the proliferation of a number of B-cell clones and a polyclonal antibody response. It is therefore likely that prior exposure to previously circulating strains in older individuals would lead to cross-reactivity to newly circulating strains that are evolutionary descendants from these older strains. A general increase in seroprevalence by age against individual viral strains has also been observed [24,25], further supporting the use of host age as a proxy for immune status. Second, our choice of host age as a proxy for host immune status is a practical one: data on host immune status are not readily available, while data on host age are. Recognizing the limitations of using host age instead of host immune status directly, we will interpret a positive relationship between host age and binding avidity as evidence for immune-mediated selection on the binding avidity phenotype, while acknowledging that immune-mediated selection might still be at play if we do not find evidence for a positive relationship between host age and binding avidity. 
+
+\end{document}
