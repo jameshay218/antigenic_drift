@@ -8,6 +8,7 @@
 ##' @param output_files xx
 ##' @param VERBOSE xx
 ##' @param scenario xx
+##' @param callback xx
 ##' @export
 ##' @import Rcpp
 ##' @useDynLib driftSim
@@ -19,6 +20,8 @@ run_simulation <- function(
                            end=365,
                            output_files = c("SIR_output.csv","voutput_1.csv","voutput_2.csv"),
                            VERBOSE=TRUE,
-                           scenario=1){
-        run_simulation_cpp(flags,hostpars,viruspars,start,end,output_files,VERBOSE,scenario)
+                           scenario=1,
+                           callback=NULL){
+    print("Here")
+    run_simulation_cpp(flags,hostpars,viruspars,start,end,output_files,VERBOSE,scenario, callback)
 }

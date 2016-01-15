@@ -14,4 +14,4 @@ LinkingTo: Rcpp
 SystemRequirements: C++11
 Suggests:
     testthat
-RoxygenNote: 4.1.1.9001
+RoxygenNote: 5.0.1

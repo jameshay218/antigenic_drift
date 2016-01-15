@@ -28,7 +28,6 @@ HostPopulation::HostPopulation(int initialS, int initialI, int initialR, int ini
   gamma = _gamma;
   
   for(int i = 0; i < initialS;++i){
-    //  _k = rand() % 20;
     H = new Host(Susceptible, this, _k);
     susceptibles.push_back(H);
   }
@@ -45,30 +44,32 @@ HostPopulation::HostPopulation(int initialS, int initialI, int initialR, int ini
 }
 
 HostPopulation::~HostPopulation(){
-  //  cout << "Host Population Destructor" << endl;
+  // Rcpp::Rcout << "Host Population Destructor" << endl;
   int j = susceptibles.size();
   for(int i = 0; i < j; ++i){
+    //Rcpp::Rcout << i << endl;
+    //    Rcpp::Rcout << susceptibles[i]->getState() << endl;
     delete susceptibles[i];
   }
-  //  cout << "S deleted" << endl;
+  //Rcpp::Rcout << "S deleted" << endl;
   j = infecteds.size();
   for(int i = 0; i < j; ++i){
     delete infecteds[i];
   }
-  //  cout << "I deleted" << endl;
+  // Rcpp::Rcout << "I deleted" << endl;
   j = recovereds.size();
   for(int i = 0; i < j; ++i){
     delete recovereds[i];
   }
-  //  cout << "R deleted" << endl;
+  //  Rcpp::Rcout << "R deleted" << endl;
   j = dead.size();
   for(int i = 0; i < j; ++i){
-    if(!dead[i]->isDead()){
-      //  cout << dead[i]->getState() << endl;
-    }
+    // if(!dead[i]->isDead()){
+      // Rcpp::Rcout << dead[i]->getState() << endl;
+    //  }
     delete dead[i];
   }
-  //  cout << "D deleted" << endl;
+  // Rcpp::Rcout << "D deleted" << endl;
 }
 
 void HostPopulation::stepForward(int new_day){
@@ -76,26 +77,26 @@ void HostPopulation::stepForward(int new_day){
   day = new_day;
 
   //New births of susceptibles
-  //  cout << "Grow" << endl;
+  // Rcpp::Rcout << "Grow" << endl;
   grow();
 
   // Infected population grows from transmission
-  //cout << "Contact" << endl;
+  //Rcpp::Rcout << "Contact" << endl;
   contact();
 
   // Infected population declines from recovery
-  //cout << "Recovered" << endl;
+  // Rcpp::Rcout << "Recovered" << endl;
   recoveries();
 
   // Some immunity wanes
-  //cout << "Waning" << endl;
+  // Rcpp::Rcout << "Waning" << endl;
   waning();
 
   // Deaths from all compartments - MUST BE LAST EVENT
-  //cout << "Decline" << endl;
+  //Rcpp::Rcout << "Decline" << endl;
   decline();
   
-  //cout << "Update" << endl;
+  //Rcpp::Rcout << "Update" << endl;
   updateCompartments();
 
   // Go through each host in infected vector and mutate its virus
@@ -107,8 +108,9 @@ void HostPopulation::stepForward(int new_day){
 
 
 void HostPopulation::grow(){
-  poisson_distribution<int> poisson(mu*countN());
-  int newBirths = poisson(generator);
+  /*  poisson_distribution<int> poisson(mu*countN());
+      int newBirths = poisson(generator);*/
+  int newBirths = R::rpois(mu*countN());
   for(int i = 0; i < newBirths; ++i){
     Host* h = new Host(Susceptible, this);
     new_births.push_back(h);
@@ -116,15 +118,16 @@ void HostPopulation::grow(){
 }
 
 void HostPopulation::decline(){
-  poisson_distribution<int> poissonS(mu*countSusceptibles());
+  /*poisson_distribution<int> poissonS(mu*countSusceptibles());
   poisson_distribution<int> poissonI(mu*countInfecteds());
   poisson_distribution<int> poissonR(mu*countRecovereds());
-  int newDeaths = poissonS(generator);
+  int newDeaths = poissonS(generator);*/
+  int newDeaths = R::rpois(mu*countSusceptibles());
   int totDeaths = 0;
   int index;
   for(int i = 0; i < newDeaths; ++i){
     if(countSusceptibles() > 0){
-      index = rand() % countSusceptibles();
+      index = floor(R::unif_rand()*(countSusceptibles()));
       dead.push_back(susceptibles[index]);
       susceptibles[index]->die(day);
       susceptibles[index] = susceptibles.back();
@@ -132,11 +135,11 @@ void HostPopulation::decline(){
       totDeaths++;
     }
   }
-  
-  newDeaths = poissonI(generator);
+  newDeaths = R::rpois(mu*countInfecteds());
+  //  newDeaths = poissonI(generator);
   for(int i = 0; i < newDeaths; ++i){
     if(countInfecteds() > 0){
-      index = rand() % countInfecteds();
+      index = floor(R::unif_rand()*(countInfecteds()));
       dead.push_back(infecteds[index]);
       infecteds[index]->die(day);
       infecteds[index] = infecteds.back();
@@ -144,11 +147,11 @@ void HostPopulation::decline(){
       totDeaths++;
     }
   }
-
-  newDeaths = poissonR(generator);
+  newDeaths = R::rpois(mu*countRecovereds());
+  //  newDeaths = poissonR(generator);
   for(int i = 0; i < newDeaths; ++i){
     if(countRecovereds() > 0){
-      index = rand() % countRecovereds();
+      index = floor(R::unif_rand()*(countRecovereds()));
       dead.push_back(recovereds[index]);
       recovereds[index]->die(day);
       recovereds[index] = recovereds.back();
@@ -160,8 +163,9 @@ void HostPopulation::decline(){
 
 void HostPopulation::contact(){
   // Generate number of contacts between infecteds and susceptibles
-  poisson_distribution<int> poisson(contactRate*countInfecteds()*countSusceptibles()/countN());
-  int totalContacts = poisson(generator);
+  //poisson_distribution<int> poisson(contactRate*countInfecteds()*countSusceptibles()/countN());
+  //  int totalContacts = poisson(generator);
+  int totalContacts = R::rpois(contactRate*countInfecteds()*countSusceptibles()/countN());
   int index1 = 0;
   int index2 = 0;
   double tmp = 0;
@@ -171,10 +175,12 @@ void HostPopulation::contact(){
      Note that the susceptible may contact multiple infecteds */
   for(int i = 0; i < totalContacts; ++i){
     if(countInfecteds() > 0){
-      index1 = rand() % countInfecteds();
-      index2 = rand() % countSusceptibles();
-      tmp = ((double) rand() / (RAND_MAX));
-      // cout << "Prob survival: " << infecteds[index1]->getCurrentVirus()->calculateRho(susceptibles[i]) << endl;
+      index1 = floor(R::unif_rand()*(countInfecteds()));
+      index2 = floor(R::unif_rand()*(countSusceptibles()));
+      //      Rcpp::Rcout << index1 << " and " << index2 << endl;
+      //      tmp = ((double) rand() / (RAND_MAX));
+      tmp = R::unif_rand();
+      // Rcpp::Rcout << "Prob survival: " << infecteds[index1]->getCurrentVirus()->calculateRho(susceptibles[i]) << endl;
       if(tmp <= infecteds[index1]->getCurrentVirus()->calculateRho(susceptibles[index2])){
 	if(susceptibles[index2]->isSusceptible()){
 	  Virus* newV = new Virus(infecteds[index1]->getCurrentVirus(), susceptibles[index2], day, infecteds[index1]->getCurrentVirus()->getTmpImmK(),susceptibles[index2]->getInfectionHistory().size()+1);
@@ -185,18 +191,19 @@ void HostPopulation::contact(){
       }
     }
   }
-  //  cout << "Beta: " << number_success/totalContacts << endl;
+  //  Rcpp::Rcout << "Beta: " << number_success/totalContacts << endl;
 }
 
 void HostPopulation::recoveries(){
   // Random number of recoveries of current infecteds
-  poisson_distribution<int> poisson(gamma*countInfecteds());
-  int noRecovered = poisson(generator);
+  /*  poisson_distribution<int> poisson(gamma*countInfecteds());
+      int noRecovered = poisson(generator);*/
+  int noRecovered = R::rpois(gamma*countInfecteds());
   int index = 0;
   // For each recovery, choose a random infected individual and add them to the list of newly recovered individuals
   for(int i = 0; i < noRecovered; ++i){
     if(countInfecteds() > 0){
-      index = rand() % countInfecteds();
+      index = floor(R::unif_rand()*(countInfecteds()));
       // Record the new recovered individual and temporarily delete from the list of infecteds
       new_recovereds.push_back(infecteds[index]);
       infecteds[index]->recover(day);
@@ -209,12 +216,13 @@ void HostPopulation::recoveries(){
 }
 
 void HostPopulation::waning(){
-  poisson_distribution<int> poisson(wane*countRecovereds());
-  int noWane = poisson(generator);
+  /*  poisson_distribution<int> poisson(wane*countRecovereds());
+      int noWane = poisson(generator);*/
+  int noWane = R::rpois(wane*countRecovereds());
   int index = 0;
   for(int i = 0; i < noWane; ++i){
     if(countRecovereds() > 0){
-      index = rand() % countRecovereds();
+      index = floor(R::unif_rand()*(countRecovereds()));
       new_susceptibles.push_back(recovereds[index]);
       recovereds[index]->wane();
       recovereds[index] = recovereds.back();
@@ -276,18 +284,18 @@ double HostPopulation::getContactRate(){
 
 
 void HostPopulation::printStatus(){
-  cout << "Current day: " << day << endl;
-  cout << "Susceptible: " << susceptibles.size() << endl;
-  cout << "Infecteds: " << infecteds.size() << endl;
-  cout << "Recovereds: " << recovereds.size() << endl;
-  cout << "Died: " << dead.size() << endl;
-  cout << "Total: " << countN() << endl;
+  Rcpp::Rcout << "Current day: " << day << endl;
+  Rcpp::Rcout << "Susceptible: " << susceptibles.size() << endl;
+  Rcpp::Rcout << "Infecteds: " << infecteds.size() << endl;
+  Rcpp::Rcout << "Recovereds: " << recovereds.size() << endl;
+  Rcpp::Rcout << "Died: " << dead.size() << endl;
+  Rcpp::Rcout << "Total: " << countN() << endl;
 }
 
 
 void HostPopulation::writeViruses(std::ofstream& output, std::string filename){
-  cout << "#########################" << endl;
-  cout << "Writing viruses to csv..." << endl;
+  Rcpp::Rcout << "#########################" << endl;
+  Rcpp::Rcout << "Writing viruses to csv..." << endl;
   output.open(filename);
   int x = 0;
   vector<vector<Host*>> tmp = {susceptibles, infecteds, recovereds, dead};
@@ -305,11 +313,11 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename){
       }
     }
   }
-  cout << "Sorting viruses..." << endl;
+  Rcpp::Rcout << "Sorting viruses..." << endl;
   sort(viruses.begin(),viruses.end(),[](Virus* lhs, Virus* rhs){
       return(lhs->getId() < rhs->getId());
     });
-  cout << "Writing output..." << endl;
+  Rcpp::Rcout << "Writing output..." << endl;
   output << "vid, birth, death, parentid, bindingAvidityIni, bindingAvidityFinal, infection_no, distance_to_parent, hostK, host_infections, immK, distRoot" << endl;
   //  output << "hostK, host_infections, vid, birth, death, parentid, infection_no, bindingAvidIni, bindingAvidFinal, distance_to_parent, immK, distRoot" << endl;
   j = viruses.size();
@@ -333,14 +341,14 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename){
   }
 
   output.close();
-  cout << "Writing viruses complete" << endl;
-  cout << "#########################" << endl;
-  cout << endl;
+  Rcpp::Rcout << "Writing viruses complete" << endl;
+  Rcpp::Rcout << "#########################" << endl;
+  Rcpp::Rcout << endl;
 }
 
 void HostPopulation::virusPairwiseMatrix(std::ofstream& output, std::string filename, int sampSize){
-  cout << "#########################" << endl;
-  cout << "Writing pairwise matrix" << endl;
+  Rcpp::Rcout << "#########################" << endl;
+  Rcpp::Rcout << "Writing pairwise matrix" << endl;
   vector<Host*> hosts;
   vector<Virus*> viruses;
   vector<int> sampIndices;
@@ -351,7 +359,7 @@ void HostPopulation::virusPairwiseMatrix(std::ofstream& output, std::string file
   hosts.insert(hosts.end(),dead.begin(),dead.end());
   int j = hosts.size();
   int x = 0;
-  cout << "Accumulating all viruses..." << endl;
+  Rcpp::Rcout << "Accumulating all viruses..." << endl;
   for(int i = 0; i < j; ++i){
     x = hosts[i]->getInfectionHistory().size();
     if(x > 0){
@@ -360,7 +368,7 @@ void HostPopulation::virusPairwiseMatrix(std::ofstream& output, std::string file
       }
     }
   }
-  cout << "Total number of viruses: " << viruses.size() << endl;
+  Rcpp::Rcout << "Total number of viruses: " << viruses.size() << endl;
   j = viruses.size();
   for(int i = 0; i < j;++i){
     sampIndices.push_back(i);
@@ -369,13 +377,13 @@ void HostPopulation::virusPairwiseMatrix(std::ofstream& output, std::string file
   sampIndices.resize(sampSize);
   sort(sampIndices.begin(),sampIndices.end());  
 
-  cout << "Sorting virus vector..." << endl;
+  Rcpp::Rcout << "Sorting virus vector..." << endl;
 
   sort(viruses.begin(),viruses.end(),[](Virus* lhs, Virus* rhs){
       return(lhs->getId() < rhs->getId());
     });
   
-  cout << "Finding pairwise matrix..." << endl;
+  Rcpp::Rcout << "Finding pairwise matrix..." << endl;
  
   j = sampIndices.size();
   int index = 0;
@@ -392,7 +400,7 @@ void HostPopulation::virusPairwiseMatrix(std::ofstream& output, std::string file
     }
     output << endl;
   }
-  cout << "Pairwise output complete" << endl;
-  cout << "#########################" << endl;
+  Rcpp::Rcout << "Pairwise output complete" << endl;
+  Rcpp::Rcout << "#########################" << endl;
 }  
   

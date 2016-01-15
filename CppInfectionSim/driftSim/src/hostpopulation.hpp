@@ -7,6 +7,7 @@
 #include <fstream>
 #include <string>
 #include <algorithm>
+#include <Rcpp.h>
 
 class Host;
 
