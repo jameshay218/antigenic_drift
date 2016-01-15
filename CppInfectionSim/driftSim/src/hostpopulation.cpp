@@ -28,7 +28,6 @@ HostPopulation::HostPopulation(int initialS, int initialI, int initialR, int ini
   gamma = _gamma;
   
   for(int i = 0; i < initialS;++i){
-    //  _k = rand() % 20;
     H = new Host(Susceptible, this, _k);
     susceptibles.push_back(H);
   }

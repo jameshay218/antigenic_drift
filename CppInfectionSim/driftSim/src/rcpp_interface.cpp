@@ -20,7 +20,6 @@ using namespace std;
 
 //[[Rcpp::export]]
 int run_simulation_cpp(Rcpp::IntegerVector flags, Rcpp::NumericVector hostPopn, Rcpp::NumericVector virusPars, int day, int final_day,std::vector<std::string> output_files, bool VERBOSE,int scenario, SEXP callback){
-  Rcpp::Rcout << "Here 1" << endl;
   bool save_SIR = flags[0];
   bool save_viruses = flags[1];
   bool save_pairwise_viruses = flags[2];
@@ -53,7 +52,7 @@ int run_simulation_cpp(Rcpp::IntegerVector flags, Rcpp::NumericVector hostPopn, 
   const bool has_callback = callback != R_NilValue;
   if (has_callback) {
     callback = Rcpp::as<Rcpp::Function>(callback);
-    }
+  }
 
   Virus::set_p(p);
   Virus::set_r(r);
@@ -107,7 +106,6 @@ int run_simulation_cpp(Rcpp::IntegerVector flags, Rcpp::NumericVector hostPopn, 
     
    if(save_SIR) output << hpop->countSusceptibles() << "," << hpop->countInfecteds() << "," << hpop->countRecovereds() << endl;
    if (has_callback) {
-     Rcpp::Rcout << "Has callback" << endl;
      Rcpp::IntegerVector tmp = Rcpp::IntegerVector::create(
 							   Rcpp::_["day"]=hpop->getDay(),
 							   Rcpp::_["susceptibles"]=hpop->countSusceptibles(),

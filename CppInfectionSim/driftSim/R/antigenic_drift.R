@@ -23,5 +23,5 @@ run_simulation <- function(
                            scenario=1,
                            callback=NULL){
     print("Here")
-        run_simulation_cpp(flags,hostpars,viruspars,start,end,output_files,VERBOSE,scenario, callback)
+    run_simulation_cpp(flags,hostpars,viruspars,start,end,output_files,VERBOSE,scenario, callback)
 }
