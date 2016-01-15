@@ -1,0 +1,160 @@
+#NEXUS
+
+Begin taxa;
+Dimensions ntax=30;
+Taxlabels
+sample1_17364_16.7852
+sample2_63106_28.5327
+sample3_76461_34.1275
+sample4_78235_36.9584
+sample5_79900_39.9465
+sample6_79821_42.5255
+sample7_81176_62.9147
+sample8_81274_84.5231
+sample9_81363_90.1346
+sample10_81522_102.2214
+sample11_82661_113.9075
+sample12_123651_130.1483
+sample13_137863_134.5408
+sample14_139055_134.5907
+sample15_146604_138.9597
+sample16_154837_151.1952
+sample17_155208_153.9706
+sample18_155831_160.5194
+sample19_156023_162.0533
+sample20_156020_164.7975
+sample21_156176_171.3346
+sample22_156442_182.1005
+sample23_156460_183.5414
+sample24_156463_183.9897
+sample25_156495_187.4587
+sample26_156515_191.8617
+sample27_156543_191.9263
+sample28_156548_192.3036
+sample29_156555_193.3288
+sample30_156550_194.4126
+;
+End;
+
+Begin trees;
+Translate
+1 sample1_17364_16.7852,
+2 sample2_63106_28.5327,
+3 sample3_76461_34.1275,
+4 sample4_78235_36.9584,
+5 sample5_79900_39.9465,
+6 sample6_79821_42.5255,
+7 sample7_81176_62.9147,
+8 sample8_81274_84.5231,
+9 sample9_81363_90.1346,
+10 sample10_81522_102.2214,
+11 sample11_82661_113.9075,
+12 sample12_123651_130.1483,
+13 sample13_137863_134.5408,
+14 sample14_139055_134.5907,
+15 sample15_146604_138.9597,
+16 sample16_154837_151.1952,
+17 sample17_155208_153.9706,
+18 sample18_155831_160.5194,
+19 sample19_156023_162.0533,
+20 sample20_156020_164.7975,
+21 sample21_156176_171.3346,
+22 sample22_156442_182.1005,
+23 sample23_156460_183.5414,
+24 sample24_156463_183.9897,
+25 sample25_156495_187.4587,
+26 sample26_156515_191.8617,
+27 sample27_156543_191.9263,
+28 sample28_156548_192.3036,
+29 sample29_156555_193.3288,
+30 sample30_156550_194.4126
+;
+tree TREE1 = [&R](
+6[&AntigenicDrift="0.88832",Netcharge.set="",Bindingscr.set="0.8"]:573.6015,
+(
+(
+(
+2[&AntigenicDrift="0.68734",Netcharge.set="",Bindingscr.set="0.8"]:0.45589,
+4[&AntigenicDrift="0.74788",Netcharge.set="",Bindingscr.set="0.8"]:8.8816)
+:29.0358,
+(
+7[&AntigenicDrift="1.2094",Netcharge.set="",Bindingscr.set="0.8"]:59.0603,
+3[&AntigenicDrift="0.76041",Netcharge.set="",Bindingscr.set="0.8"]:30.2732)
+:4.8133)
+:187.7894,
+(
+5[&AntigenicDrift="0.98625",Netcharge.set="",Bindingscr.set="0.8"]:70.2084,
+(
+1[&AntigenicDrift="0.46141",Netcharge.set="",Bindingscr.set="0.8"]:9.6234,
+(
+(
+(
+25[&AntigenicDrift="4.2219",Netcharge.set="",Bindingscr.set="0.8"]:95.4587,
+(
+10[&AntigenicDrift="2.6498",Netcharge.set="",Bindingscr.set="0.8"]:5.2214,
+14[&AntigenicDrift="3.205",Netcharge.set="",Bindingscr.set="0.8"]:37.5907)
+:5)
+:12,
+(
+(
+22[&AntigenicDrift="3.9579",Netcharge.set="",Bindingscr.set="0.8"]:87.1005,
+(
+15[&AntigenicDrift="3.579",Netcharge.set="",Bindingscr.set="0.8"]:36.9597,
+16[&AntigenicDrift="3.2196",Netcharge.set="",Bindingscr.set="0.8"]:49.1952)
+:7)
+:12,
+(
+9[&AntigenicDrift="2.1903",Netcharge.set="",Bindingscr.set="0.8"]:0.13464,
+(
+21[&AntigenicDrift="4.2589",Netcharge.set="",Bindingscr.set="0.8"]:7.3346,
+23[&AntigenicDrift="4.3772",Netcharge.set="",Bindingscr.set="0.8"]:19.5414)
+:74)
+:7)
+:3)
+:31,
+(
+(
+(
+12[&AntigenicDrift="3.266",Netcharge.set="",Bindingscr.set="0.8"]:39.1483,
+(
+13[&AntigenicDrift="3.1283",Netcharge.set="",Bindingscr.set="0.8"]:42.5408,
+(
+20[&AntigenicDrift="3.6514",Netcharge.set="",Bindingscr.set="0.8"]:63.7975,
+24[&AntigenicDrift="4.3305",Netcharge.set="",Bindingscr.set="0.8"]:82.9897)
+:9)
+:1)
+:3,
+(
+(
+11[&AntigenicDrift="2.7972",Netcharge.set="",Bindingscr.set="0.8"]:10.9075,
+17[&AntigenicDrift="4.3692",Netcharge.set="",Bindingscr.set="0.8"]:50.9706)
+:13,
+(
+18[&AntigenicDrift="3.7297",Netcharge.set="",Bindingscr.set="0.8"]:58.5194,
+30[&AntigenicDrift="4.811",Netcharge.set="",Bindingscr.set="0.8"]:92.4126)
+:12)
+:2)
+:30,
+(
+8[&AntigenicDrift="1.9106",Netcharge.set="",Bindingscr.set="0.8"]:4.5231,
+(
+19[&AntigenicDrift="3.7926",Netcharge.set="",Bindingscr.set="0.8"]:78.0533,
+(
+(
+26[&AntigenicDrift="4.7695",Netcharge.set="",Bindingscr.set="0.8"]:5.8617,
+27[&AntigenicDrift="4.4746",Netcharge.set="",Bindingscr.set="0.8"]:5.9263)
+:15,
+(
+28[&AntigenicDrift="4.875",Netcharge.set="",Bindingscr.set="0.8"]:8.3036,
+29[&AntigenicDrift="4.2317",Netcharge.set="",Bindingscr.set="0.8"]:9.3288)
+:13)
+:87)
+:4)
+:22)
+:9)
+:41.8382)
+:37.4237)
+:158.4865)
+:342.3277)
+;
+End;
