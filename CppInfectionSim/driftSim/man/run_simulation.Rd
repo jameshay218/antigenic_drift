@@ -8,7 +8,7 @@ run_simulation(flags = c(1, 0, 0, 0), hostpars = c(90000, 100, 1e+05 - 90000
   - 100, 1.5, 1/(40 * 365), 1/25, 0.333, 0.8), viruspars = c(3, 50, 1, 0.7, 3,
   2, 2, 0.1, 1, 0.5, 1000), start = 0, end = 365,
   output_files = c("SIR_output.csv", "voutput_1.csv", "voutput_2.csv"),
-  VERBOSE = TRUE, scenario = 1)
+  VERBOSE = TRUE, scenario = 1, callback = NULL)
 }
 \arguments{
 \item{flags}{xx}
@@ -26,6 +26,8 @@ run_simulation(flags = c(1, 0, 0, 0), hostpars = c(90000, 100, 1e+05 - 90000
 \item{VERBOSE}{xx}
 
 \item{scenario}{xx}
+
+\item{callback}{xx}
 }
 \description{
 moar

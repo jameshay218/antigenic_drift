@@ -6,8 +6,8 @@
 using namespace Rcpp;
 
 // run_simulation_cpp
-int run_simulation_cpp(Rcpp::IntegerVector flags, Rcpp::NumericVector hostPopn, Rcpp::NumericVector virusPars, int day, int final_day, std::vector<std::string> output_files, bool VERBOSE, int scenario);
-RcppExport SEXP driftSim_run_simulation_cpp(SEXP flagsSEXP, SEXP hostPopnSEXP, SEXP virusParsSEXP, SEXP daySEXP, SEXP final_daySEXP, SEXP output_filesSEXP, SEXP VERBOSESEXP, SEXP scenarioSEXP) {
+int run_simulation_cpp(Rcpp::IntegerVector flags, Rcpp::NumericVector hostPopn, Rcpp::NumericVector virusPars, int day, int final_day, std::vector<std::string> output_files, bool VERBOSE, int scenario, SEXP callback);
+RcppExport SEXP driftSim_run_simulation_cpp(SEXP flagsSEXP, SEXP hostPopnSEXP, SEXP virusParsSEXP, SEXP daySEXP, SEXP final_daySEXP, SEXP output_filesSEXP, SEXP VERBOSESEXP, SEXP scenarioSEXP, SEXP callbackSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -19,7 +19,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< std::vector<std::string> >::type output_files(output_filesSEXP);
     Rcpp::traits::input_parameter< bool >::type VERBOSE(VERBOSESEXP);
     Rcpp::traits::input_parameter< int >::type scenario(scenarioSEXP);
-    __result = Rcpp::wrap(run_simulation_cpp(flags, hostPopn, virusPars, day, final_day, output_files, VERBOSE, scenario));
+    Rcpp::traits::input_parameter< SEXP >::type callback(callbackSEXP);
+    __result = Rcpp::wrap(run_simulation_cpp(flags, hostPopn, virusPars, day, final_day, output_files, VERBOSE, scenario, callback));
     return __result;
 END_RCPP
 }

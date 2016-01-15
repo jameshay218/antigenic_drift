@@ -3,6 +3,7 @@
 #include<iostream>
 #include<math.h>
 #include<vector>
+#include <Rcpp.h>
 
 using namespace std;
 
@@ -170,7 +171,8 @@ double Virus::calculateRho(Host* _host){
 void Virus::mutate(){
   double bindingAvidChange;
   double change;
-  double tmp = ((double) rand() / (RAND_MAX));
+  //  double tmp = ((double) rand() / (RAND_MAX));
+  double tmp = R::unif_rand();
   std::exponential_distribution<double> dist(45);
 
   switch (_scenario){
