@@ -78,6 +78,7 @@ void Virus::set_VtoD(double new_VtoD){
 
 
 Virus::Virus(Virus* _parent, Host* _host, int _t, double _immK, double _tmpK){
+  death=-1;
   id = v_IDgenerator++;
   birth = _t;
   infectionK = _host->getInfectionHistory().size();
@@ -93,6 +94,7 @@ Virus::Virus(Virus* _parent, Host* _host, int _t, double _immK, double _tmpK){
 }
 
 Virus::Virus(int _level, Virus* _parent, double _bindingavid, double _distance, Host* _host, int _t, double _immK, double _tmpK){
+  death=-1;
   id = v_IDgenerator++;
   birth = _t;
   infectionK = 0;

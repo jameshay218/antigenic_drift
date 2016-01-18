@@ -9,7 +9,7 @@ private:
 
   int id;
   int birth;
-  int death = -1;
+  int death;
   int infectionK;
   Virus* parent;
   Host* host;
