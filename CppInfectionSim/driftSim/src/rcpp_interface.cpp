@@ -19,11 +19,13 @@
 using namespace std;
 
 //[[Rcpp::export]]
-int run_simulation_cpp(Rcpp::IntegerVector flags, Rcpp::NumericVector hostPopn, Rcpp::NumericVector virusPars, int day, int final_day,std::vector<std::string> output_files, bool VERBOSE,int scenario, SEXP callback){
+int run_simulation_cpp(Rcpp::IntegerVector flags, Rcpp::NumericVector hostPopn, Rcpp::NumericVector virusPars, int day, int final_day,std::vector<std::string> input_files, std::vector<std::string> output_files, bool VERBOSE,int scenario, SEXP callback){
   bool save_SIR = flags[0];
   bool save_viruses = flags[1];
   bool save_pairwise_viruses = flags[2];
   bool use_time = flags[3];
+  bool save_hosts = flags[4];
+  bool import_start = flags[5];
 
   double S0 = hostPopn[0];
   double I0 = hostPopn[1];
@@ -34,6 +36,7 @@ int run_simulation_cpp(Rcpp::IntegerVector flags, Rcpp::NumericVector hostPopn, 
   double wane = hostPopn[5];
   double gamma = hostPopn[6];
   double iniBinding = hostPopn[7];
+  double meanBoost = hostPopn[8];
 
   double p = virusPars[0];
   double r = virusPars[1];
@@ -42,10 +45,11 @@ int run_simulation_cpp(Rcpp::IntegerVector flags, Rcpp::NumericVector hostPopn, 
   double b = virusPars[4];
   double n = virusPars[5];
   double v = virusPars[6];
-  double probMut = virusPars[7];
-  double expDist = virusPars[8];
-  double kc = virusPars[9];
-  double VtoD = virusPars[10];
+  double _g = virusPars[7];
+  double probMut = virusPars[8];
+  double expDist = virusPars[9];
+  double kc = virusPars[10];
+  double VtoD = virusPars[11];
 
   int start = day;
   
@@ -61,29 +65,36 @@ int run_simulation_cpp(Rcpp::IntegerVector flags, Rcpp::NumericVector hostPopn, 
   Virus::set_b(b);
   Virus::set_n(n);
   Virus::set_v(v);
+  Virus::set_g(_g);
   Virus::set_prob_mut(probMut);
   Virus::set_exp_dist(expDist);
   Virus::set_kc(kc);
   Virus::set_VtoD(VtoD);
   Virus::set_scenario(scenario);
 
+  Host::changeMeanBoost(meanBoost);
 
   if(use_time) int start = clock();
   string filename;
- ofstream output (output_files[0]);
- ofstream voutput;
- ofstream voutput2;
- if(VERBOSE){
-   Rcpp::Rcout << "Params: " << endl;
-   Rcpp::Rcout << "S0: " << S0 << endl;
-   Rcpp::Rcout << "I0: " << I0 << endl;
-   Rcpp::Rcout << "R0: " << I0 << endl;
-   Rcpp::Rcout << "contact: " << contactRate << endl;
-   Rcpp::Rcout << "mu: " << mu << endl;
-   Rcpp::Rcout << "wane: " << wane << endl;
-   Rcpp::Rcout << "gamma: " << gamma << endl;
-   Rcpp::Rcout << "iniBinding: " << iniBinding << endl;
-   Rcpp::Rcout << "Scenario: " << scenario << endl;
+  ofstream output (output_files[0]);
+  ofstream voutput;
+  ofstream voutput2;
+  ofstream voutput3;
+  ofstream houtput;
+
+  if(VERBOSE){
+    Rcpp::Rcout << "###################" << endl;
+    Rcpp:: Rcout << "Starting simulation..." << endl << endl;
+    Rcpp::Rcout << "Parameters used: " << endl << endl;
+    Rcpp::Rcout << "S0: " << S0 << endl;
+    Rcpp::Rcout << "I0: " << I0 << endl;
+    Rcpp::Rcout << "R0: " << I0 << endl;
+    Rcpp::Rcout << "contact: " << contactRate << endl;
+    Rcpp::Rcout << "mu: " << mu << endl;
+    Rcpp::Rcout << "wane: " << wane << endl;
+    Rcpp::Rcout << "gamma: " << gamma << endl;
+    Rcpp::Rcout << "iniBinding: " << iniBinding << endl;
+    Rcpp::Rcout << "Scenario: " << scenario << endl << endl;
  }
 
  HostPopulation* hpop = new HostPopulation(
@@ -97,6 +108,14 @@ int run_simulation_cpp(Rcpp::IntegerVector flags, Rcpp::NumericVector hostPopn, 
 					   gamma,
 					   iniBinding
 					   );
+ if(import_start){
+   hpop->readHosts(input_files[0], input_files[1]);
+   if(VERBOSE){
+     Rcpp::Rcout << "Starting conditions: " << endl;
+     hpop->printStatus();
+     Rcpp::Rcout << endl;
+   }
+ }
  while(day <= final_day){
    hpop->stepForward(day);
    if(VERBOSE){
@@ -116,8 +135,15 @@ int run_simulation_cpp(Rcpp::IntegerVector flags, Rcpp::NumericVector hostPopn, 
    day++;
  }
 
- if(save_viruses) hpop->writeViruses(voutput, output_files[1]);
- if(save_pairwise_viruses) hpop->virusPairwiseMatrix(voutput2, output_files[2],1000);
+ if(save_viruses) hpop->writeViruses(voutput, output_files[1], FALSE);
+ if(save_pairwise_viruses) hpop->virusPairwiseMatrix(voutput2, output_files[2],1000);if(save_hosts){
+   hpop->writeHosts(houtput, output_files[3]);
+   hpop->writeViruses(voutput3,output_files[4],TRUE);
+   Rcpp::Rcout << "Final Virus ID: ";
+   Virus::printIDgenerator();
+   Rcpp::Rcout << endl;
+ }
+ 
  delete hpop;
  if(save_SIR) output.close();
   
@@ -125,5 +151,6 @@ int run_simulation_cpp(Rcpp::IntegerVector flags, Rcpp::NumericVector hostPopn, 
    int stop = clock();
    Rcpp::Rcout << "Time elapsed: " << (stop-start)/double(CLOCKS_PER_SEC) << " Seconds" << endl;
  }
+
  return 0;
 }

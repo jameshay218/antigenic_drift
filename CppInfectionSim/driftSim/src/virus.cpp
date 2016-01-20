@@ -9,7 +9,7 @@ using namespace std;
 
 int Virus::v_IDgenerator = 1;
 double Virus::_p=3.0;
-double Virus::_r=50.0;
+double Virus::_r=1.0;
 double Virus::_q=1.0;
 double Virus::_a=0.7;
 double Virus::_b=3.0;
@@ -21,22 +21,38 @@ double Virus::_kc = 0.5;
 double Virus::_V_to_d = 1000;
 int Virus::_scenario = 1;
 
+double Virus::_g = 100;
+
 void Virus::set_default(){
   _p=3.0;
-  _r=50.0;
+  _r=1.0;
   _q=1.0;
   _a=0.7;
   _b=3.0;
   _n=2.0;
   _v=2.0;
+  _g = 1.0;
   _prob_mut = 0.1;
   _exp_dist = 1;
   _kc = 0.5;
   _V_to_d = 1000;
   _scenario = 1;
+  v_IDgenerator = 1;
 }
 void Virus::set_scenario(int _scen){
   _scenario = _scen;
+}
+
+void Virus::printIDgenerator(){
+  Rcpp::Rcout << v_IDgenerator;
+}
+
+
+void Virus::set_generator(int _start){
+  v_IDgenerator = _start;
+}
+void Virus::set_g(double new_g){
+  _g = new_g;
 }
 
 void Virus::set_p(double new_p){
@@ -74,8 +90,29 @@ void Virus::set_VtoD(double new_VtoD){
 }
 
 
+void Virus::updateParent(Virus* newParent){
+  parent = newParent;
+}
 
+void Virus::updateHost(Host* newHost){
+  host = newHost;
+}
 
+Virus::Virus(int _id, int _birth, int _death, Virus* _parent, int _level, double _bindIni, double _bind, int _k, double _distToParent, double distToRoot, int _immK, int _tmpK, Host* _host){
+  id = _id;
+  birth = _birth;
+  death = _death;
+  parent = _parent;
+  level = _level;
+  bindingavid = _bind;
+  bindingavid_ini =_bindIni;
+  infectionK = _k;
+  distanceToParent = _distToParent;
+  distRoot = distToRoot;
+  immK = _immK;
+  tmpK = _tmpK;
+  host = _host;
+}
 
 Virus::Virus(Virus* _parent, Host* _host, int _t, double _immK, double _tmpK){
   death=-1;
@@ -167,7 +204,7 @@ void Virus::kill(int cur_t){
 }
 
 double Virus::calculateRho(Host* _host){
-  return(1 - pow((1/(_n*probSurvival(_host)*probReplication())),_v));
+  return(1 - pow((_n*probSurvival(_host)*probReplication()),-_v));
 }
 
 void Virus::mutate(){
@@ -175,12 +212,13 @@ void Virus::mutate(){
   double change;
   //  double tmp = ((double) rand() / (RAND_MAX));
   double tmp = R::unif_rand();
-  std::exponential_distribution<double> dist(45);
+  //std::exponential_distribution<double> dist(45);
 
   switch (_scenario){
   case 1: 
     if(tmp <= _prob_mut){
-      change = dist(host->popn->generator);
+      //      change = dist(host->popn->generator);
+      change = R::rexp(_exp_dist);
       distanceToParent += change;
       distRoot += change;
     }
@@ -191,7 +229,8 @@ void Virus::mutate(){
     break;
   case 3:
     if(tmp <= _prob_mut){
-      change = dist(host->popn->generator);
+      //change = dist(host->popn->generator);
+      change = R::rexp(_exp_dist);
       distanceToParent += change;
       distRoot += change;
     }
@@ -202,7 +241,8 @@ void Virus::mutate(){
     break;
   case 4:
     if(tmp <= _prob_mut){
-      change = dist(host->popn->generator);
+      //      change = dist(host->popn->generator);
+      change = R::rexp(_exp_dist);
       distanceToParent += change;
       distRoot += change;
     }
@@ -227,7 +267,7 @@ double Virus::probSurvival(Host* _host){
       }
     }
   }
-  tmpK = _r*_host->get_hostK() - 100*tmp;
+  tmpK = _r*_host->get_hostK() - _g*tmp;
   if(tmpK < 0){ tmpK = 0;}
   tmp = pow((1 - exp(-_p*(bindingavid + _q))), tmpK);
   return(tmp);
@@ -241,6 +281,7 @@ double Virus::d_probSurvival(Host* _host){
 }
 
 double Virus::probReplication(){
+  //Rcpp::Rcout << "Prob replication: " << exp(-_a*(pow(bindingavid,_b))) << endl;
   return(exp(-_a*(pow(bindingavid,_b))));
 }
 
@@ -290,6 +331,7 @@ double Virus::getAntigenicDistance(Virus* A, Virus* B){
       tmpA = tmpA->getParent();
       tmpB = tmpB->getParent();
       totalDistance += tmpA->getDistance() + tmpB->getDistance();
+      if(tmpA->getParent() == NULL && tmpB->getParent() == NULL) totalDistance = 10000;
     }
 
 

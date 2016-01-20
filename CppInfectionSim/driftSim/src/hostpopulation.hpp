@@ -8,8 +8,10 @@
 #include <string>
 #include <algorithm>
 #include <Rcpp.h>
+#include <map>
 
 class Host;
+class Virus;
 
 class HostPopulation{
 private:
@@ -57,7 +59,10 @@ public:
 
   // Print out current population status
   void printStatus();
-  void writeViruses(std::ofstream& output, std::string filename);
+  void writeHosts(std::ofstream& output, std::string filename);
+  void readHosts(std::string hostFilename, std::string virusFilename);
+  std::map<int, Virus*> readViruses(std::string virusFilename);
+  void writeViruses(std::ofstream& output, std::string filename, bool savingState);
   void virusPairwiseMatrix(std::ofstream& output, std::string filename, int sampSize);
 };
 

@@ -18,9 +18,11 @@ private:
   double hostK;
 
 public:
+  static int _meanBoost;
   HostPopulation* popn;
   // Constructors
   Host();
+  Host(State _state, HostPopulation* _popn, int _k, Virus* firstInf);
   Host(State _state, HostPopulation* _popn);
   Host(State _state, HostPopulation* _popn, int _k);
   ~Host();
@@ -29,6 +31,7 @@ public:
   double calculateBeta();
   void infect(Virus* newInfection, int cur_t);
   void recover(int cur_t);
+  void addInfection(Virus* infection);
   void wane();
   void die(int cur_t);
   double get_hostK();
@@ -43,6 +46,8 @@ public:
   std::vector<Virus*> getInfectionHistory();
   State getState();
   std::default_random_engine get_generator();
+
+  static void changeMeanBoost(int newBoost);
 
 };
 

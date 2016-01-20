@@ -2,6 +2,12 @@
 
 using namespace std;
 
+int Host::_meanBoost = 10;
+
+void Host::changeMeanBoost(int newBoost){
+  _meanBoost = newBoost;
+}
+
 Host::Host(){
   state = Susceptible;
   currentInfection = NULL;
@@ -21,6 +27,14 @@ Host::Host(State _state, HostPopulation* _popn, int _k){
   currentInfection = NULL;
   popn = _popn;
   hostK = _k;
+}
+
+Host::Host(State _state, HostPopulation* _popn, int _k, Virus* _firstInf){
+state = _state;
+  currentInfection = NULL;
+  popn = _popn;
+  hostK = _k;
+  infectionHistory.push_back(_firstInf);
 }
 
 
@@ -64,8 +78,9 @@ void Host::infect(Virus* newInfection, int cur_t){
 void Host::recover(int cur_t){
   state = Recovered;
 
-  poisson_distribution<int> poisson(10);
-  int boost = poisson(popn->generator);
+  /*  poisson_distribution<int> poisson(10);
+      int boost = poisson(popn->generator);*/
+  int boost = R::rpois(_meanBoost);
   hostK += boost;
 
   if(currentInfection != NULL){
@@ -85,6 +100,10 @@ std::vector<Virus*> Host::getInfectionHistory(){
 
 State Host::getState(){
   return(state);
+}
+
+void Host::addInfection(Virus* infection){
+  infectionHistory.push_back(infection);
 }
 
 void Host::die(int cur_t){
