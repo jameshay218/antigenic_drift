@@ -200,7 +200,7 @@ void HostPopulation::contact(){
       }
     }
   }
-  Rcpp::Rcout << "Beta: " << number_success/totalContacts << endl;
+  //  Rcpp::Rcout << "Beta: " << number_success/totalContacts << endl;
 }
 
 void HostPopulation::recoveries(){
