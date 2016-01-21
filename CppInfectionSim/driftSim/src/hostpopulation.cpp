@@ -497,8 +497,14 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename, b
   j = viruses.size();
   for(int i = 0; i < j;++i){
     output << viruses[i]->getId() << ",";
-    output << viruses[i]->getBirth() - day << ",";
-    output << viruses[i]->getDeath() - day << ",";
+    if(savingState){
+      output << viruses[i]->getBirth() - day << ",";
+      output << viruses[i]->getDeath() - day << ",";
+    } else {
+      output << viruses[i]->getBirth() << ",";
+      output << viruses[i]->getDeath() << ",";
+    }
+
     if(viruses[i]->getParent()){
       output << viruses[i]->getParent()->getId() << ",";
     } else {

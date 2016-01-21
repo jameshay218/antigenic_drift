@@ -71,6 +71,7 @@ int run_simulation_cpp(Rcpp::IntegerVector flags, Rcpp::NumericVector hostPopn, 
   Virus::set_kc(kc);
   Virus::set_VtoD(VtoD);
   Virus::set_scenario(scenario);
+  Virus::set_generator(1);
 
   Host::changeMeanBoost(meanBoost);
 
