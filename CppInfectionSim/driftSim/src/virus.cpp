@@ -320,8 +320,10 @@ double Virus::d_probReplication(){
 double Virus::bindingavid_change(Host* _host){
   int row_K, col_V;
   double change = 0;
-  row_K = (int)floor(10* (_host->get_hostK()-distToHost));
+  row_K = (int)floor(10*(_host->get_hostK()-distToHost));
   col_V = (int)floor(100*bindingavid);
+  if(row_K < 0) row_K = 0;
+  if(col_V < 0) col_V = 0;
   if(row_K >= deltaVMat.nrow()) row_K = deltaVMat.nrow()-1;
   if(col_V >= deltaVMat.ncol()) row_K = deltaVMat.ncol()-1;
   
