@@ -72,7 +72,7 @@ int run_simulation_cpp(Rcpp::IntegerVector flags, Rcpp::NumericVector hostPopn, 
   Virus::set_VtoD(VtoD);
   Virus::set_scenario(scenario);
   Virus::set_generator(1);
-  Virus::set_deltaVMat(deltaVMat);
+  
 
   Host::changeMeanBoost(meanBoost);
 
@@ -98,6 +98,7 @@ int run_simulation_cpp(Rcpp::IntegerVector flags, Rcpp::NumericVector hostPopn, 
     Rcpp::Rcout << "iniBinding: " << iniBinding << endl;
     Rcpp::Rcout << "Scenario: " << scenario << endl << endl;
  }
+Virus::set_deltaVMat(deltaVMat);
 
  HostPopulation* hpop = new HostPopulation(
 					   S0,
