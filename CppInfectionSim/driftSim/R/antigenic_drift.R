@@ -24,5 +24,9 @@ run_simulation <- function(
                            VERBOSE=TRUE,
                            scenario=1,
                            callback=NULL){
-    run_simulation_cpp(flags,hostpars,viruspars, deltaVMat, start,end,input_files,output_files,VERBOSE,scenario, callback)
+    if(scenario != 1 && is.null(deltaVMat)){
+        print("Error - attempting binding avidity change with no deltaV matrix. Aborting")
+        return(0)
+    }
+    run_simulation_cpp(flags,hostpars,viruspars, deltaVMat,start,end,input_files,output_files,VERBOSE,scenario, callback)
 }

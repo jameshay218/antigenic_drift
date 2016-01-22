@@ -20,7 +20,7 @@ double Virus::_exp_dist = 1;
 double Virus::_kc = 0.5;
 double Virus::_V_to_d = 1000;
 int Virus::_scenario = 1;
-Rcpp::NumericMatrix Virus::deltaVMat = R_NilValue;
+Rcpp::NumericMatrix Virus::deltaVMat;
 //double Virus::_g = 100;
 
 void Virus::set_deltaVMat(Rcpp::NumericMatrix _newMat){
@@ -320,15 +320,13 @@ double Virus::d_probReplication(){
 double Virus::bindingavid_change(Host* _host){
   int row_K, col_V;
   double change = 0;
-  if(deltaVMat != R_NilValue){
-    row_K = (int)floor(10* (_host->get_hostK()-distToHost));
-    col_V = (int)floor(100*bindingavid);
-    if(row_K >= deltaVMat.nrow()) row_K = deltaVMat.nrow()-1;
-    if(col_V >= deltaVMat.ncol()) row_K = deltaVMat.ncol()-1;
-
-    cout << "Row: " << row_K << "   Col: " << col_V << endl;
-    change = deltaVMat(row_K,col_V);
-  }
+  row_K = (int)floor(10* (_host->get_hostK()-distToHost));
+  col_V = (int)floor(100*bindingavid);
+  if(row_K >= deltaVMat.nrow()) row_K = deltaVMat.nrow()-1;
+  if(col_V >= deltaVMat.ncol()) row_K = deltaVMat.ncol()-1;
+  
+  cout << "Row: " << row_K << "   Col: " << col_V << endl;
+  change = deltaVMat(row_K,col_V);
   return(change);
   //   double dV = probSurvival(_host)*d_probReplication() + probReplication()*d_probSurvival(_host);
   //return(dV*_kc);

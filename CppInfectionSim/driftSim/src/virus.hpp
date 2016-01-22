@@ -25,8 +25,6 @@ private:
   double changeFromR;
   int level;
 
-
-
 public:
   static double _p;
   static double _r;

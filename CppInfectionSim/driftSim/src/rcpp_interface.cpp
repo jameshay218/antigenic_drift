@@ -19,7 +19,7 @@
 using namespace std;
 
 //[[Rcpp::export]]
-int run_simulation_cpp(Rcpp::IntegerVector flags, Rcpp::NumericVector hostPopn, Rcpp::NumericVector virusPars, Rcpp::NumericMatrix deltaVMatrix, int day, int final_day,std::vector<std::string> input_files, std::vector<std::string> output_files, bool VERBOSE,int scenario, SEXP callback){
+int run_simulation_cpp(Rcpp::IntegerVector flags, Rcpp::NumericVector hostPopn, Rcpp::NumericVector virusPars,  Rcpp::NumericMatrix deltaVMat, int day, int final_day,std::vector<std::string> input_files, std::vector<std::string> output_files, bool VERBOSE,int scenario, SEXP callback){
   bool save_SIR = flags[0];
   bool save_viruses = flags[1];
   bool save_pairwise_viruses = flags[2];
@@ -72,7 +72,7 @@ int run_simulation_cpp(Rcpp::IntegerVector flags, Rcpp::NumericVector hostPopn, 
   Virus::set_VtoD(VtoD);
   Virus::set_scenario(scenario);
   Virus::set_generator(1);
-  Virus::set_deltaVMat(deltaVMatrix);
+  Virus::set_deltaVMat(deltaVMat);
 
   Host::changeMeanBoost(meanBoost);
 
