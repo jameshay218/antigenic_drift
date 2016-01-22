@@ -1,6 +1,8 @@
 #ifndef VIRUS_HPP
 #define VIRUS_HPP
 
+#include "hostpopulation.hpp"
+
 class Host;
 
 class Virus {
@@ -16,9 +18,11 @@ private:
   double bindingavid_ini;
   double bindingavid;
   double distanceToParent;
-  double immK;
+  double distToHost;
   double tmpK;
   double distRoot;
+  double changeFromV;
+  double changeFromR;
   int level;
 
 
@@ -31,20 +35,20 @@ public:
   static double _b;
   static double _n;
   static double _v;
-  static double _g;
+  // static double _g;
   static double _prob_mut;
   static double _exp_dist;
   static double _kc;
   static double _V_to_d;
   static int _scenario;
-
+  static Rcpp::NumericMatrix deltaVMat;
   static double getAntigenicDistance(Virus* A, Virus* B);
 
   // Constructors
   Virus();
-  Virus(Virus* _parent, Host* _host, int _t, double _immK, double _tmpK);
-  Virus(int _level, Virus* _parent, double _bindingavid, double _distance, Host* _host, int _t, double _immK, double _tmpK);
-  Virus(int _id, int _birth, int _death, Virus* _parent, int _level, double _bindini,double _bind, int _k, double _distToParent, double distToRoot, int _immK, int _tmpK, Host* _host);
+  Virus(Virus* _parent, Host* _host, int _t, double _distHost, double _infectionNo);
+  Virus(int _level, Virus* _parent, double _bindingavid, double _distance, Host* _host, int _t, double _distHost, double _tmpK);
+  Virus(int _id, int _birth, int _death, Virus* _parent, int _level, double _bindini,double _bind, int _k, double _distToParent, double distToRoot, int _distHost, int _tmpK, Host* _host, double changeV, double changeR);
   ~Virus(){};  // Don't really need to worry about pointers. VirusPopulation should take care of memory.
 
   // Accessing attributes
@@ -56,12 +60,14 @@ public:
   int getHostK();
   Host* getHost();
 
-  double getImmK();
+  double getDistHost();
   Virus* getParent(); 
   double getBindingAvid();
   double getIniBindingAvid();
   double getDistance();
   double getDistRoot();
+  double getChangeFromV();
+  double getChangeFromR();
   int getLevel();
 
   void updateParent(Virus* newParent);
@@ -93,7 +99,8 @@ public:
   static void set_VtoD(double new_VtoD);
   static void set_scenario(int _scen);
   static void set_generator(int _start);
-  static void set_g(double new_g);
+  static void set_deltaVMat(Rcpp::NumericMatrix _newMat);
+  //static void set_g(double new_g);
 };
 
 #endif

@@ -177,22 +177,10 @@ void HostPopulation::contact(){
       index1 = floor(R::unif_rand()*(countInfecteds()));
       index2 = floor(R::unif_rand()*(countSusceptibles()));
       tmp = R::unif_rand();
-      // Rcpp::Rcout << "Host: " << susceptibles[i]->getInfectionHistory().size() << endl;
-      // Rcpp::Rcout << "Infector: " << infecteds[index1]->getCurrentVirus()->getId() << endl;
-      //Rcpp::Rcout << "Prob survival: " << infecteds[index1]->getCurrentVirus()->calculateRho(susceptibles[i]) << endl;
-      /*Rcpp::Rcout << endl;
-      Rcpp::Rcout << "Virus characteristics: " << endl;
-      Rcpp::Rcout << "Host: " << infecteds[index1]->getCurrentVirus()->getHost() << endl;
-      Rcpp::Rcout << "Bindingavid: " << infecteds[index1]->getCurrentVirus()->getBindingAvid() << endl;
-      Rcpp::Rcout << "InfectionK: " << infecteds[index1]->getCurrentVirus()->getK() << endl;
-      Rcpp::Rcout << "immK: " << infecteds[index1]->getCurrentVirus()->getImmK() << endl;
-      Rcpp::Rcout << "Dist root: " << infecteds[index1]->getCurrentVirus()->getDistRoot() << endl;
-      Rcpp::Rcout << endl;*/
-      
-
+   
       if(tmp <= infecteds[index1]->getCurrentVirus()->calculateRho(susceptibles[index2])){
 	if(susceptibles[index2]->isSusceptible()){
-	  Virus* newV = new Virus(infecteds[index1]->getCurrentVirus(), susceptibles[index2], day, infecteds[index1]->getCurrentVirus()->getTmpImmK(),susceptibles[index2]->getInfectionHistory().size()+1);
+	  Virus* newV = new Virus(infecteds[index1]->getCurrentVirus(), susceptibles[index2], day, infecteds[index1]->getCurrentVirus()->getTmpImmK(),susceptibles[index2]->getInfectionHistory().size());
 	  susceptibles[index2]->infect(newV,day);
 	  new_infecteds.push_back(susceptibles[index2]); // Record new infected to add later
 	  number_success++;
@@ -304,7 +292,7 @@ void HostPopulation::printStatus(){
 
 
 
-/* ------------------------------------------- FILE MANIUPLATION CODE ---------------------------------------------- */
+/* ------------------------------------------- FILE MANIPULATION CODE ---------------------------------------------- */
 void HostPopulation::writeHosts(std::ofstream& output, std::string filename){
   Rcpp::Rcout << "#########################" << endl;
   Rcpp::Rcout << "Writing hosts to csv..." << endl;
@@ -419,7 +407,7 @@ std::map<int, Virus*> HostPopulation::readViruses(std::string virusFilename){
   string line;
   Virus* V;
   int vid, birth, death, level, infectionK;
-  double bindingAvid, bindingAvidIni,distanceToParent, distanceToRoot, immK, tmpK;
+  double bindingAvid, bindingAvidIni,distanceToParent, distanceToRoot, distHost, tmpK, changeV, changeR;
   if(virusFile.is_open()){
     getline(virusFile,line);
     while(getline(virusFile,line)){
@@ -441,9 +429,12 @@ std::map<int, Virus*> HostPopulation::readViruses(std::string virusFilename){
       infectionK = (int)tmpRow[7];
       distanceToParent = tmpRow[8];
       distanceToRoot = tmpRow[9];
-      immK = tmpK = (int)tmpRow[10];      
-      //  cout << vid << " " << birth << " " << death << " " << tmpRow[3] << " " << level << " " << bindingAvidIni << " " << bindingAvid << " " << infectionK << " " << distanceToParent << " " << distanceToRoot << " " << tmpK<< " " << immK << endl;
-      V = new Virus(vid, birth, death, NULL, level, bindingAvidIni, bindingAvid, infectionK, distanceToParent, distanceToRoot, immK, tmpK, NULL);
+      distHost = tmpRow[10];
+      tmpK = tmpRow[11];      
+      changeV = tmpRow[12];
+      changeR = tmpRow[13];
+
+      V = new Virus(vid, birth, death, NULL, level, bindingAvidIni, bindingAvid, infectionK, distanceToParent, distanceToRoot, distHost, tmpK, NULL, changeV, changeR);
       viruses.insert(make_pair(vid,V));
     }
     typedef map<int, Virus*>::iterator virusIt;
@@ -491,39 +482,39 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename, b
   }
   else {
     Rcpp::Rcout << "... for save state" << endl;
-    output << "vid,birth,death,parentid,level,bindingAvidIni,bindingAvid,infection_no,distance_to_parent,distance_to_root, immK" << endl;
+    output << "vid,birth,death,parentid,level,bindingAvidIni,bindingAvid,infection_no,distance_to_parent,distance_to_root, distToHost, tmpK, changeFromV, changeFromR" << endl;
   }
-  //  output << "hostK, host_infections, vid, birth, death, parentid, infection_no, bindingAvidIni, bindingAvidFinal, distance_to_parent, immK, distRoot" << endl;
   j = viruses.size();
   for(int i = 0; i < j;++i){
-    output << viruses[i]->getId() << ",";
-    if(savingState){
-      output << viruses[i]->getBirth() - day << ",";
-      output << viruses[i]->getDeath() - day << ",";
-    } else {
+    if(!savingState){
+      output << viruses[i]->getId() << ",";
       output << viruses[i]->getBirth() << ",";
       output << viruses[i]->getDeath() << ",";
-    }
-
-    if(viruses[i]->getParent()){
-      output << viruses[i]->getParent()->getId() << ",";
-    } else {
-      output << 0 << ",";
-    }
-    if(savingState) output << viruses[i]->getLevel() << ",";
-    output << viruses[i]->getIniBindingAvid() << ",";
-    output << viruses[i]->getBindingAvid() << ",";
-    output << viruses[i]->getK() << ",";
-    output << viruses[i]->getDistance() << ",";
-    if(savingState) output << viruses[i]->getDistRoot() << ",";
-    if(!savingState) {
+      output << viruses[i]->getIniBindingAvid() << ",";
+      output << viruses[i]->getBindingAvid() << ",";
+      output << viruses[i]->getK() << ",";
+      output << viruses[i]->getDistance() << ",";
       output << viruses[i]->getHostK() << ",";
       output << viruses[i]->getHost()->getInfectionHistory().size() << ",";
+      output << viruses[i]->getDistHost() << ",";
+      output << viruses[i]->getDistRoot();
     }
-    output << viruses[i]->getImmK();
-    if(!savingState) output << "," << viruses[i]->getDistRoot() << endl;
-    else output << endl;
-    
+    else {
+      output << viruses[i]->getId() << ",";
+      output << viruses[i]->getBirth() << ",";
+      output << viruses[i]->getDeath() << ",";
+      output << viruses[i]->getLevel() << ",";
+      output << viruses[i]->getIniBindingAvid() << ",";
+      output << viruses[i]->getBindingAvid() << ",";
+      output << viruses[i]->getK() << ",";
+      output << viruses[i]->getDistance() << ",";
+      output << viruses[i]->getDistRoot() << endl;
+      output << viruses[i]->getDistHost() << ",";
+      output << viruses[i]->getTmpImmK() << ",";
+      output << viruses[i]->getChangeFromV() << ",";
+      output << viruses[i]->getChangeFromR();
+    }
+    output << endl;
   }
 
   output.close();

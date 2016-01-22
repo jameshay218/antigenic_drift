@@ -15,7 +15,8 @@
 run_simulation <- function(
                            flags=c(1,0,0,0,0,0),
                            hostpars=c(90000,100,100000-90000-100,1.5,1/(40*365),1/25,0.333,0.8,10),
-                           viruspars=c(3, 2, 1, 0.7, 3, 2, 2, 1,0.1, 1, 0.5, 1000),
+                           viruspars=c(3, 70, 1, 0.7, 3, 2, 2, 0.1, 1, 0.5, 1000),
+                           deltaVMat = NULL,
                            start=0,
                            end=365,
                            input_files=c("hosts.csv","viruses.csv"),
@@ -23,5 +24,5 @@ run_simulation <- function(
                            VERBOSE=TRUE,
                            scenario=1,
                            callback=NULL){
-    run_simulation_cpp(flags,hostpars,viruspars,start,end,input_files,output_files,VERBOSE,scenario, callback)
+    run_simulation_cpp(flags,hostpars,viruspars, deltaVMat, start,end,input_files,output_files,VERBOSE,scenario, callback)
 }

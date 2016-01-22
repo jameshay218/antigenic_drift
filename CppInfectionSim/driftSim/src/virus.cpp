@@ -20,8 +20,12 @@ double Virus::_exp_dist = 1;
 double Virus::_kc = 0.5;
 double Virus::_V_to_d = 1000;
 int Virus::_scenario = 1;
+Rcpp::NumericMatrix Virus::deltaVMat = R_NilValue;
+//double Virus::_g = 100;
 
-double Virus::_g = 100;
+void Virus::set_deltaVMat(Rcpp::NumericMatrix _newMat){
+  deltaVMat = _newMat;
+}
 
 void Virus::set_default(){
   _p=3.0;
@@ -31,7 +35,7 @@ void Virus::set_default(){
   _b=3.0;
   _n=2.0;
   _v=2.0;
-  _g = 1.0;
+  //_g = 1.0;
   _prob_mut = 0.1;
   _exp_dist = 1;
   _kc = 0.5;
@@ -47,13 +51,12 @@ void Virus::printIDgenerator(){
   Rcpp::Rcout << v_IDgenerator;
 }
 
-
 void Virus::set_generator(int _start){
   v_IDgenerator = _start;
 }
-void Virus::set_g(double new_g){
+/*void Virus::set_g(double new_g){
   _g = new_g;
-}
+  }*/
 
 void Virus::set_p(double new_p){
   _p = new_p;
@@ -98,7 +101,7 @@ void Virus::updateHost(Host* newHost){
   host = newHost;
 }
 
-Virus::Virus(int _id, int _birth, int _death, Virus* _parent, int _level, double _bindIni, double _bind, int _k, double _distToParent, double distToRoot, int _immK, int _tmpK, Host* _host){
+Virus::Virus(int _id, int _birth, int _death, Virus* _parent, int _level, double _bindIni, double _bind, int _k, double _distToParent, double distToRoot, int _distHost, int _tmpK, Host* _host, double changeV, double changeR){
   id = _id;
   birth = _birth;
   death = _death;
@@ -109,16 +112,18 @@ Virus::Virus(int _id, int _birth, int _death, Virus* _parent, int _level, double
   infectionK = _k;
   distanceToParent = _distToParent;
   distRoot = distToRoot;
-  immK = _immK;
+  distToHost = _distHost;
   tmpK = _tmpK;
   host = _host;
+  changeFromV = changeV;
+  changeFromR = changeR;
 }
 
-Virus::Virus(Virus* _parent, Host* _host, int _t, double _immK, double _tmpK){
+Virus::Virus(Virus* _parent, Host* _host, int _t, double _distHost, double _infectionNo){
   death=-1;
   id = v_IDgenerator++;
   birth = _t;
-  infectionK = _host->getInfectionHistory().size();
+  infectionK = _infectionNo;
   bindingavid = bindingavid_ini = _parent->getBindingAvid();
   parent = _parent;
   level = parent->level + 1;
@@ -126,11 +131,12 @@ Virus::Virus(Virus* _parent, Host* _host, int _t, double _immK, double _tmpK){
   if(_parent != NULL) distRoot = _parent->getDistRoot();
   else distRoot = 0;
   host = _host;
-  immK = _immK;
-  tmpK = _tmpK;
+  tmpK = _distHost;
+  distToHost = 0;
+  changeFromV = changeFromR = 0;
 }
 
-Virus::Virus(int _level, Virus* _parent, double _bindingavid, double _distance, Host* _host, int _t, double _immK, double _tmpK){
+Virus::Virus(int _level, Virus* _parent, double _bindingavid, double _distance, Host* _host, int _t, double _distHost, double _tmpK){
   death=-1;
   id = v_IDgenerator++;
   birth = _t;
@@ -142,16 +148,17 @@ Virus::Virus(int _level, Virus* _parent, double _bindingavid, double _distance, 
   if(_parent != NULL) distRoot = _parent->getDistRoot() + _distance;
   else distRoot = 0;
   host = _host;
-  immK = _immK;
+  distToHost = _distHost;
   tmpK = _tmpK;
+  changeFromV = changeFromR = 0;
 }
 
 
 int Virus::getId(){
   return id;
 }
-double Virus::getImmK(){
-  return immK;
+double Virus::getDistHost(){
+  return distToHost;
 }
 
 Virus* Virus::getParent(){
@@ -160,6 +167,14 @@ Virus* Virus::getParent(){
 
 int Virus::getLevel(){
   return level;
+}
+
+double Virus::getChangeFromV(){
+  return(changeFromV);
+}
+
+double Virus::getChangeFromR(){
+  return(changeFromR);
 }
 
 double Virus::getDistance(){
@@ -221,11 +236,14 @@ void Virus::mutate(){
       change = R::rexp(_exp_dist);
       distanceToParent += change;
       distRoot += change;
+      distToHost += change;
+      changeFromR += change;
     }
     break;
   case 2:
     bindingAvidChange = bindingavid_change(host);
     bindingavid += bindingAvidChange;
+    changeFromV += bindingAvidChange;
     break;
   case 3:
     if(tmp <= _prob_mut){
@@ -233,11 +251,16 @@ void Virus::mutate(){
       change = R::rexp(_exp_dist);
       distanceToParent += change;
       distRoot += change;
+      distToHost += change;
+      changeFromR += change;
     }
     bindingAvidChange = bindingavid_change(host);
     bindingavid += bindingAvidChange;
+    changeFromV += bindingAvidChange;
     distanceToParent += _V_to_d*fabs(bindingAvidChange);
     distRoot += _V_to_d*fabs(bindingAvidChange);
+    distToHost += change;
+    changeFromR += change;
     break;
   case 4:
     if(tmp <= _prob_mut){
@@ -245,9 +268,12 @@ void Virus::mutate(){
       change = R::rexp(_exp_dist);
       distanceToParent += change;
       distRoot += change;
+      distToHost += change;
+      changeFromR += change;
     }
     bindingAvidChange = bindingavid_change(host);
     bindingavid += bindingAvidChange;
+    changeFromV += bindingAvidChange;
     break;
   default:
     break;
@@ -267,8 +293,10 @@ double Virus::probSurvival(Host* _host){
       }
     }
   }
-  tmpK = _r*_host->get_hostK() - _g*tmp;
-  if(tmpK < 0){ tmpK = 0;}
+  tmpK = _r*(_host->get_hostK() - tmp);
+  distToHost = tmp;
+  if(distToHost < 0) distToHost = 0;
+  if(tmpK < 0) tmpK = 0;
   tmp = pow((1 - exp(-_p*(bindingavid + _q))), tmpK);
   return(tmp);
 }
@@ -277,7 +305,7 @@ double Virus::getDistRoot(){
 }
 
 double Virus::d_probSurvival(Host* _host){
-  return(_p*immK*(pow((1-exp(-_p*(bindingavid+_q))),(immK-1)))*(exp(-_p*(bindingavid+_q))));
+  return(_p*tmpK*(pow((1-exp(-_p*(bindingavid+_q))),(tmpK-1)))*(exp(-_p*(bindingavid+_q))));
 }
 
 double Virus::probReplication(){
@@ -290,8 +318,20 @@ double Virus::d_probReplication(){
 }	 
 
 double Virus::bindingavid_change(Host* _host){
-  double dV = probSurvival(_host)*d_probReplication() + probReplication()*d_probSurvival(_host);
-  return(dV*_kc);
+  int row_K, col_V;
+  double change = 0;
+  if(deltaVMat != R_NilValue){
+    row_K = (int)floor(10* (_host->get_hostK()-distToHost));
+    col_V = (int)floor(100*bindingavid);
+    if(row_K >= deltaVMat.nrow()) row_K = deltaVMat.nrow()-1;
+    if(col_V >= deltaVMat.ncol()) row_K = deltaVMat.ncol()-1;
+
+    cout << "Row: " << row_K << "   Col: " << col_V << endl;
+    change = deltaVMat(row_K,col_V);
+  }
+  return(change);
+  //   double dV = probSurvival(_host)*d_probReplication() + probReplication()*d_probSurvival(_host);
+  //return(dV*_kc);
 }
 
 double Virus::getAntigenicDistance(Virus* A, Virus* B){
