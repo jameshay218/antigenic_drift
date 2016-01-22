@@ -327,7 +327,7 @@ double Virus::bindingavid_change(Host* _host){
   if(row_K >= deltaVMat.nrow()) row_K = deltaVMat.nrow()-1;
   if(col_V >= deltaVMat.ncol()) row_K = deltaVMat.ncol()-1;
   
-  cout << "Row: " << row_K << "   Col: " << col_V << endl;
+  //  cout << "Row: " << row_K << "   Col: " << col_V << endl;
   change = deltaVMat(row_K,col_V);
   return(change);
   //   double dV = probSurvival(_host)*d_probReplication() + probReplication()*d_probSurvival(_host);
