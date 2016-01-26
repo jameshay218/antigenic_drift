@@ -490,7 +490,11 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename, b
       output << viruses[i]->getId() << ",";
       output << viruses[i]->getBirth() << ",";
       output << viruses[i]->getDeath() << ",";
-      output << viruses[i]->getParent()->getId() << ",";
+      if(viruses[i]->getParent() != NULL){
+	output << viruses[i]->getParent()->getId() << ",";
+      } else {
+	output << "" << ",";
+      }
       output << viruses[i]->getIniBindingAvid() << ",";
       output << viruses[i]->getBindingAvid() << ",";
       output << viruses[i]->getK() << ",";
@@ -505,7 +509,11 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename, b
       output << viruses[i]->getId() << ",";
       output << viruses[i]->getBirth() << ",";
       output << viruses[i]->getDeath() << ",";
-      output << viruses[i]->getParent()->getId() << ",";
+      if(viruses[i]->getParent() != NULL){
+	output << viruses[i]->getParent()->getId() << ",";
+      } else {
+	output << "" << ",";
+      }
       output << viruses[i]->getLevel() << ",";
       output << viruses[i]->getIniBindingAvid() << ",";
       output << viruses[i]->getBindingAvid() << ",";
