@@ -243,7 +243,10 @@ void Virus::mutate(){
   case 2:
     bindingAvidChange = bindingavid_change(host);
     bindingavid += bindingAvidChange;
-    changeFromV += bindingAvidChange;
+    changeFromV += _V_to_d*fabs(bindingAvidChange);
+    distanceToParent += _V_to_d*fabs(bindingAvidChange);
+    distRoot += _V_to_d*fabs(bindingAvidChange);
+    distToHost += _V_to_d*fabs(bindingAvidChange);
     break;
   case 3:
     if(tmp <= _prob_mut){
@@ -256,11 +259,10 @@ void Virus::mutate(){
     }
     bindingAvidChange = bindingavid_change(host);
     bindingavid += bindingAvidChange;
-    changeFromV += bindingAvidChange;
+    changeFromV += _V_to_d*fabs(bindingAvidChange);
     distanceToParent += _V_to_d*fabs(bindingAvidChange);
     distRoot += _V_to_d*fabs(bindingAvidChange);
-    distToHost += change;
-    changeFromR += change;
+    distToHost += _V_to_d*fabs(bindingAvidChange);
     break;
   case 4:
     if(tmp <= _prob_mut){
@@ -273,7 +275,7 @@ void Virus::mutate(){
     }
     bindingAvidChange = bindingavid_change(host);
     bindingavid += bindingAvidChange;
-    changeFromV += bindingAvidChange;
+    changeFromV += _V_to_d*fabs(bindingAvidChange);
     break;
   default:
     break;

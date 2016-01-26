@@ -12,6 +12,7 @@ HostPopulation::HostPopulation(){
     Host* firstH = new Host();
     susceptibles.push_back(firstH);
   }
+  seedVirus = NULL;
     
 }
 
@@ -28,7 +29,7 @@ HostPopulation::HostPopulation(int initialS, int initialI, int initialR, int ini
   wane = _wane;
   gamma = _gamma;
   parentV = new Virus(0, NULL, iniBindingAvid, 0, NULL, day, 0, 0);
-
+  seedVirus = parentV;
   for(int i = 0; i < initialS;++i){
     H = new Host(Susceptible, this, _k);
     susceptibles.push_back(H);
@@ -345,9 +346,11 @@ Rcpp::Rcout << "#########################" << endl;
   map<int, Virus*> viruses = readViruses(virusFilename);
   Host* H;
   Virus* V;
-  
+  seedVirus = viruses[0];
+
   if(hostFile.is_open()){
     getline(hostFile,line);
+    // Get each row from the host file
     while(getline(hostFile, line)){
       vector<int> tmpRow;
       stringstream ss(line);
@@ -364,7 +367,7 @@ Rcpp::Rcout << "#########################" << endl;
 	tmpHostK = tmpRow[3];
 	//	if(tmpState == 0) cout << tmpState << " " << tmpVID << " " << tmpInf << " " << tmpHostK << endl;
 	H = new Host(static_cast<State>(tmpState), this, tmpHostK);
-
+	// If this host was infected, get the infecting virus ID and get this virus from the viruses vector
 	if(tmpState == Infected){
 	  H->infect(viruses[tmpInf],viruses[tmpInf]->getBirth());
 	  viruses[tmpInf]->updateHost(H);
@@ -443,7 +446,9 @@ std::map<int, Virus*> HostPopulation::readViruses(std::string virusFilename){
     int index = 0;
     for(virusIt iterator = viruses.begin(); iterator != viruses.end(); iterator++){
       // Iterate through all viruses and update parents
-      iterator->second->updateParent(viruses[parentIDs[index]]);
+      if(parentIDs[index] >= 0){
+	iterator->second->updateParent(viruses[parentIDs[index]]);
+      }
       index++;
     }
   }
@@ -480,12 +485,57 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename, b
   Rcpp::Rcout << "Writing output..." << endl;
   if(!savingState){
     Rcpp::Rcout << "... for phylogenetic tree" << endl;
-    output << "vid, birth, death, parentid, bindingAvidityIni, bindingAvidityFinal, infection_no, distance_to_parent, hostK, host_infections, tmpK,distHost, distRoot" << endl;
+    output << "vid, birth, death, parentid, bindingAvidityIni, bindingAvidityFinal, infection_no, distance_to_parent, hostK, host_infections, j,distHost, distRoot,changeFromV, changeFromR" << endl;
   }
   else {
     Rcpp::Rcout << "... for save state" << endl;
-    output << "vid,birth,death,parentid,level,bindingAvidIni,bindingAvid,infection_no,distance_to_parent,distance_to_root, distToHost, tmpK, changeFromV, changeFromR" << endl;
+    output << "vid,birth,death,parentid,level,bindingAvidIni,bindingAvid,infection_no,distance_to_parent,distance_to_root, distToHost, j, changeFromV, changeFromR" << endl;
   }
+  if(seedVirus != NULL){
+    if(!savingState){
+      output << seedVirus->getId() << ",";
+      output << seedVirus->getBirth() << ",";
+      output << seedVirus->getDeath() << ",";
+      if(seedVirus->getParent() != NULL){
+	output << seedVirus->getParent()->getId() << ",";
+      } else {
+	output << "-1" << ",";
+      }
+      output << seedVirus->getIniBindingAvid() << ",";
+      output << seedVirus->getBindingAvid() << ",";
+      output << seedVirus->getK() << ",";
+      output << seedVirus->getDistance() << ",";
+      output << seedVirus->getHostK() << ",";
+      output << seedVirus->getHost()->getInfectionHistory().size() << ",";
+      output << seedVirus->getTmpImmK() << ",";
+      output << seedVirus->getDistHost() << ",";
+      output << seedVirus->getDistRoot() << ",";
+      output << seedVirus->getChangeFromV() << ",";
+      output << seedVirus->getChangeFromR();
+    }
+    else {
+      output << seedVirus->getId() << ",";
+      output << seedVirus->getBirth() << ",";
+      output << seedVirus->getDeath() << ",";
+      if(seedVirus->getParent() != NULL){
+	output << seedVirus->getParent()->getId() << ",";
+      } else {
+	output << "-1" << ",";
+      }
+      output << seedVirus->getLevel() << ",";
+      output << seedVirus->getIniBindingAvid() << ",";
+      output << seedVirus->getBindingAvid() << ",";
+      output << seedVirus->getK() << ",";
+      output << seedVirus->getDistance() << ",";
+      output << seedVirus->getDistRoot() << ",";
+      output << seedVirus->getDistHost() << ",";
+      output << seedVirus->getTmpImmK() << ",";
+      output << seedVirus->getChangeFromV() << ",";
+      output << seedVirus->getChangeFromR();
+    }
+    output << endl;
+  }
+
   j = viruses.size();
   for(int i = 0; i < j;++i){
     if(!savingState){
@@ -495,17 +545,19 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename, b
       if(viruses[i]->getParent() != NULL){
 	output << viruses[i]->getParent()->getId() << ",";
       } else {
-	output << "" << ",";
+	output << "-1" << ",";
       }
       output << viruses[i]->getIniBindingAvid() << ",";
-      output << viruses[i]->getBindingAvid() << ",";
-      output << viruses[i]->getK() << ",";
-      output << viruses[i]->getDistance() << ",";
-      output << viruses[i]->getHostK() << ",";
-      output << viruses[i]->getHost()->getInfectionHistory().size() << ",";
-      output << viruses[i]->getTmpImmK() << ",";
+	output << viruses[i]->getBindingAvid() << ",";
+	output << viruses[i]->getK() << ",";
+	output << viruses[i]->getDistance() << ",";
+	output << viruses[i]->getHostK() << ",";
+	output << viruses[i]->getHost()->getInfectionHistory().size() << ",";
+	output << viruses[i]->getTmpImmK() << ",";
       output << viruses[i]->getDistHost() << ",";
-      output << viruses[i]->getDistRoot();
+      output << viruses[i]->getDistRoot() << ",";
+      output << seedVirus->getChangeFromV() << ",";
+      output << seedVirus->getChangeFromR();
     }
     else {
       output << viruses[i]->getId() << ",";
@@ -514,14 +566,14 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename, b
       if(viruses[i]->getParent() != NULL){
 	output << viruses[i]->getParent()->getId() << ",";
       } else {
-	output << "" << ",";
+	output << "-1" << ",";
       }
       output << viruses[i]->getLevel() << ",";
       output << viruses[i]->getIniBindingAvid() << ",";
       output << viruses[i]->getBindingAvid() << ",";
       output << viruses[i]->getK() << ",";
       output << viruses[i]->getDistance() << ",";
-      output << viruses[i]->getDistRoot() << endl;
+      output << viruses[i]->getDistRoot() << ",";
       output << viruses[i]->getDistHost() << ",";
       output << viruses[i]->getTmpImmK() << ",";
       output << viruses[i]->getChangeFromV() << ",";
@@ -533,15 +585,15 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename, b
   output.close();
   Rcpp::Rcout << "Writing viruses complete" << endl;
   Rcpp::Rcout << "#########################" << endl << endl;
-}
+  }
 
-void HostPopulation::virusPairwiseMatrix(std::ofstream& output, std::string filename, int sampSize){
-  Rcpp::Rcout << "#########################" << endl;
-  Rcpp::Rcout << "Writing pairwise matrix" << endl;
-  vector<Host*> hosts;
-  vector<Virus*> viruses;
-  vector<int> sampIndices;
-  output.open(filename);
+  void HostPopulation::virusPairwiseMatrix(std::ofstream& output, std::string filename, int sampSize){
+    Rcpp::Rcout << "#########################" << endl;
+    Rcpp::Rcout << "Writing pairwise matrix" << endl;
+    vector<Host*> hosts;
+    vector<Virus*> viruses;
+    vector<int> sampIndices;
+    output.open(filename);
   hosts.insert(hosts.end(),susceptibles.begin(),susceptibles.end());
   hosts.insert(hosts.end(),infecteds.begin(),infecteds.end());
   hosts.insert(hosts.end(),recovereds.begin(),recovereds.end());
@@ -579,12 +631,15 @@ void HostPopulation::virusPairwiseMatrix(std::ofstream& output, std::string file
   int index2 = 0;
   for(int row = 0; row < j; ++row){
     index = sampIndices[row];
-    for(int col = 0; col < row-1; ++col){
+    int col = 0;
+    while(col < row-1){
       output << ",";
+      col++;
     }
-    for(int col = row; col < j; ++col){
+    col = row;
+    while(col < j){
       output << ",";
-      index2 = sampIndices[col];
+      index2 = sampIndices[col++];
       output << Virus::getAntigenicDistance(viruses[index],viruses[index2]);
     }
     output << endl;

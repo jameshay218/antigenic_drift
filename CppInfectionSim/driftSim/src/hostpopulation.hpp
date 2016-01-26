@@ -31,6 +31,8 @@ private:
   double wane;
   double gamma;
 
+  Virus* seedVirus;
+
 public:
   std::default_random_engine generator;
 
