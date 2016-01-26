@@ -18,6 +18,7 @@ HostPopulation::HostPopulation(){
 HostPopulation::HostPopulation(int initialS, int initialI, int initialR, int iniDay, double _contactRate, double _mu, double _wane, double _gamma, double _iniBindingAvid){
   Host* H;
   Virus* V;
+  Virus* parentV;
   double iniBindingAvid = _iniBindingAvid;
   int _k = 0;
   generator.seed(time(NULL));
@@ -26,14 +27,15 @@ HostPopulation::HostPopulation(int initialS, int initialI, int initialR, int ini
   mu = _mu;
   wane = _wane;
   gamma = _gamma;
-  
+  parentV = new Virus(0, NULL, iniBindingAvid, 0, NULL, day, 0, 0);
+
   for(int i = 0; i < initialS;++i){
     H = new Host(Susceptible, this, _k);
     susceptibles.push_back(H);
   }
   for(int i =0; i < initialI; ++i){
     H = new Host(Infected, this);
-    V = new Virus(0, NULL, iniBindingAvid, 0, H,day,0,0);
+    V = new Virus(0, parentV, iniBindingAvid, 0, H,day,0,0);
     H->infect(V,day);
     infecteds.push_back(H);
   }
