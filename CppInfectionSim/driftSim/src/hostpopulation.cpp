@@ -478,7 +478,7 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename, b
   Rcpp::Rcout << "Writing output..." << endl;
   if(!savingState){
     Rcpp::Rcout << "... for phylogenetic tree" << endl;
-    output << "vid, birth, death, parentid, bindingAvidityIni, bindingAvidityFinal, infection_no, distance_to_parent, hostK, host_infections, immK, distRoot" << endl;
+    output << "vid, birth, death, parentid, bindingAvidityIni, bindingAvidityFinal, infection_no, distance_to_parent, hostK, host_infections, tmpK,distHost, distRoot" << endl;
   }
   else {
     Rcpp::Rcout << "... for save state" << endl;
@@ -490,12 +490,14 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename, b
       output << viruses[i]->getId() << ",";
       output << viruses[i]->getBirth() << ",";
       output << viruses[i]->getDeath() << ",";
+      output << viruses[i]->getParent()->getId() << ",";
       output << viruses[i]->getIniBindingAvid() << ",";
       output << viruses[i]->getBindingAvid() << ",";
       output << viruses[i]->getK() << ",";
       output << viruses[i]->getDistance() << ",";
       output << viruses[i]->getHostK() << ",";
       output << viruses[i]->getHost()->getInfectionHistory().size() << ",";
+      output << viruses[i]->getTmpImmK() << ",";
       output << viruses[i]->getDistHost() << ",";
       output << viruses[i]->getDistRoot();
     }
@@ -503,6 +505,7 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename, b
       output << viruses[i]->getId() << ",";
       output << viruses[i]->getBirth() << ",";
       output << viruses[i]->getDeath() << ",";
+      output << viruses[i]->getParent()->getId() << ",";
       output << viruses[i]->getLevel() << ",";
       output << viruses[i]->getIniBindingAvid() << ",";
       output << viruses[i]->getBindingAvid() << ",";
