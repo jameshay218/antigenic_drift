@@ -38,7 +38,8 @@ public:
 
   // Constructors
   HostPopulation();
-  HostPopulation(int initialS, int initialI, int initialR, int iniDay, double _contactRate, double _mu, double _wane, double _gamma, double _iniBindingAvid);
+  HostPopulation(int initialS, int initialI, int initialR, int iniDay, double _contactRate, double _mu, double _wane, double _gamma, double _iniBindingAvid, double initialDistance);
+  HostPopulation(int initialS, int initialI, int initialR, int iniDay, double _contactRate, double _mu, double _wane, double _gamma, double _iniBindingAvid, double initialDistance, Rcpp::NumericVector startingK);
   ~HostPopulation();
 
   // Manage population temporal dynamics
@@ -58,6 +59,8 @@ public:
   int countInfecteds();
   int countRecovereds();
   int countN();
+
+  Virus* getSeedVirus();
 
   // Print out current population status
   void printStatus();

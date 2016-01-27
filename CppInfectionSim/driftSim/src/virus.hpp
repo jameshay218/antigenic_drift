@@ -12,15 +12,15 @@ private:
   int id;
   int birth;
   int death;
-  int infectionK;
+  int infectionNo;
   Virus* parent;
   Host* host;
   double bindingavid_ini;
   double bindingavid;
   double distanceToParent;
   double distToHost;
-  double tmpK;
   double distRoot;
+  double tmpK;
   double changeFromV;
   double changeFromR;
   int level;
@@ -53,8 +53,8 @@ public:
   int getId();
   int getBirth();
   int getDeath();
+  int getInfectionNo();
   int getK();
-  int getTmpImmK();
   int getHostK();
   Host* getHost();
 
@@ -66,6 +66,7 @@ public:
   double getDistRoot();
   double getChangeFromV();
   double getChangeFromR();
+  double getJ();
   int getLevel();
 
   void updateParent(Virus* newParent);
@@ -73,12 +74,16 @@ public:
 
   // Calculations/events
   double calculateRho(Host* _host);
+  double calculateRho(double distHost, Host* _host);
   void mutate();
+  double findDistanceToHost(Host* _host);
   double probSurvival(Host* _host);
+  double probSurvival(double distHost, Host* _host);
   double probReplication();
   double d_probSurvival(Host* _host);
   double d_probReplication();
-  double bindingavid_change(Host* _host);
+  double bindingavid_change();
+  double currentDistHost();
   void kill(int cur_t);
 
   // Change static member variables

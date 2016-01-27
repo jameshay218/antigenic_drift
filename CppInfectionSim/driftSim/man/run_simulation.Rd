@@ -4,11 +4,13 @@
 \alias{run_simulation}
 \title{xx}
 \usage{
-run_simulation(flags = c(1, 0, 0, 0), hostpars = c(90000, 100, 1e+05 - 90000
-  - 100, 1.5, 1/(40 * 365), 1/25, 0.333, 0.8), viruspars = c(3, 50, 1, 0.7, 3,
-  2, 2, 0.1, 1, 0.5, 1000), start = 0, end = 365,
-  output_files = c("SIR_output.csv", "voutput_1.csv", "voutput_2.csv"),
-  VERBOSE = TRUE, scenario = 1, callback = NULL)
+run_simulation(flags = c(1, 0, 0, 0, 0, 0), hostpars = c(90000, 100, 1e+05 -
+  90000 - 100, 1.5, 1/(40 * 365), 1/25, 0.333, 0.8, 10, 0), viruspars = c(3,
+  70, 1, 0.7, 3, 2, 2, 0.1, 1, 0.5, 1000), deltaVMat = matrix(ncol = 2, nrow =
+  2), start = 0, end = 365, input_files = c("hosts.csv", "viruses.csv"),
+  output_files = c("SIR_output.csv", "voutput_1.csv", "voutput_2.csv",
+  "hosts.csv", "viruses.csv"), VERBOSE = TRUE, scenario = 1,
+  callback = NULL)
 }
 \arguments{
 \item{flags}{xx}

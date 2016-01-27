@@ -14,7 +14,7 @@
 ##' @useDynLib driftSim
 run_simulation <- function(
                            flags=c(1,0,0,0,0,0),
-                           hostpars=c(90000,100,100000-90000-100,1.5,1/(40*365),1/25,0.333,0.8,10),
+                           hostpars=c(90000,100,100000-90000-100,1.5,1/(40*365),1/25,0.333,0.8,10,0),
                            viruspars=c(3, 70, 1, 0.7, 3, 2, 2, 0.1, 1, 0.5, 1000),
                            deltaVMat = matrix(ncol=2,nrow=2),
                            start=0,
@@ -29,4 +29,29 @@ run_simulation <- function(
         return(0)
     }
     run_simulation_cpp(flags,hostpars,viruspars, deltaVMat,start,end,input_files,output_files,VERBOSE,scenario, callback)
+}
+
+##' moar2
+##' @title xx
+##' @param flags xx
+##' @param hostpars xx
+##' @param viruspars xx
+##' @param start xx
+##' @param end xx
+##' @param output_files xx
+##' @param VERBOSE xx
+##' @param scenario xx
+##' @param callback xx
+##' @export
+##' @import Rcpp
+##' @useDynLib driftSim
+generateHostKDist <- function(hostFile, N){
+    hostDat <- read.csv(hostFile)
+    hostKs <- hostDat$hostK  
+    countHostK <- count(hostKs)
+    freqs <- countHostK$freq/sum(countHostK$freq)
+    cumSumK <- cumsum(freqs)
+    startingKs <- generateKSamples(cumSumK, N)
+    startingKs <- startingKs + 1
+    return(countHostK$x[startingKs])
 }

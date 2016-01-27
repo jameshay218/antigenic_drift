@@ -26,14 +26,14 @@ Host::Host(State _state, HostPopulation* _popn, int _k){
   state = _state;
   currentInfection = NULL;
   popn = _popn;
-  hostK = _k;
+  hostK = (double)_k;
 }
 
 Host::Host(State _state, HostPopulation* _popn, int _k, Virus* _firstInf){
 state = _state;
   currentInfection = NULL;
   popn = _popn;
-  hostK = _k;
+  hostK = (double)_k;
   infectionHistory.push_back(_firstInf);
 }
 
@@ -41,7 +41,7 @@ state = _state;
 Host::~Host(){
   int j = infectionHistory.size();
   for(int i = 0; i < j;++i){
-    if(infectionHistory[i] != NULL){
+    if(infectionHistory[i] != NULL && infectionHistory[i] != popn->getSeedVirus()){
       delete infectionHistory[i];
     }
   }
@@ -65,8 +65,6 @@ bool Host::isSusceptible(){
 
 void Host::infect(Virus* newInfection, int cur_t){
   state = Infected;
-
-  //newInfection->updateK(infectionHistory.size()+1);
 
   if(currentInfection != NULL){
     currentInfection->kill(cur_t);

@@ -9,7 +9,8 @@ LazyData: true
 URL: https://github.com/<gh-username>/driftSim
 BugReports: https://github.com/<gh-username>/driftSim/issues
 Imports:
-    Rcpp
+    Rcpp,
+    plyr
 LinkingTo: Rcpp
 SystemRequirements: C++11
 Suggests:

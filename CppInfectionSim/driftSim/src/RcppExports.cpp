@@ -5,6 +5,42 @@
 
 using namespace Rcpp;
 
+// generateStartK
+int generateStartK(Rcpp::NumericVector dist);
+RcppExport SEXP driftSim_generateStartK(SEXP distSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type dist(distSEXP);
+    __result = Rcpp::wrap(generateStartK(dist));
+    return __result;
+END_RCPP
+}
+// generateKSamples
+Rcpp::NumericVector generateKSamples(Rcpp::NumericVector cumSumK, int N);
+RcppExport SEXP driftSim_generateKSamples(SEXP cumSumKSEXP, SEXP NSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type cumSumK(cumSumKSEXP);
+    Rcpp::traits::input_parameter< int >::type N(NSEXP);
+    __result = Rcpp::wrap(generateKSamples(cumSumK, N));
+    return __result;
+END_RCPP
+}
+// callFunction
+Rcpp::NumericVector callFunction(std::string filename, int N, Rcpp::Function f);
+RcppExport SEXP driftSim_callFunction(SEXP filenameSEXP, SEXP NSEXP, SEXP fSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
+    Rcpp::traits::input_parameter< int >::type N(NSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Function >::type f(fSEXP);
+    __result = Rcpp::wrap(callFunction(filename, N, f));
+    return __result;
+END_RCPP
+}
 // run_simulation_cpp
 int run_simulation_cpp(Rcpp::IntegerVector flags, Rcpp::NumericVector hostPopn, Rcpp::NumericVector virusPars, Rcpp::NumericMatrix deltaVMat, int day, int final_day, std::vector<std::string> input_files, std::vector<std::string> output_files, bool VERBOSE, int scenario, SEXP callback);
 RcppExport SEXP driftSim_run_simulation_cpp(SEXP flagsSEXP, SEXP hostPopnSEXP, SEXP virusParsSEXP, SEXP deltaVMatSEXP, SEXP daySEXP, SEXP final_daySEXP, SEXP input_filesSEXP, SEXP output_filesSEXP, SEXP VERBOSESEXP, SEXP scenarioSEXP, SEXP callbackSEXP) {

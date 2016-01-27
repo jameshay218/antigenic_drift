@@ -16,19 +16,18 @@ HostPopulation::HostPopulation(){
     
 }
 
-HostPopulation::HostPopulation(int initialS, int initialI, int initialR, int iniDay, double _contactRate, double _mu, double _wane, double _gamma, double _iniBindingAvid){
+HostPopulation::HostPopulation(int initialS, int initialI, int initialR, int iniDay, double _contactRate, double _mu, double _wane, double _gamma, double _iniBindingAvid, double initialDistance){
   Host* H;
   Virus* V;
   Virus* parentV;
   double iniBindingAvid = _iniBindingAvid;
   int _k = 0;
-  generator.seed(time(NULL));
   day = iniDay;
   contactRate = _contactRate;
   mu = _mu;
   wane = _wane;
   gamma = _gamma;
-  parentV = new Virus(0, NULL, iniBindingAvid, 0, NULL, day, 0, 0);
+  parentV = new Virus(0, NULL, iniBindingAvid, initialDistance, NULL, day, 0, 0);
   seedVirus = parentV;
   for(int i = 0; i < initialS;++i){
     H = new Host(Susceptible, this, _k);
@@ -42,6 +41,40 @@ HostPopulation::HostPopulation(int initialS, int initialI, int initialR, int ini
   }
   for(int i = 0; i < initialR; ++i){
     H = new Host(Recovered, this);
+    recovereds.push_back(H);
+  }
+}
+
+
+HostPopulation::HostPopulation(int initialS, int initialI, int initialR, int iniDay, double _contactRate, double _mu, double _wane, double _gamma, double _iniBindingAvid, double initialDistance, Rcpp::NumericVector startingK){
+  Host* H;
+  Virus* V;
+  Virus* parentV;
+  double iniBindingAvid = _iniBindingAvid;
+  int hostIndex = 0;
+  day = iniDay;
+  contactRate = _contactRate;
+  mu = _mu;
+  wane = _wane;
+  gamma = _gamma;
+  parentV = new Virus(0, NULL, iniBindingAvid, initialDistance, NULL, day, 0, 0);
+  seedVirus = parentV;
+
+  for(int i = 0; i < initialS;++i){
+    H = new Host(Susceptible, this, startingK[hostIndex++]);
+    H->addInfection(seedVirus);
+    susceptibles.push_back(H);
+  }
+  for(int i =0; i < initialI; ++i){
+    H = new Host(Infected, this, startingK[hostIndex++]);
+    H->addInfection(seedVirus);
+    V = new Virus(0, parentV, iniBindingAvid, 0, H,day,0,0);
+    H->infect(V,day);
+    infecteds.push_back(H);
+  }
+  for(int i = 0; i < initialR; ++i){
+    H = new Host(Recovered, this, startingK[hostIndex++]);
+    H->addInfection(seedVirus);
     recovereds.push_back(H);
   }
 }
@@ -73,6 +106,11 @@ HostPopulation::~HostPopulation(){
     delete dead[i];
   }
   // Rcpp::Rcout << "D deleted" << endl;
+  delete seedVirus;
+}
+
+Virus* HostPopulation::getSeedVirus(){
+  return(seedVirus);
 }
 
 void HostPopulation::stepForward(int new_day){
@@ -166,13 +204,12 @@ void HostPopulation::decline(){
 
 void HostPopulation::contact(){
   // Generate number of contacts between infecteds and susceptibles
-  //poisson_distribution<int> poisson(contactRate*countInfecteds()*countSusceptibles()/countN());
-  //  int totalContacts = poisson(generator);
   int totalContacts = R::rpois(contactRate*countInfecteds()*countSusceptibles()/countN());
   int index1 = 0;
   int index2 = 0;
   double tmp = 0;
   double number_success = 0;
+  double tmpDist;
   /* For each contact, get a random I and random S. With a probability proportional to virus survival, infect the susceptible. 
      Note that the susceptible may contact multiple infecteds */
   for(int i = 0; i < totalContacts; ++i){
@@ -180,10 +217,14 @@ void HostPopulation::contact(){
       index1 = floor(R::unif_rand()*(countInfecteds()));
       index2 = floor(R::unif_rand()*(countSusceptibles()));
       tmp = R::unif_rand();
-   
-      if(tmp <= infecteds[index1]->getCurrentVirus()->calculateRho(susceptibles[index2])){
-	if(susceptibles[index2]->isSusceptible()){
-	  Virus* newV = new Virus(infecteds[index1]->getCurrentVirus(), susceptibles[index2], day, infecteds[index1]->getCurrentVirus()->getTmpImmK(),susceptibles[index2]->getInfectionHistory().size());
+      
+      // Check if given virus can infect given host
+      if(susceptibles[index2]->isSusceptible()){
+	// Find antigenic distance to host's immunity
+	tmpDist = infecteds[index1]->getCurrentVirus()->findDistanceToHost(susceptibles[index2]);
+	if(tmp <= infecteds[index1]->getCurrentVirus()->calculateRho(tmpDist, susceptibles[index2])){
+	  // If successful infection, use the infecting virus as the parent. Get distance to new host's immunity.
+	  Virus* newV = new Virus(infecteds[index1]->getCurrentVirus(), susceptibles[index2], day, tmpDist, susceptibles[index2]->getInfectionHistory().size());
 	  susceptibles[index2]->infect(newV,day);
 	  new_infecteds.push_back(susceptibles[index2]); // Record new infected to add later
 	  number_success++;
@@ -191,7 +232,6 @@ void HostPopulation::contact(){
       }
     }
   }
-  //  Rcpp::Rcout << "Beta: " << number_success/totalContacts << endl;
 }
 
 void HostPopulation::recoveries(){
@@ -249,11 +289,15 @@ void HostPopulation::updateCompartments(){
   new_births.clear();
 }
 
+// Mutate once per infection, at x days after infection
 void HostPopulation::mutations(){
   int j = infecteds.size();
+  int x = 1;
   if(j > 0){
     for(int i = 0; i < j; ++i){
-      infecteds[i]->getCurrentVirus()->mutate();
+      if((infecteds[i]->getCurrentVirus()->getBirth() - day) == 1){
+	infecteds[i]->getCurrentVirus()->mutate();
+      }
     }
   }
 }
@@ -411,7 +455,7 @@ std::map<int, Virus*> HostPopulation::readViruses(std::string virusFilename){
   ifstream virusFile(virusFilename);
   string line;
   Virus* V;
-  int vid, birth, death, level, infectionK;
+  int vid, birth, death, level, infectionNo;
   double bindingAvid, bindingAvidIni,distanceToParent, distanceToRoot, distHost, tmpK, changeV, changeR;
   if(virusFile.is_open()){
     getline(virusFile,line);
@@ -423,7 +467,6 @@ std::map<int, Virus*> HostPopulation::readViruses(std::string virusFilename){
 	tmpRow.push_back(i);
 	if(ss.peek() == ',' || ss.peek() == '\n' || ss.peek() == ' ') ss.ignore();	
       }
-      //      cout << line << endl;
       vid = (int)tmpRow[0];
       birth = (int)tmpRow[1];
       death = (int)tmpRow[2];
@@ -431,7 +474,7 @@ std::map<int, Virus*> HostPopulation::readViruses(std::string virusFilename){
       level = (int)tmpRow[4];
       bindingAvidIni = tmpRow[5];	
       bindingAvid = tmpRow[6];
-      infectionK = (int)tmpRow[7];
+      infectionNo = (int)tmpRow[7];
       distanceToParent = tmpRow[8];
       distanceToRoot = tmpRow[9];
       distHost = tmpRow[10];
@@ -439,7 +482,7 @@ std::map<int, Virus*> HostPopulation::readViruses(std::string virusFilename){
       changeV = tmpRow[12];
       changeR = tmpRow[13];
 
-      V = new Virus(vid, birth, death, NULL, level, bindingAvidIni, bindingAvid, infectionK, distanceToParent, distanceToRoot, distHost, tmpK, NULL, changeV, changeR);
+      V = new Virus(vid, birth, death, NULL, level, bindingAvidIni, bindingAvid, infectionNo, distanceToParent, distanceToRoot, distHost, tmpK, NULL, changeV, changeR);
       viruses.insert(make_pair(vid,V));
     }
     typedef map<int, Virus*>::iterator virusIt;
@@ -485,11 +528,11 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename, b
   Rcpp::Rcout << "Writing output..." << endl;
   if(!savingState){
     Rcpp::Rcout << "... for phylogenetic tree" << endl;
-    output << "vid, birth, death, parentid, bindingAvidityIni, bindingAvidityFinal, infection_no, distance_to_parent, hostK, host_infections, j,distHost, distRoot,changeFromV, changeFromR" << endl;
+    output << "vid, birth, death, parentid, bindingAvidityIni, bindingAvidityFinal, infectionNo, distToParent, hostImmunity, hostInfections, immJ,distHost, distRoot,changeFromV, changeFromR" << endl;
   }
   else {
     Rcpp::Rcout << "... for save state" << endl;
-    output << "vid,birth,death,parentid,level,bindingAvidIni,bindingAvid,infection_no,distance_to_parent,distance_to_root, distToHost, j, changeFromV, changeFromR" << endl;
+    output << "vid,birth,death,parentid,level,bindingAvidIni,bindingAvid,infectionNo,distToParent,distToRoot, distToHost, immJ, changeFromV, changeFromR" << endl;
   }
   if(seedVirus != NULL){
     if(!savingState){
@@ -503,11 +546,15 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename, b
       }
       output << seedVirus->getIniBindingAvid() << ",";
       output << seedVirus->getBindingAvid() << ",";
-      output << seedVirus->getK() << ",";
+      output << seedVirus->getInfectionNo() << ",";
       output << seedVirus->getDistance() << ",";
-      output << seedVirus->getHostK() << ",";
-      output << seedVirus->getHost()->getInfectionHistory().size() << ",";
-      output << seedVirus->getTmpImmK() << ",";
+      if(seedVirus->getHost() != NULL){
+	output << seedVirus->getK() << ",";
+	output << seedVirus->getHost()->getInfectionHistory().size() << ",";
+      } else {
+	output << "-1" << "," << "-1" << ",";
+      }
+      output << seedVirus->getJ() << ",";
       output << seedVirus->getDistHost() << ",";
       output << seedVirus->getDistRoot() << ",";
       output << seedVirus->getChangeFromV() << ",";
@@ -525,15 +572,16 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename, b
       output << seedVirus->getLevel() << ",";
       output << seedVirus->getIniBindingAvid() << ",";
       output << seedVirus->getBindingAvid() << ",";
-      output << seedVirus->getK() << ",";
+      output << seedVirus->getInfectionNo() << ",";
       output << seedVirus->getDistance() << ",";
       output << seedVirus->getDistRoot() << ",";
       output << seedVirus->getDistHost() << ",";
-      output << seedVirus->getTmpImmK() << ",";
+      output << seedVirus->getK() << ",";
       output << seedVirus->getChangeFromV() << ",";
       output << seedVirus->getChangeFromR();
     }
     output << endl;
+    Rcpp::Rcout << "Seed virus saved" << endl;
   }
 
   j = viruses.size();
@@ -548,12 +596,12 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename, b
 	output << "-1" << ",";
       }
       output << viruses[i]->getIniBindingAvid() << ",";
-	output << viruses[i]->getBindingAvid() << ",";
-	output << viruses[i]->getK() << ",";
-	output << viruses[i]->getDistance() << ",";
-	output << viruses[i]->getHostK() << ",";
-	output << viruses[i]->getHost()->getInfectionHistory().size() << ",";
-	output << viruses[i]->getTmpImmK() << ",";
+      output << viruses[i]->getBindingAvid() << ",";
+      output << viruses[i]->getInfectionNo() << ",";
+      output << viruses[i]->getDistance() << ",";
+      output << viruses[i]->getK() << ",";
+      output << viruses[i]->getHost()->getInfectionHistory().size() << ",";
+      output << viruses[i]->getJ() << ",";
       output << viruses[i]->getDistHost() << ",";
       output << viruses[i]->getDistRoot() << ",";
       output << seedVirus->getChangeFromV() << ",";
@@ -571,11 +619,11 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename, b
       output << viruses[i]->getLevel() << ",";
       output << viruses[i]->getIniBindingAvid() << ",";
       output << viruses[i]->getBindingAvid() << ",";
-      output << viruses[i]->getK() << ",";
+      output << viruses[i]->getInfectionNo() << ",";
       output << viruses[i]->getDistance() << ",";
       output << viruses[i]->getDistRoot() << ",";
       output << viruses[i]->getDistHost() << ",";
-      output << viruses[i]->getTmpImmK() << ",";
+      output << viruses[i]->getK() << ",";
       output << viruses[i]->getChangeFromV() << ",";
       output << viruses[i]->getChangeFromR();
     }
