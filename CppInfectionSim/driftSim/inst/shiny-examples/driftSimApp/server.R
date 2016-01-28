@@ -152,6 +152,8 @@ shinyServer(
             else {
                 inputFiles <- c(inputs$hostInput$datapath,inputs$virusInput$datapath)
             }
+            print("Working directory: " )
+            print(getwd())
             if(length(inputs$scenarios) > 0){
                 withProgress(message="Simulation number", value=0, detail=1, {
                     for(i in inputs$scenarios){
