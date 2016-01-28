@@ -9,10 +9,9 @@ LazyData: true
 URL: https://github.com/<gh-username>/driftSim
 BugReports: https://github.com/<gh-username>/driftSim/issues
 Imports:
-    Rcpp,
-    plyr
+    Rcpp, shiny, ggplot2, reshape2, gridExtra, data.table, deSolve, plyr
 LinkingTo: Rcpp
 SystemRequirements: C++11
 Suggests:
-    testthat,shiny, ggplot2, reshape2, gridExtra, data.table, deSolve, plyr
+    testthat
 RoxygenNote: 5.0.1
