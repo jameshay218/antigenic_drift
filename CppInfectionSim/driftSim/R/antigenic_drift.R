@@ -56,7 +56,20 @@ generateHostKDist <- function(hostFile, N){
     return(countHostK$x[startingKs])
 }
 
-#' @export
+##' moar3
+##' @title xx
+##' @param flags xx
+##' @param hostpars xx
+##' @param viruspars xx
+##' @param start xx
+##' @param end xx
+##' @param output_files xx
+##' @param VERBOSE xx
+##' @param scenario xx
+##' @param callback xx
+##' @export
+##' @import Rcpp
+##' @useDynLib driftSim
 runSimulationApp <- function(){
     runExample <- function() {
         appDir <- system.file("shiny-examples", "driftSimApp", package = "driftSim")
