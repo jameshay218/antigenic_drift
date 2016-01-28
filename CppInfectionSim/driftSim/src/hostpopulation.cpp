@@ -295,9 +295,8 @@ void HostPopulation::mutations(){
   int x = 1;
   if(j > 0){
     for(int i = 0; i < j; ++i){
-      if((infecteds[i]->getCurrentVirus()->getBirth() - day) == 1){
-	infecteds[i]->getCurrentVirus()->mutate();
-      }
+      //   if((infecteds[i]->getCurrentVirus()->getBirth() - day) == 1){
+      infecteds[i]->getCurrentVirus()->mutate(day);
     }
   }
 }

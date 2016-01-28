@@ -88,14 +88,14 @@ double Virus::calculateRho(double distHost, Host* _host){
   return(1 - pow((_n*probSurvival(distHost, _host)*probReplication()),-_v));
 }
 
-void Virus::mutate(){
+void Virus::mutate(int day){
   double bindingAvidChange;
   double change;
   double tmp = R::unif_rand();
-
+  int dayPassed = day-birth;
   switch (_scenario){
   case 1: 
-    if(tmp <= _prob_mut){
+    if(dayPassed ==1 && tmp <= _prob_mut){
       change = R::rexp(_exp_dist);
       distanceToParent += change;
       distRoot += change;
@@ -110,7 +110,7 @@ void Virus::mutate(){
     distRoot += _V_to_d*fabs(bindingAvidChange);
     break;
   case 3:
-    if(tmp <= _prob_mut){
+    if(dayPassed ==1 && tmp <= _prob_mut){
       change = R::rexp(_exp_dist);
       distanceToParent += change;
       distRoot += change;
@@ -123,7 +123,7 @@ void Virus::mutate(){
     distRoot += _V_to_d*fabs(bindingAvidChange);
     break;
   case 4:
-    if(tmp <= _prob_mut){
+    if(dayPassed ==1 && tmp <= _prob_mut){
       change = R::rexp(_exp_dist);
       distanceToParent += change;
       distRoot += change;
@@ -193,7 +193,7 @@ double Virus::d_probReplication(){
 double Virus::bindingavid_change(){
   int row_K, col_V;
   double change = 0;
-  row_K = (int)floor(10*(_r*(tmpK-distToHost)));
+  row_K = (int)floor(10*(tmpK-distToHost));
   col_V = (int)floor(100*bindingavid);
   if(row_K < 0) row_K = 0;
   if(col_V < 0) col_V = 0;

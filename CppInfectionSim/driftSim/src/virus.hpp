@@ -75,7 +75,7 @@ public:
   // Calculations/events
   double calculateRho(Host* _host);
   double calculateRho(double distHost, Host* _host);
-  void mutate();
+  void mutate(int day);
   double findDistanceToHost(Host* _host);
   double probSurvival(Host* _host);
   double probSurvival(double distHost, Host* _host);
