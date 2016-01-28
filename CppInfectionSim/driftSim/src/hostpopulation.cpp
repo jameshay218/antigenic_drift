@@ -342,6 +342,7 @@ void HostPopulation::printStatus(){
 void HostPopulation::writeHosts(std::ofstream& output, std::string filename){
   Rcpp::Rcout << "#########################" << endl;
   Rcpp::Rcout << "Writing hosts to csv..." << endl;
+  Rcpp::Rcout << "Location: " << filename << endl;
   output.open(filename);
   
   // Put all hosts into one vector
