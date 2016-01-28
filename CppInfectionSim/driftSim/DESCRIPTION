@@ -14,5 +14,5 @@ Imports:
 LinkingTo: Rcpp
 SystemRequirements: C++11
 Suggests:
-    testthat
+    testthat,shiny, ggplot2, reshape2, gridExtra, data.table, deSolve, plyr
 RoxygenNote: 5.0.1
