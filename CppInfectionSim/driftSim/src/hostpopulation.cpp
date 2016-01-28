@@ -512,11 +512,17 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename, b
   for(int y = 0; y < q; ++y){
     j = tmp[y].size();
     for(int i = 0; i < j; ++i){
-      if(tmp[y][i]->isInfected()) viruses.push_back(tmp[y][i]->getCurrentVirus());
+      if(tmp[y][i]->isInfected()){
+	if(tmp[y][i]->getCurrentVirus() != seedVirus){
+	  viruses.push_back(tmp[y][i]->getCurrentVirus());
+	}
+      }
       x = tmp[y][i]->getInfectionHistory().size();
       if(x > 0){
 	for(int ii = 0; ii < x; ++ii){
-	  viruses.push_back(tmp[y][i]->getInfectionHistory()[ii]);
+	  if(tmp[y][i]->getInfectionHistory()[ii]!=seedVirus){
+	    viruses.push_back(tmp[y][i]->getInfectionHistory()[ii]);
+	  }
 	}
       }
     }

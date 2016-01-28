@@ -120,7 +120,7 @@ int run_simulation_cpp(Rcpp::IntegerVector flags, Rcpp::NumericVector hostPopn, 
     Rcpp::Rcout << "Parameters used: " << endl << endl;
     Rcpp::Rcout << "S0: " << S0 << endl;
     Rcpp::Rcout << "I0: " << I0 << endl;
-    Rcpp::Rcout << "R0: " << I0 << endl;
+    Rcpp::Rcout << "R0: " << R0 << endl;
     Rcpp::Rcout << "contact: " << contactRate << endl;
     Rcpp::Rcout << "mu: " << mu << endl;
     Rcpp::Rcout << "wane: " << wane << endl;
