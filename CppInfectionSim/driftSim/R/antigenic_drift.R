@@ -55,3 +55,15 @@ generateHostKDist <- function(hostFile, N){
     startingKs <- startingKs + 1
     return(countHostK$x[startingKs])
 }
+
+#' @export
+runSimulationApp <- function(){
+    runExample <- function() {
+        appDir <- system.file("shiny-examples", "driftSimApp", package = "driftSim")
+        if (appDir == "") {
+            stop("Could not find example directory. Try re-installing `mypackage`.", call. = FALSE)
+        }
+        shiny::runApp(appDir, display.mode = "normal")
+    }
+
+}

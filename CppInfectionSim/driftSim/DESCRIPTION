@@ -8,6 +8,8 @@ License: GPL-2
 LazyData: true
 URL: https://github.com/<gh-username>/driftSim
 BugReports: https://github.com/<gh-username>/driftSim/issues
+Suggests:
+	Shiny
 Imports:
     Rcpp,
     plyr
