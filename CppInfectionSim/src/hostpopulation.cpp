@@ -284,6 +284,40 @@ void HostPopulation::printStatus(){
   cout << "Total: " << countN() << endl;
 }
 
+void HostPopulation::writeHosts(std::ofstream& output, std::string filename){
+  cout << "#########################" << endl;
+  cout << "Writing hosts to csv..." << endl;
+  output.open(filename);
+  
+  // Put all hosts into one vector
+  vector<vector<Host*>> tmp = {susceptibles, infecteds, recovereds};
+
+  output << "state,last_vid,cur_inf,hostK" << endl;
+  
+  int end = tmp.size();
+  int tot = 0;
+  for(int i = 0; i < end; ++i){
+    tot = tmp[i].size();
+    for(int j = 0; j < tot;++j){
+      output << tmp[i][j]->getState() << ",";
+      if(tmp[i][j]->getInfectionHistory().size() > 0){
+	output << tmp[i][j]->getInfectionHistory()[0] << ",";
+      }
+      else {
+	output << "" << ",";
+      }
+      output << tmp[i][j]->isInfected() << ",";
+      output << tmp[i][j]->get_hostK() << endl;
+    }
+  }
+  output.close();
+  
+}
+
+void HostPopulation::readHosts(std::string filename){
+
+
+}
 
 void HostPopulation::writeViruses(std::ofstream& output, std::string filename){
   cout << "#########################" << endl;
@@ -337,6 +371,8 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename){
   cout << "#########################" << endl;
   cout << endl;
 }
+
+
 
 void HostPopulation::virusPairwiseMatrix(std::ofstream& output, std::string filename, int sampSize){
   cout << "#########################" << endl;

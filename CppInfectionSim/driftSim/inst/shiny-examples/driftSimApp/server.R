@@ -8,6 +8,7 @@ library(deSolve)
 library(driftSim)
 library(plyr)
 
+saveDir <- "~/tmp/"
 options(shiny.maxRequestSize=1000*1024^2)
 
 shinyServer(
@@ -85,7 +86,7 @@ shinyServer(
                     allV[j,i] <- deltaV[length(deltaV)] - V[i]
                 }
             }
-            write.table(allV, file=paste(getwd(),"/outputs/deltaVMat.csv",sep=""),row.names=FALSE,col.names=FALSE,sep=",")
+            write.table(allV, file=paste(saveDir,"outputs/deltaVMat.csv",sep=""),row.names=FALSE,col.names=FALSE,sep=",")
         })
         
         run_sim <- observeEvent(inputs$run, {
@@ -118,7 +119,7 @@ shinyServer(
             
             hostpars <- c(S0,I0, R0,contactRate,mu,wane,gamma,iniBind, meanBoost, iniDist)
 
-            deltaVMat <- unname(as.matrix(read.csv(paste(getwd(),"/outputs/deltaVMat.csv",sep=""),header=FALSE)))
+            deltaVMat <- unname(as.matrix(read.csv(saveDir,"outputs/deltaVMat.csv",sep=""),header=FALSE)))
 
             p = as.numeric(inputs$p) 
             r = as.numeric(inputs$r)
@@ -153,7 +154,7 @@ shinyServer(
                 inputFiles <- c(inputs$hostInput$datapath,inputs$virusInput$datapath)
             }
             print("Working directory: " )
-            print(getwd())
+            print(saveDir)
             if(length(inputs$scenarios) > 0){
                 withProgress(message="Simulation number", value=0, detail=1, {
                     for(i in inputs$scenarios){
@@ -170,7 +171,7 @@ shinyServer(
                             y <- run_simulation(flags,hostpars,viruspars,deltaVMat,0,inputs$dur,inputFiles,filenames,VERBOSE, as.numeric(i),callback)
                             incProgress(1/length(inputs$scenarios),detail=(as.numeric(i)+1))
                             for(j in filenames){
-                                if(file.exists(j)) file.rename(from=j,to = paste(getwd(),"/outputs/",j,sep=""))
+                                if(file.exists(j)) file.rename(from=j,to = paste(saveDir,"/outputs/",j,sep=""))
                             }
                     }
                 })
@@ -180,7 +181,7 @@ shinyServer(
         output$sim_main_1<- renderPlot({
             inputs$run
             if(1 %in% inputs$scenarios){
-                g <- plot_SIR(paste(getwd(),"/outputs/scenario_1_SIR.csv",sep=""))
+                g <- plot_SIR(paste(saveDir,"outputs/scenario_1_SIR.csv",sep=""))
                 g
             } else{
                 NULL
@@ -189,7 +190,7 @@ shinyServer(
         output$sim_main_2<- renderPlot({
             inputs$run
             if(2 %in% inputs$scenarios){
-                g <- plot_SIR(paste(getwd(),"/outputs/scenario_2_SIR.csv",sep=""))
+                g <- plot_SIR(paste(saveDir,"outputs/scenario_2_SIR.csv",sep=""))
                 g
             }else{
                 NULL
@@ -198,7 +199,7 @@ shinyServer(
         output$sim_main_3<- renderPlot({
             inputs$run
             if(3 %in% inputs$scenarios){
-                g <- plot_SIR(paste(getwd(),"/outputs/scenario_3_SIR.csv",sep=""))
+                g <- plot_SIR(paste(saveDir,"outputs/scenario_3_SIR.csv",sep=""))
                 g
             } else{
                 NULL
@@ -207,7 +208,7 @@ shinyServer(
         output$sim_main_4<- renderPlot({
             inputs$run
             if(4 %in% inputs$scenarios){
-                g <- plot_SIR(paste(getwd(),"outputs/scenario_4_SIR.csv",sep=""))
+                g <- plot_SIR(paste(saveDir,"outputs/scenario_4_SIR.csv",sep=""))
                 g
             } else{
                 NULL
@@ -264,25 +265,25 @@ shinyServer(
         output$dlPlot1 <- downloadHandler(
             filename = "scenario1SIR.png",
             content = function(file){
-                ggsave(file,plot=plot_SIR(paste(getwd(),"/outputs/scenario_1_SIR.csv",sep="")),device="png", width=10,height=6)
+                ggsave(file,plot=plot_SIR(paste(saveDir,"outputs/scenario_1_SIR.csv",sep="")),device="png", width=10,height=6)
             }
         )
         output$dlPlot2 <- downloadHandler(
             filename = "scenario2SIR.png",
             content = function(file){
-                 ggsave(file,plot=plot_SIR(paste(getwd(),"/outputs/scenario_2_SIR.csv",sep="")),device="png", width=10,height=6)
+                 ggsave(file,plot=plot_SIR(paste(saveDir,"outputs/scenario_2_SIR.csv",sep="")),device="png", width=10,height=6)
             }
         )
         output$dlPlot3 <- downloadHandler(
             filename = "scenario3SIR.png",
             content = function(file){
-                ggsave(file,plot=plot_SIR(paste(getwd(),"/outputs/scenario4_3_SIR.csv",sep="")),device="png", width=10,height=6)
+                ggsave(file,plot=plot_SIR(paste(saveDir,"outputs/scenario4_3_SIR.csv",sep="")),device="png", width=10,height=6)
             }
         )
         output$dlPlot4 <- downloadHandler(
             filename = "scenario4SIR.png",
             content = function(file){
-                ggsave(file,plot=plot_SIR(paste(getwd(),"/outputs/scenario_4_SIR.csv",sep="")),device="png", width=10,height=6)
+                ggsave(file,plot=plot_SIR(paste(saveDir,"outputs/scenario_4_SIR.csv",sep="")),device="png", width=10,height=6)
             }
         )
 
@@ -296,7 +297,7 @@ shinyServer(
         output$dlOutputsSIR <- downloadHandler(
             filename = function(){paste("outputs",".tar",sep="")},
             content=function(file){
-                tar(file,paste(getwd(),"/outputs",sep=""))
+                tar(file,paste(saveDir,"outputs",sep=""))
             }
         )
         
@@ -319,10 +320,10 @@ shinyServer(
         )
         
         plotAllSIR <- function(){
-                p1 <- plot_SIR(paste(getwd(),"/outputs/scenario_1_SIR.csv",sep=""))
-                p2 <- plot_SIR(paste(getwd(),"/outputs/scenario_2_SIR.csv",sep=""))
-                p3 <- plot_SIR(paste(getwd(),"/outputs/scenario_3_SIR.csv",sep=""))
-                p4 <- plot_SIR(paste(getwd(),"/outputs/scenario_4_SIR.csv",sep=""))
+                p1 <- plot_SIR(paste(saveDir,"outputs/scenario_1_SIR.csv",sep=""))
+                p2 <- plot_SIR(paste(saveDir,"outputs/scenario_2_SIR.csv",sep=""))
+                p3 <- plot_SIR(paste(saveDir,"outputs/scenario_3_SIR.csv",sep=""))
+                p4 <- plot_SIR(paste(saveDir,"outputs/scenario_4_SIR.csv",sep=""))
                 plot.list <- list(p1, p2, p3, p4, ncol=1)
                 do.call(arrangeGrob, plot.list)
         }

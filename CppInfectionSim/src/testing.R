@@ -30,9 +30,7 @@ difeq <- function(V, t, params){
   g_dx <- -a*b*V^(b-1)*exp(-a*(V^b))
     
   dV <- f_x*g_dx + g_x*f_dx
-  print(dV)
-  dt <- dV*t*c
-  return(dt)
+  return(dV)
 }
 
 y <- function(V, params){
