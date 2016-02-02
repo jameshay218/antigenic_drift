@@ -23,8 +23,9 @@ shinyUI(
                                                    "Record run time"=4,
                                                    "Save final state"=5,
                                                    "Use input starting conditions"=6,
-                                                   "Verbose"=7
-                                                   ),
+                                                   "Save hostK"=7,
+                                                   "Verbose"=8
+                                               ),
                                                selected=1),
                             h3(strong("Host Population Parameters")),
                           
@@ -47,11 +48,12 @@ shinyUI(
                             fluidRow(
                                 column(4,numericInput("wane", "Waning Rate", 25)),
                                 column(4,numericInput("gamma", "Recovery Time", 3)),
-                                column(4,numericInput("iniBinding", "Initial Binding Avidity ", 0.8))
+                                column(4,numericInput("iniBinding", "Ini Binding Avidity ", 0.8))
                             ),
                             fluidRow(
-                                column(4,numericInput("boost","Mean Boost ",10)),
-                                column(4, numericInput("iniDist","Initial Antigenic Distance ", 0))
+                                column(4,numericInput("boost","Mean Boost",10)),
+                                column(4, numericInput("iniDist","Ini Distance", 0)),
+                                column(4, numericInput("kSaveFreq","K Save Freq",1))
                             ),
                             h3(strong("Virus Parameters")),
                             fluidRow(
@@ -75,8 +77,7 @@ shinyUI(
                             ),
                             h3(strong("Filenames")),
                             fluidRow(
-                                column(6,fileInput("hostInput","Host input file")),
-                                column(6,fileInput("virusInput","Virus input file"))
+                                column(6,fileInput("hostInput","Host input file"))
                             ),
                             h3(strong("Actions")),
                             
@@ -92,6 +93,12 @@ shinyUI(
                             )
                         ),
                         mainPanel(
+                            fluidRow(
+                                column(12,
+                                       h4(strong("Incidence for each scenario:")),
+                                       textOutput("incidenceText1")
+                                       )
+                            ),
                             fluidRow(
                                 column(12,
                                        h4(strong("Scenario 1: Random drift; fixed binding avidity")),

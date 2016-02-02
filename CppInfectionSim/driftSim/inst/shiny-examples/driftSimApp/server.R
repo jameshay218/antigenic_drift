@@ -13,6 +13,9 @@ options(shiny.maxRequestSize=1000*1024^2)
 
 shinyServer(
     function(inputs, output, session){
+        
+        values <- reactiveValues()
+        
         plot_SIR <- function(filename){
             N <- isolate(inputs$s0) + isolate(inputs$i0) +  isolate(inputs$r0) + 500
             dat <- read.csv(filename,header=0)
@@ -42,6 +45,11 @@ shinyServer(
             return(SIR_plot)
         }
 
+        output$incidenceText1 <- renderText({
+            N <- isolate(inputs$s0) + isolate(inputs$i0) +  isolate(inputs$r0)
+            paste(round((values$infections/N)*100,3),"%",sep="")
+        })
+        
         calculate_deltaVMat <- observeEvent(inputs$dVcalc,{
             print("Calculating deltaV matrix...")
             maxV = 3
@@ -97,13 +105,13 @@ shinyServer(
             voutput1_flag <- 2 %in% inputs$flags #' Flag to save virus information for Sean's phylogenetic tree
             voutput2_flag <- 3 %in% inputs$flags #' Flag to save pairwise distance matrix
             time_flag <- 4 %in% inputs$flags #' Flag to record time taken for simulation
-            VERBOSE <- 7 %in% inputs$flags #' Outputs in simulation
+            VERBOSE <- 8 %in% inputs$flags #' Outputs in simulation
             save_state <- 5 %in% inputs$flags #' Flag to save the final state of the simulation
             input_flag <- 6 %in% inputs$flags #' Flag to use specified file as input for simulation
-
-            flags <- c(SIR_flag, voutput1_flag, voutput2_flag, time_flag, save_state, input_flag)
+            save_k <- 7 %in% inputs$flags
+            
+            flags <- c(SIR_flag, voutput1_flag, voutput2_flag, time_flag, save_state, input_flag, save_k)
             flags <- as.numeric(flags)
-            print(flags)
             
             S0 <- as.numeric(inputs$s0)
             I0 <- as.numeric(inputs$i0)
@@ -116,10 +124,11 @@ shinyServer(
             iniBind <- as.numeric(inputs$iniBinding)
             meanBoost = as.numeric(inputs$boost)
             iniDist = as.numeric(inputs$iniDist)
+            saveFreq = as.numeric(inputs$kSaveFreq)
             
-            hostpars <- c(S0,I0, R0,contactRate,mu,wane,gamma,iniBind, meanBoost, iniDist)
+            hostpars <- c(S0,I0, R0,contactRate,mu,wane,gamma,iniBind, meanBoost, iniDist,saveFreq)
 
-            deltaVMat <- unname(as.matrix(read.csv(saveDir,"outputs/deltaVMat.csv",sep=""),header=FALSE)))
+            deltaVMat <- unname(as.matrix(read.csv(paste(saveDir,"outputs/deltaVMat.csv",sep=""),header=FALSE)))
 
             p = as.numeric(inputs$p) 
             r = as.numeric(inputs$r)
@@ -135,46 +144,52 @@ shinyServer(
             VtoD = inputs$VtoD
 
             viruspars <- c(p,r,q,a,b,n,v,probMut,expDist,kc,VtoD)
-            print("Host pars:")
-            print(hostpars)
-            print("Virus pars:")
-            print(viruspars)
             
             progress_within<- shiny::Progress$new()
             on.exit(progress_within$close())
             callback <- function(x) {
                 progress_within$set(value=x[[1]]/inputs$dur,detail= x[[1]])
-               # isolate(dummy$iter <- dummy$iter + 1)
-                ##message(sprintf("day: %d [%d / %d / %d]", x[[1]], x[[2]], x[[3]], x[[4]]))
             }
-            if(is.null(inputs$hostInput) || is.null(inputs$virusInput)){
-                inputFiles <- c("hosts.csv","viruses.csv")
+            if(is.null(inputs$hostInput)){
+                inputFiles <- c("hosts.csv")
             }
             else {
-                inputFiles <- c(inputs$hostInput$datapath,inputs$virusInput$datapath)
+                inputFiles <- c(inputs$hostInput$datapath)
             }
             print("Working directory: " )
             print(saveDir)
+
+            iniK <- NULL
+            if(input_flag){
+                print("Here I am!")
+                iniK <- generateHostKDist(inputFiles[1],S0+I0+R0)
+                print(length(iniK))
+            } 
+
             if(length(inputs$scenarios) > 0){
+                infections <- NULL
                 withProgress(message="Simulation number", value=0, detail=1, {
+                    index <- 1
                     for(i in inputs$scenarios){
-                        print(i)
-                        print(paste("Scenario number: "),i,sep="")
-                            progress_within$set(message = "Day", value = 0)
-                            Sys.sleep(0.1)
-                            filename1 <- paste("scenario_",i,"_SIR.csv",sep="")
-                            filename2 <- paste("voutput1_",i,".csv",sep="")
-                            filename3 <- paste("voutput2_",i,".csv",sep="")
-                            filename4 <- paste("hosts_",i,".csv",sep="")
-                            filename5 <- paste("viruses_",i,".csv",sep="")
-                            filenames <- c(filename1, filename2, filename3, filename4, filename5)
-                            y <- run_simulation(flags,hostpars,viruspars,deltaVMat,0,inputs$dur,inputFiles,filenames,VERBOSE, as.numeric(i),callback)
-                            incProgress(1/length(inputs$scenarios),detail=(as.numeric(i)+1))
-                            for(j in filenames){
-                                if(file.exists(j)) file.rename(from=j,to = paste(saveDir,"/outputs/",j,sep=""))
-                            }
-                    }
+                        print(paste("Scenario number: ",as.numeric(i),sep=""))
+                        progress_within$set(message = "Day", value = 0)
+                        Sys.sleep(0.1)
+                        filename1 <- paste("scenario_",i,"_SIR.csv",sep="")
+                        filename2 <- paste("voutput1_",i,".csv",sep="")
+                        filename3 <- paste("voutput2_",i,".csv",sep="")
+                        filename4 <- paste("hosts_",i,".csv",sep="")
+                        filename5 <- paste("hostKs_",i,".csv",sep="")
+                        filenames <- c(filename1, filename2, filename3, filename4, filename5)
+                        infections[[index]] <- run_simulation(flags,hostpars,viruspars,deltaVMat,iniK,0,inputs$dur,inputFiles,filenames,VERBOSE, as.numeric(i),callback)
+                        print(paste("Number of new viruses: ", infections[[index]], sep=""))
+                        incProgress(1/length(inputs$scenarios),detail=(as.numeric(i)+1))
+                        index <- index + 1
+                        for(j in filenames){
+                            if(file.exists(j)) file.rename(from=j,to = paste(saveDir,"/outputs/",j,sep=""))
+                        }
+                    }                   
                 })
+                values$infections <- infections
             }
         })
 
@@ -656,6 +671,7 @@ shinyServer(
             }
             return(p)
         })
+                
         output$hostImmunityHist <- renderPlot({
 
         })

@@ -13,7 +13,11 @@ callFunction <- function(filename, N, f) {
     .Call('driftSim_callFunction', PACKAGE = 'driftSim', filename, N, f)
 }
 
-run_simulation_cpp <- function(flags, hostPopn, virusPars, deltaVMat, day, final_day, input_files, output_files, VERBOSE, scenario, callback) {
-    .Call('driftSim_run_simulation_cpp', PACKAGE = 'driftSim', flags, hostPopn, virusPars, deltaVMat, day, final_day, input_files, output_files, VERBOSE, scenario, callback)
+countKs <- function(ks, N) {
+    .Call('driftSim_countKs', PACKAGE = 'driftSim', ks, N)
+}
+
+run_simulation_cpp <- function(flags, hostPopn, virusPars, deltaVMat, iniKs, day, final_day, input_files, output_files, VERBOSE, scenario, callback) {
+    .Call('driftSim_run_simulation_cpp', PACKAGE = 'driftSim', flags, hostPopn, virusPars, deltaVMat, iniKs, day, final_day, input_files, output_files, VERBOSE, scenario, callback)
 }
 

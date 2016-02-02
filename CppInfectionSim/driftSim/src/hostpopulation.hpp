@@ -69,6 +69,9 @@ public:
   std::map<int, Virus*> readViruses(std::string virusFilename);
   void writeViruses(std::ofstream& output, std::string filename, bool savingState);
   void virusPairwiseMatrix(std::ofstream& output, std::string filename, int sampSize);
+  
+  Rcpp::NumericVector getHostKDist();
+
 };
 
 #endif

@@ -314,6 +314,10 @@ void Virus::updateHost(Host* newHost){
   host = newHost;
 }
 
+int Virus::getIDgenerator(){
+  return v_IDgenerator;
+}
+
 int Virus::getId(){
   return id;
 }

@@ -88,6 +88,7 @@ public:
 
   // Change static member variables
   static void printIDgenerator();
+  static int getIDgenerator();
   static void set_default();
   static void set_p(double _new_p);
   static void set_r(double new_r);

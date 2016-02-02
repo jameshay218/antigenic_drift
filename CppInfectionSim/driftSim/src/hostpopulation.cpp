@@ -335,6 +335,16 @@ void HostPopulation::printStatus(){
   Rcpp::Rcout << "Total: " << countN() << endl;
 }
 
+Rcpp::NumericVector HostPopulation::getHostKDist(){
+  Rcpp::NumericVector ks(countN()+1);
+  int i = 0;
+  vector<Host*>::iterator it;
+  for(it = susceptibles.begin(); it != susceptibles.end(); it++) ks[i++] = ((*it)->get_hostK());
+  for(it = infecteds.begin(); it != infecteds.end(); it++) ks[i++] = ((*it)->get_hostK());
+  for(it = recovereds.begin(); it != recovereds.end(); it++) ks[i++] = ((*it)->get_hostK());
+
+  return(ks);
+}
 
 
 
@@ -374,130 +384,6 @@ void HostPopulation::writeHosts(std::ofstream& output, std::string filename){
   output.close();
   Rcpp::Rcout << "Hosts writing complete" << endl;
   Rcpp::Rcout << "#########################" << endl << endl;
-}
-
-
-void HostPopulation::readHosts(std::string hostFilename, std::string virusFilename){
-Rcpp::Rcout << "#########################" << endl;
- Rcpp::Rcout << "Reading hosts from csv for initial conditions..." << endl;
-  int tmpSize = 0;
-  ifstream hostFile(hostFilename);
-  string line;
-  int tmpState, tmpVID, tmpInf, tmpHostK;
-  vector<Host*> iniSusceptibles;
-  vector<Host*> iniInfecteds;
-  vector<Host*> iniRecovereds;
-  map<int, Virus*> viruses = readViruses(virusFilename);
-  Host* H;
-  Virus* V;
-  seedVirus = viruses[0];
-
-  if(hostFile.is_open()){
-    getline(hostFile,line);
-    // Get each row from the host file
-    while(getline(hostFile, line)){
-      vector<int> tmpRow;
-      stringstream ss(line);
-      int i;
-      while(ss >> i){
-	tmpRow.push_back(i);
-	if(ss.peek() == ',' || ss.peek() == '\n' || ss.peek() == ' ') ss.ignore();
-      }
-      tmpSize = tmpRow.size();
-      if(tmpSize == 4){
-	tmpState = tmpRow[0];
-	tmpVID = tmpRow[1];
-	tmpInf = tmpRow[2];
-	tmpHostK = tmpRow[3];
-	//	if(tmpState == 0) cout << tmpState << " " << tmpVID << " " << tmpInf << " " << tmpHostK << endl;
-	H = new Host(static_cast<State>(tmpState), this, tmpHostK);
-	// If this host was infected, get the infecting virus ID and get this virus from the viruses vector
-	if(tmpState == Infected){
-	  H->infect(viruses[tmpInf],viruses[tmpInf]->getBirth());
-	  viruses[tmpInf]->updateHost(H);
-	  iniInfecteds.push_back(H);
-	}
-	else if(tmpState == Susceptible){
-	  if(tmpVID != -1){
-	    H->addInfection(viruses[tmpVID]);
-	    viruses[tmpVID]->updateHost(H);
-	  }
-	  iniSusceptibles.push_back(H);
-	}
-	else{
-	  if(tmpVID != -1){
-	    H->addInfection(viruses[tmpVID]);
-	    viruses[tmpVID]->updateHost(H);
-	  }
-	  iniRecovereds.push_back(H);
-	}
-      }
-    }
-    hostFile.close();
-  }
-  susceptibles = iniSusceptibles;
-  infecteds = iniInfecteds;
-  recovereds = iniRecovereds;
-  /*Rcpp::Rcout << "Virus ID: ";
-  Virus::printIDgenerator();
-  Rcpp::Rcout << endl;
-  Rcpp::Rcout << "True Virus ID: " << viruses.rbegin()->first +1 << endl;*/
-  Virus::set_generator(viruses.rbegin()->first+1);
-  Rcpp::Rcout << "Read hosts complete" << endl;
-  Rcpp::Rcout << "#########################" << endl;
-}
-
-std::map<int, Virus*> HostPopulation::readViruses(std::string virusFilename){
-  Rcpp::Rcout << "-------------------------------------------------------" << endl;
-  Rcpp::Rcout << "Reading in viruses... " << endl;
-  std::map <int, Virus*> viruses;
-  vector<int> parentIDs;
-  ifstream virusFile(virusFilename);
-  string line;
-  Virus* V;
-  int vid, birth, death, level, infectionNo;
-  double bindingAvid, bindingAvidIni,distanceToParent, distanceToRoot, distHost, tmpK, changeV, changeR;
-  if(virusFile.is_open()){
-    getline(virusFile,line);
-    while(getline(virusFile,line)){
-      vector<double> tmpRow;
-      stringstream ss(line);
-      double i;
-      while(ss >> i){
-	tmpRow.push_back(i);
-	if(ss.peek() == ',' || ss.peek() == '\n' || ss.peek() == ' ') ss.ignore();	
-      }
-      vid = (int)tmpRow[0];
-      birth = (int)tmpRow[1];
-      death = (int)tmpRow[2];
-      parentIDs.push_back((int)tmpRow[3]);
-      level = (int)tmpRow[4];
-      bindingAvidIni = tmpRow[5];	
-      bindingAvid = tmpRow[6];
-      infectionNo = (int)tmpRow[7];
-      distanceToParent = tmpRow[8];
-      distanceToRoot = tmpRow[9];
-      distHost = tmpRow[10];
-      tmpK = tmpRow[11];      
-      changeV = tmpRow[12];
-      changeR = tmpRow[13];
-
-      V = new Virus(vid, birth, death, NULL, level, bindingAvidIni, bindingAvid, infectionNo, distanceToParent, distanceToRoot, distHost, tmpK, NULL, changeV, changeR);
-      viruses.insert(make_pair(vid,V));
-    }
-    typedef map<int, Virus*>::iterator virusIt;
-    int index = 0;
-    for(virusIt iterator = viruses.begin(); iterator != viruses.end(); iterator++){
-      // Iterate through all viruses and update parents
-      if(parentIDs[index] >= 0){
-	iterator->second->updateParent(viruses[parentIDs[index]]);
-      }
-      index++;
-    }
-  }
-  Rcpp::Rcout << "Read viruses complete" << endl;
-  Rcpp::Rcout << "-------------------------------------------------------" << endl;
-  return(viruses);
 }
 
 void HostPopulation::writeViruses(std::ofstream& output, std::string filename, bool savingState){
@@ -648,13 +534,13 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename, b
     vector<Virus*> viruses;
     vector<int> sampIndices;
     output.open(filename);
-  hosts.insert(hosts.end(),susceptibles.begin(),susceptibles.end());
-  hosts.insert(hosts.end(),infecteds.begin(),infecteds.end());
-  hosts.insert(hosts.end(),recovereds.begin(),recovereds.end());
-  hosts.insert(hosts.end(),dead.begin(),dead.end());
-  int j = hosts.size();
-  int x = 0;
-  Rcpp::Rcout << "Accumulating all viruses..." << endl;
+    hosts.insert(hosts.end(),susceptibles.begin(),susceptibles.end());
+    hosts.insert(hosts.end(),infecteds.begin(),infecteds.end());
+    hosts.insert(hosts.end(),recovereds.begin(),recovereds.end());
+    hosts.insert(hosts.end(),dead.begin(),dead.end());
+    int j = hosts.size();
+    int x = 0;
+    Rcpp::Rcout << "Accumulating all viruses..." << endl;
   for(int i = 0; i < j; ++i){
     x = hosts[i]->getInfectionHistory().size();
     if(x > 0){
@@ -702,3 +588,129 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename, b
   Rcpp::Rcout << "#########################" << endl << endl;
 }  
   
+
+
+
+void HostPopulation::readHosts(std::string hostFilename, std::string virusFilename){
+Rcpp::Rcout << "#########################" << endl;
+ Rcpp::Rcout << "Reading hosts from csv for initial conditions..." << endl;
+  int tmpSize = 0;
+  ifstream hostFile(hostFilename);
+  string line;
+  int tmpState, tmpVID, tmpInf, tmpHostK;
+  vector<Host*> iniSusceptibles;
+  vector<Host*> iniInfecteds;
+  vector<Host*> iniRecovereds;
+  map<int, Virus*> viruses = readViruses(virusFilename);
+  Host* H;
+  Virus* V;
+  seedVirus = viruses[0];
+
+  if(hostFile.is_open()){
+    getline(hostFile,line);
+    // Get each row from the host file
+    while(getline(hostFile, line)){
+      vector<int> tmpRow;
+      stringstream ss(line);
+      int i;
+      while(ss >> i){
+	tmpRow.push_back(i);
+	if(ss.peek() == ',' || ss.peek() == '\n' || ss.peek() == ' ') ss.ignore();
+      }
+      tmpSize = tmpRow.size();
+      if(tmpSize == 4){
+	tmpState = tmpRow[0];
+	tmpVID = tmpRow[1];
+	tmpInf = tmpRow[2];
+	tmpHostK = tmpRow[3];
+	//	if(tmpState == 0) cout << tmpState << " " << tmpVID << " " << tmpInf << " " << tmpHostK << endl;
+	H = new Host(static_cast<State>(tmpState), this, tmpHostK);
+	// If this host was infected, get the infecting virus ID and get this virus from the viruses vector
+	if(tmpState == Infected){
+	  H->infect(viruses[tmpInf],viruses[tmpInf]->getBirth());
+	  viruses[tmpInf]->updateHost(H);
+	  iniInfecteds.push_back(H);
+	}
+	else if(tmpState == Susceptible){
+	  if(tmpVID != -1){
+	    H->addInfection(viruses[tmpVID]);
+	    viruses[tmpVID]->updateHost(H);
+	  }
+	  iniSusceptibles.push_back(H);
+	}
+	else{
+	  if(tmpVID != -1){
+	    H->addInfection(viruses[tmpVID]);
+	    viruses[tmpVID]->updateHost(H);
+	  }
+	  iniRecovereds.push_back(H);
+	}
+      }
+    }
+    hostFile.close();
+  }
+  susceptibles = iniSusceptibles;
+  infecteds = iniInfecteds;
+  recovereds = iniRecovereds;
+  /*Rcpp::Rcout << "Virus ID: ";
+  Virus::printIDgenerator();
+  Rcpp::Rcout << endl;
+  Rcpp::Rcout << "True Virus ID: " << viruses.rbegin()->first +1 << endl;*/
+  Virus::set_generator(viruses.rbegin()->first+1);
+  Rcpp::Rcout << "Read hosts complete" << endl;
+  Rcpp::Rcout << "#########################" << endl;
+}
+
+std::map<int, Virus*> HostPopulation::readViruses(std::string virusFilename){
+  Rcpp::Rcout << "-------------------------------------------------------" << endl;
+  Rcpp::Rcout << "Reading in viruses... " << endl;
+  std::map <int, Virus*> viruses;
+  vector<int> parentIDs;
+  ifstream virusFile(virusFilename);
+  string line;
+  Virus* V;
+  int vid, birth, death, level, infectionNo;
+  double bindingAvid, bindingAvidIni,distanceToParent, distanceToRoot, distHost, tmpK, changeV, changeR;
+  if(virusFile.is_open()){
+    getline(virusFile,line);
+    while(getline(virusFile,line)){
+      vector<double> tmpRow;
+      stringstream ss(line);
+      double i;
+      while(ss >> i){
+	tmpRow.push_back(i);
+	if(ss.peek() == ',' || ss.peek() == '\n' || ss.peek() == ' ') ss.ignore();	
+      }
+      vid = (int)tmpRow[0];
+      birth = (int)tmpRow[1];
+      death = (int)tmpRow[2];
+      parentIDs.push_back((int)tmpRow[3]);
+      level = (int)tmpRow[4];
+      bindingAvidIni = tmpRow[5];	
+      bindingAvid = tmpRow[6];
+      infectionNo = (int)tmpRow[7];
+      distanceToParent = tmpRow[8];
+      distanceToRoot = tmpRow[9];
+      distHost = tmpRow[10];
+      tmpK = tmpRow[11];      
+      changeV = tmpRow[12];
+      changeR = tmpRow[13];
+
+      V = new Virus(vid, birth, death, NULL, level, bindingAvidIni, bindingAvid, infectionNo, distanceToParent, distanceToRoot, distHost, tmpK, NULL, changeV, changeR);
+      viruses.insert(make_pair(vid,V));
+    }
+    typedef map<int, Virus*>::iterator virusIt;
+    int index = 0;
+    for(virusIt iterator = viruses.begin(); iterator != viruses.end(); iterator++){
+      // Iterate through all viruses and update parents
+      if(parentIDs[index] >= 0){
+	iterator->second->updateParent(viruses[parentIDs[index]]);
+      }
+      index++;
+    }
+  }
+  Rcpp::Rcout << "Read viruses complete" << endl;
+  Rcpp::Rcout << "-------------------------------------------------------" << endl;
+  return(viruses);
+}
+

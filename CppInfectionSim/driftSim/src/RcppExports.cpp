@@ -41,9 +41,21 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// countKs
+Rcpp::NumericVector countKs(Rcpp::NumericVector ks, int N);
+RcppExport SEXP driftSim_countKs(SEXP ksSEXP, SEXP NSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type ks(ksSEXP);
+    Rcpp::traits::input_parameter< int >::type N(NSEXP);
+    __result = Rcpp::wrap(countKs(ks, N));
+    return __result;
+END_RCPP
+}
 // run_simulation_cpp
-int run_simulation_cpp(Rcpp::IntegerVector flags, Rcpp::NumericVector hostPopn, Rcpp::NumericVector virusPars, Rcpp::NumericMatrix deltaVMat, int day, int final_day, std::vector<std::string> input_files, std::vector<std::string> output_files, bool VERBOSE, int scenario, SEXP callback);
-RcppExport SEXP driftSim_run_simulation_cpp(SEXP flagsSEXP, SEXP hostPopnSEXP, SEXP virusParsSEXP, SEXP deltaVMatSEXP, SEXP daySEXP, SEXP final_daySEXP, SEXP input_filesSEXP, SEXP output_filesSEXP, SEXP VERBOSESEXP, SEXP scenarioSEXP, SEXP callbackSEXP) {
+int run_simulation_cpp(Rcpp::IntegerVector flags, Rcpp::NumericVector hostPopn, Rcpp::NumericVector virusPars, Rcpp::NumericMatrix deltaVMat, SEXP iniKs, int day, int final_day, std::vector<std::string> input_files, std::vector<std::string> output_files, bool VERBOSE, int scenario, SEXP callback);
+RcppExport SEXP driftSim_run_simulation_cpp(SEXP flagsSEXP, SEXP hostPopnSEXP, SEXP virusParsSEXP, SEXP deltaVMatSEXP, SEXP iniKsSEXP, SEXP daySEXP, SEXP final_daySEXP, SEXP input_filesSEXP, SEXP output_filesSEXP, SEXP VERBOSESEXP, SEXP scenarioSEXP, SEXP callbackSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -51,6 +63,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type hostPopn(hostPopnSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type virusPars(virusParsSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type deltaVMat(deltaVMatSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type iniKs(iniKsSEXP);
     Rcpp::traits::input_parameter< int >::type day(daySEXP);
     Rcpp::traits::input_parameter< int >::type final_day(final_daySEXP);
     Rcpp::traits::input_parameter< std::vector<std::string> >::type input_files(input_filesSEXP);
@@ -58,7 +71,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type VERBOSE(VERBOSESEXP);
     Rcpp::traits::input_parameter< int >::type scenario(scenarioSEXP);
     Rcpp::traits::input_parameter< SEXP >::type callback(callbackSEXP);
-    __result = Rcpp::wrap(run_simulation_cpp(flags, hostPopn, virusPars, deltaVMat, day, final_day, input_files, output_files, VERBOSE, scenario, callback));
+    __result = Rcpp::wrap(run_simulation_cpp(flags, hostPopn, virusPars, deltaVMat, iniKs, day, final_day, input_files, output_files, VERBOSE, scenario, callback));
     return __result;
 END_RCPP
 }
