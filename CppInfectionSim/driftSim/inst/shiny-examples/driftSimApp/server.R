@@ -82,7 +82,7 @@ shinyServer(
                 g_dx <- -a*b*x^(b-1)*exp(-a*(x^b))
                 
                 dV <- f_x*g_dx + g_x*f_dx
-                return(list(dV*kc))
+                return(list(dV))
             }
             V = seq(0,maxV,by=0.01)
             immKs = seq(0,maxK,by=0.1)

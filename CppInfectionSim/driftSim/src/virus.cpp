@@ -201,7 +201,7 @@ double Virus::bindingavid_change(){
   if(row_K >= deltaVMat.nrow()) row_K = deltaVMat.nrow()-1;
   if(col_V >= deltaVMat.ncol()) row_K = deltaVMat.ncol()-1;
   change = deltaVMat(row_K,col_V);
-  return(change);
+  return(_kc*change);
 }
 
 double Virus::getAntigenicDistance(Virus* A, Virus* B){
