@@ -3,5 +3,6 @@
 export(generateHostKDist)
 export(runSimulationApp)
 export(run_simulation)
+export(writeCSV)
 import(Rcpp)
 useDynLib(driftSim)
