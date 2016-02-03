@@ -140,6 +140,7 @@ int run_simulation_cpp(Rcpp::IntegerVector flags,
   Virus::set_VtoD(VtoD);
   Virus::set_scenario(scenario);
   Virus::set_generator(1);
+  Virus::set_delta(iniDist);
   Virus::set_deltaVMat(deltaVMat);
 
   Host::changeMeanBoost(meanBoost);

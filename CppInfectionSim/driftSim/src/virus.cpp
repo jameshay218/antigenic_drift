@@ -18,6 +18,7 @@ double Virus::_v=2.0;
 double Virus::_prob_mut = 0.1;
 double Virus::_exp_dist = 1;
 double Virus::_kc = 0.5;
+double Virus::_delta = 4.0;
 double Virus::_V_to_d = 1000;
 int Virus::_scenario = 1;
 Rcpp::NumericMatrix Virus::deltaVMat;
@@ -306,6 +307,9 @@ void Virus::set_kc(double new_kc){
 }
 void Virus::set_VtoD(double new_VtoD){
   _V_to_d = new_VtoD;
+}
+void Virus::set_delta(double new_delta){
+  _delta = new_delta;
 }
 void Virus::updateParent(Virus* newParent){
   parent = newParent;

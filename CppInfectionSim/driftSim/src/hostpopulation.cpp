@@ -338,11 +338,23 @@ void HostPopulation::printStatus(){
 Rcpp::NumericVector HostPopulation::getHostKDist(){
   Rcpp::NumericVector ks(countN()+1);
   int i = 0;
+  double tmp1 = 0;
   vector<Host*>::iterator it;
-  for(it = susceptibles.begin(); it != susceptibles.end(); it++) ks[i++] = ((*it)->get_hostK());
-  for(it = infecteds.begin(); it != infecteds.end(); it++) ks[i++] = ((*it)->get_hostK());
-  for(it = recovereds.begin(); it != recovereds.end(); it++) ks[i++] = ((*it)->get_hostK());
-
+  for(it = susceptibles.begin(); it != susceptibles.end(); it++){
+    tmp1 = ((*it)->get_hostK());
+    if(tmp1 < 0) tmp1 = 0;
+    ks[i++] = tmp1;
+  }
+  for(it = infecteds.begin(); it != infecteds.end(); it++) {
+    tmp1 = ((*it)->get_hostK());
+    if(tmp1 < 0) tmp1 = 0;
+    ks[i++] = ((*it)->get_hostK());
+  }
+  for(it = recovereds.begin(); it != recovereds.end(); it++){
+    tmp1 = ((*it)->get_hostK());
+    if(tmp1 < 0) tmp1 = 0;
+    ks[i++] = ((*it)->get_hostK());
+  }
   return(ks);
 }
 
@@ -370,7 +382,7 @@ void HostPopulation::writeHosts(std::ofstream& output, std::string filename){
 	output << tmp[i][j]->getInfectionHistory()[0]->getId() << ",";
       }
       else {
-	output << -1 << ",";
+	output << 0 << ",";
       }
       if(tmp[i][j]->isInfected() == 1){
 	output << tmp[i][j]->getCurrentVirus()->getId() << ",";
@@ -434,7 +446,7 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename, b
       if(seedVirus->getParent() != NULL){
 	output << seedVirus->getParent()->getId() << ",";
       } else {
-	output << "-1" << ",";
+	output << "0" << ",";
       }
       output << seedVirus->getIniBindingAvid() << ",";
       output << seedVirus->getBindingAvid() << ",";
@@ -444,7 +456,7 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename, b
 	output << seedVirus->getK() << ",";
 	output << seedVirus->getHost()->getInfectionHistory().size() << ",";
       } else {
-	output << "-1" << "," << "-1" << ",";
+	output << "0" << "," << "0" << ",";
       }
       output << seedVirus->getJ() << ",";
       output << seedVirus->getDistHost() << ",";
@@ -459,7 +471,7 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename, b
       if(seedVirus->getParent() != NULL){
 	output << seedVirus->getParent()->getId() << ",";
       } else {
-	output << "-1" << ",";
+	output << "0" << ",";
       }
       output << seedVirus->getLevel() << ",";
       output << seedVirus->getIniBindingAvid() << ",";
@@ -485,7 +497,7 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename, b
       if(viruses[i]->getParent() != NULL){
 	output << viruses[i]->getParent()->getId() << ",";
       } else {
-	output << "-1" << ",";
+	output << "0" << ",";
       }
       output << viruses[i]->getIniBindingAvid() << ",";
       output << viruses[i]->getBindingAvid() << ",";
@@ -506,7 +518,7 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename, b
       if(viruses[i]->getParent() != NULL){
 	output << viruses[i]->getParent()->getId() << ",";
       } else {
-	output << "-1" << ",";
+	output << "0" << ",";
       }
       output << viruses[i]->getLevel() << ",";
       output << viruses[i]->getIniBindingAvid() << ",";
@@ -632,14 +644,14 @@ Rcpp::Rcout << "#########################" << endl;
 	  iniInfecteds.push_back(H);
 	}
 	else if(tmpState == Susceptible){
-	  if(tmpVID != -1){
+	  if(tmpVID != 0){
 	    H->addInfection(viruses[tmpVID]);
 	    viruses[tmpVID]->updateHost(H);
 	  }
 	  iniSusceptibles.push_back(H);
 	}
 	else{
-	  if(tmpVID != -1){
+	  if(tmpVID != 0){
 	    H->addInfection(viruses[tmpVID]);
 	    viruses[tmpVID]->updateHost(H);
 	  }

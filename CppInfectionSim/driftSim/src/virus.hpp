@@ -38,6 +38,7 @@ public:
   static double _exp_dist;
   static double _kc;
   static double _V_to_d;
+  static double _delta;
   static int _scenario;
   static Rcpp::NumericMatrix deltaVMat;
   static double getAntigenicDistance(Virus* A, Virus* B);
@@ -97,6 +98,7 @@ public:
   static void set_b(double new_b);
   static void set_n(double new_n);
   static void set_v(double new_v);
+  static void set_delta(double new_delta);
   static void set_prob_mut(double new_probMut);
   static void set_exp_dist(double new_exp);
   static void set_kc(double new_kc);
