@@ -12,7 +12,8 @@ shinyUI(
                         sidebarPanel(
                             fluidRow(
                                 column(6,actionButton("run",h4(strong("Run Simulation")))),
-                                column(6,actionButton("dVcalc",h4(strong("Recalcuate deltaV"))))
+                                column(6,actionButton("dVcalc",h4(strong("Recalcuate deltaV")))),
+                                column(6,actionButton("iniCalc",h4(strong("Create iniK"))))
                             ),
                             checkboxGroupInput("flags",
                                                label=h3(strong("Flags")),
@@ -22,9 +23,10 @@ shinyUI(
                                                    "Save virus pairwise distances"=3,
                                                    "Record run time"=4,
                                                    "Save final state"=5,
-                                                   "Use input starting conditions"=6,
-                                                   "Save hostK"=7,
-                                                   "Verbose"=8
+                                                   "Use input starting conditions (new)"=6,
+                                                   "Use input starting conditions (saved)"=7,
+                                                   "Save hostK"=8,
+                                                   "Verbose"=9
                                                ),
                                                selected=1),
                             h3(strong("Host Population Parameters")),

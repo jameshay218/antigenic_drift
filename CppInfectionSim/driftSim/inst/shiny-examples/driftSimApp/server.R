@@ -16,6 +16,17 @@ shinyServer(
         
         values <- reactiveValues()
         
+        create_startingK <- observeEvent(inputs$iniCalc){
+            if(is.null(isolate(inputs$hostInput))){
+                inputFile <- "hosts.csv"
+            }
+            else {
+                inputFile <- isolate(inputs$hostInput$datapath)
+            }
+            iniK <- generateHostKDist(inputFile,S0+I0+R0)
+            write.table(iniK, file=paste(saveDir, "outputs/iniK.csv",sep=""),row.names=FALSE, col.names=FALSE, sep=",")
+        }
+        
         plot_SIR <- function(filename){
             N <- isolate(inputs$s0) + isolate(inputs$i0) +  isolate(inputs$r0) + 500
             dat <- read.csv(filename,header=0)
@@ -49,6 +60,8 @@ shinyServer(
             N <- isolate(inputs$s0) + isolate(inputs$i0) +  isolate(inputs$r0)
             paste(round((values$infections/N)*100,3),"%",sep="")
         })
+
+        
         
         calculate_deltaVMat <- observeEvent(inputs$dVcalc,{
             print("Calculating deltaV matrix...")
@@ -105,10 +118,11 @@ shinyServer(
             voutput1_flag <- 2 %in% inputs$flags #' Flag to save virus information for Sean's phylogenetic tree
             voutput2_flag <- 3 %in% inputs$flags #' Flag to save pairwise distance matrix
             time_flag <- 4 %in% inputs$flags #' Flag to record time taken for simulation
-            VERBOSE <- 8 %in% inputs$flags #' Outputs in simulation
+            VERBOSE <- 9 %in% inputs$flags #' Outputs in simulation
             save_state <- 5 %in% inputs$flags #' Flag to save the final state of the simulation
-            input_flag <- 6 %in% inputs$flags #' Flag to use specified file as input for simulation
-            save_k <- 7 %in% inputs$flags
+            input_flagA <- 6 %in% inputs$flags #' Flag to use specified file as input for simulation
+            input_flagB <- 7 %in% inputs$flags #' Flag to use specified file as input for simulation
+            save_k <- 8 %in% inputs$flags
             
             flags <- c(SIR_flag, voutput1_flag, voutput2_flag, time_flag, save_state, input_flag, save_k)
             flags <- as.numeric(flags)
@@ -160,11 +174,13 @@ shinyServer(
             print(saveDir)
 
             iniK <- NULL
-            if(input_flag){
-                print("Here I am!")
+            if(input_flagA){
                 iniK <- generateHostKDist(inputFiles[1],S0+I0+R0)
-                print(length(iniK))
-            } 
+            }
+            if(input_flagB){
+                iniK <- read.csv(inputFiles[1],header=FALSE)
+            }
+                            
 
             if(length(inputs$scenarios) > 0){
                 infections <- NULL

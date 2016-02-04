@@ -346,12 +346,13 @@ Rcpp::NumericVector HostPopulation::getHostKDist(){
     if(tmp1 < 0) tmp1 = 0;
     ks[i++] = tmp1;
   }
+  /*
   for(it = infecteds.begin(); it != infecteds.end(); it++) {
     tmp1 = ((*it)->get_hostK());
     tmp1 = tmp1 - Virus::_delta;
     if(tmp1 < 0) tmp1 = 0;
     ks[i++] = ((*it)->get_hostK());
-  }
+    }*/
   for(it = recovereds.begin(); it != recovereds.end(); it++){
     tmp1 = ((*it)->get_hostK());
     tmp1 = tmp1 - Virus::_delta;

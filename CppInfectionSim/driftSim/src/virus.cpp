@@ -163,7 +163,6 @@ double Virus::probSurvival(Host* _host){
   double immJ = (_host->get_hostK() - dist);
   if(immJ < 0) immJ = 0;
   double prob = pow((1-exp(-_p*(bindingavid + _q))),_r*immJ);
-  if(immJ/_r >= 1) prob = 0;
   return(prob);
 }
 
@@ -171,7 +170,6 @@ double Virus::probSurvival(double distHost, Host* _host){
   double immJ = (_host->get_hostK() - distHost);
   if(immJ < 0) immJ = 0;
   double prob = pow((1-exp(-_p*(bindingavid + _q))),_r*immJ);
-  if(immJ/_r >= 1) prob = 0;
   return(prob);
 }
 
