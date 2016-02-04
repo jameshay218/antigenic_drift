@@ -168,6 +168,7 @@ double Virus::probSurvival(Host* _host){
 double Virus::probSurvival(double distHost, Host* _host){
   double immJ = _r*(_host->get_hostK() - distHost);
   double prob = pow((1-exp(-_p*(bindingavid + _q))),immJ);
+  if(immJ/_r) >= 1) prob = 1;
   return(prob);
 }
 
