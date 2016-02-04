@@ -33,29 +33,29 @@ shinyUI(
                           
                             fluidRow(
                                 column(4,
-                                       numericInput("s0", "S0", 900000)
+                                       numericInput("s0", "S0", 999900)
                                        ),
                                 column(4,
                                 numericInput("i0", "I0", 100)
                                ),
                                column(4,
-                                      numericInput("r0", "R0", 50000)
+                                      numericInput("r0", "R0", 0)
                                       )
                             ),
                             fluidRow(
-                                column(4, numericInput("dur","Duration",365)),
-                                column(4,numericInput("contact", "Contact Rate", 1.5)),
-                                column(4,numericInput("mu", "Birth/Death Rate", 40))
+                                column(4, numericInput("dur","Duration",400)),
+                                column(4,numericInput("contact", "Contact Rate", 0.7)),
+                                column(4,numericInput("mu", "Birth/Death Rate", 70))
                             ),
                             fluidRow(
                                 column(4,numericInput("wane", "Waning Rate", 25)),
-                                column(4,numericInput("gamma", "Recovery Time", 3)),
-                                column(4,numericInput("iniBinding", "Ini Binding Avidity ", 0.8))
+                                column(4,numericInput("gamma", "Recovery Time", 3.3)),
+                                column(4,numericInput("iniBinding", "Ini Binding Avidity ", 0.67))
                             ),
                             fluidRow(
-                                column(4,numericInput("boost","Mean Boost",10)),
+                                column(4,numericInput("boost","Mean Boost",6)),
                                 column(4, numericInput("iniDist","Ini Distance", 0)),
-                                column(4, numericInput("kSaveFreq","K Save Freq",1))
+                                column(4, numericInput("kSaveFreq","K Save Freq",5))
                             ),
                             h3(strong("Virus Parameters")),
                             fluidRow(
@@ -64,7 +64,7 @@ shinyUI(
                             ),
                             fluidRow(
                                 column(6,numericInput("kc","Rate of binding avidity change",0.5)),
-                                column(6,numericInput("VtoD","Impact of dV on delta",0.1))
+                                column(6,numericInput("VtoD","Impact of dV on delta",0))
                             ),
                             checkboxGroupInput(
                                 "scenarios",
