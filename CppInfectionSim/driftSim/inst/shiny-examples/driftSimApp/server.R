@@ -16,16 +16,18 @@ shinyServer(
         
         values <- reactiveValues()
         
-        create_startingK <- observeEvent(inputs$iniCalc){
+        create_startingK <- observeEvent(inputs$iniCalc,{
+            print("Generating hostK...")
+            N <- isolate(inputs$s0) + isolate(inputs$i0) +  isolate(inputs$r0)
             if(is.null(isolate(inputs$hostInput))){
                 inputFile <- "hosts.csv"
             }
             else {
                 inputFile <- isolate(inputs$hostInput$datapath)
             }
-            iniK <- generateHostKDist(inputFile,S0+I0+R0)
+            iniK <- generateHostKDist(inputFile,N)
             write.table(iniK, file=paste(saveDir, "outputs/iniK.csv",sep=""),row.names=FALSE, col.names=FALSE, sep=",")
-        }
+        })
         
         plot_SIR <- function(filename){
             N <- isolate(inputs$s0) + isolate(inputs$i0) +  isolate(inputs$r0) + 500
@@ -122,9 +124,10 @@ shinyServer(
             save_state <- 5 %in% inputs$flags #' Flag to save the final state of the simulation
             input_flagA <- 6 %in% inputs$flags #' Flag to use specified file as input for simulation
             input_flagB <- 7 %in% inputs$flags #' Flag to use specified file as input for simulation
+            input_flag <- input_flagA || input_flagB
             save_k <- 8 %in% inputs$flags
             
-            flags <- c(SIR_flag, voutput1_flag, voutput2_flag, time_flag, save_state, input_flag, save_k)
+            flags <- c(SIR_flag, voutput1_flag, voutput2_flag, time_flag, save_state, input_flagA, input_flagB, save_k)
             flags <- as.numeric(flags)
             
             S0 <- as.numeric(inputs$s0)
@@ -175,12 +178,13 @@ shinyServer(
 
             iniK <- NULL
             if(input_flagA){
+                print(paste("Generating starting K from... ",inputFiles[1],sep=""))
                 iniK <- generateHostKDist(inputFiles[1],S0+I0+R0)
             }
             if(input_flagB){
-                iniK <- read.csv(inputFiles[1],header=FALSE)
+                print(paste("Using saved starting K from ",inputFiles[1],sep=""))
+                iniK <- read.csv(inputFiles[1],header=FALSE)[,1]
             }
-                            
 
             if(length(inputs$scenarios) > 0){
                 infections <- NULL

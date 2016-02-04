@@ -83,8 +83,9 @@ int run_simulation_cpp(Rcpp::IntegerVector flags,
   bool save_pairwise_viruses = flags[2];
   bool use_time = flags[3];
   bool save_hosts = flags[4];
-  bool import_start = flags[5];
-  bool save_hostKs = flags[6];
+  bool import_startA = flags[5];
+  bool import_startB = flags[6];
+  bool save_hostKs = flags[7];
 
   double S0 = hostPopn[0];
   double I0 = hostPopn[1];
@@ -159,9 +160,9 @@ int run_simulation_cpp(Rcpp::IntegerVector flags,
     Rcpp::Rcout << "iniBinding: " << iniBinding << endl;
     Rcpp::Rcout << "Scenario: " << scenario << endl << endl;
   }
-  if(iniKs != R_NilValue){
+  if(iniKs != R_NilValue && import_startB){
     hpop = new HostPopulation(S0, I0,R0,start_day,contactRate,mu,wane,gamma,iniBinding,iniDist, Rcpp::as<Rcpp::NumericVector>(iniKs));	
-  } else if(import_start){
+  } else if(import_startA){
     startingKs = callFunction(input_files[0],(S0 + I0 + R0), generateHostKDist);
     hpop = new HostPopulation(S0, I0,R0,start_day,contactRate,mu,wane,gamma,iniBinding,iniDist, startingKs);		      
   } else {

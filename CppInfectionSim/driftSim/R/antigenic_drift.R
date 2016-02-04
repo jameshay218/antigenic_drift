@@ -13,7 +13,7 @@
 ##' @import Rcpp
 ##' @useDynLib driftSim
 run_simulation <- function(
-                           flags=c(1,0,0,0,0,0,0),
+                           flags=c(1,0,0,0,0,0,0,0),
                            hostpars=c(90000,100,0,1.5,1/(40*365),1/25,0.333,0.8,10,0,10),
                            viruspars=c(3, 70, 1, 0.7, 3, 2, 2, 0.1, 1, 0.5, 1000),
                            deltaVMat = matrix(ncol=2,nrow=2),

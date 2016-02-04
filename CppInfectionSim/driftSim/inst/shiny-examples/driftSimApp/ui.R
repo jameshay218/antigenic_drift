@@ -11,9 +11,9 @@ shinyUI(
                tabPanel("Simulation",
                         sidebarPanel(
                             fluidRow(
-                                column(6,actionButton("run",h4(strong("Run Simulation")))),
-                                column(6,actionButton("dVcalc",h4(strong("Recalcuate deltaV")))),
-                                column(6,actionButton("iniCalc",h4(strong("Create iniK"))))
+                                column(4,actionButton("run",(strong("Run Simulation")))),
+                                column(4,actionButton("dVcalc",(strong("Recalcuate deltaV")))),
+                                column(4,actionButton("iniCalc",(strong("Create iniK"))))
                             ),
                             checkboxGroupInput("flags",
                                                label=h3(strong("Flags")),
