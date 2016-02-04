@@ -27,7 +27,7 @@ HostPopulation::HostPopulation(int initialS, int initialI, int initialR, int ini
   mu = _mu;
   wane = _wane;
   gamma = _gamma;
-  parentV = new Virus(0, NULL, iniBindingAvid, initialDistance, NULL, day, 0, 0);
+  parentV = new Virus(0, NULL, iniBindingAvid, 0, NULL, day, 0, 0);
   seedVirus = parentV;
   for(int i = 0; i < initialS;++i){
     H = new Host(Susceptible, this, _k);
@@ -35,7 +35,7 @@ HostPopulation::HostPopulation(int initialS, int initialI, int initialR, int ini
   }
   for(int i =0; i < initialI; ++i){
     H = new Host(Infected, this);
-    V = new Virus(0, parentV, iniBindingAvid, 0, H,day,0,0);
+    V = new Virus(1, parentV, iniBindingAvid, initialDistance, H,day,initialDistance,0);
     H->infect(V,day);
     infecteds.push_back(H);
   }
@@ -57,7 +57,7 @@ HostPopulation::HostPopulation(int initialS, int initialI, int initialR, int ini
   mu = _mu;
   wane = _wane;
   gamma = _gamma;
-  parentV = new Virus(0, NULL, iniBindingAvid, initialDistance, NULL, day, 0, 0);
+  parentV = new Virus(0, NULL, iniBindingAvid, 0, NULL, day, 0, 0);
   seedVirus = parentV;
 
   for(int i = 0; i < initialS;++i){
@@ -68,7 +68,7 @@ HostPopulation::HostPopulation(int initialS, int initialI, int initialR, int ini
   for(int i =0; i < initialI; ++i){
     H = new Host(Infected, this, startingK[hostIndex++]);
     H->addInfection(seedVirus);
-    V = new Virus(0, parentV, iniBindingAvid, 0, H,day,0,0);
+    V = new Virus(1, parentV, iniBindingAvid, initialDistance, H,day,initialDistance,0);
     H->infect(V,day);
     infecteds.push_back(H);
   }
