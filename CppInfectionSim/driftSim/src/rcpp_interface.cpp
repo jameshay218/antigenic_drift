@@ -109,7 +109,7 @@ int run_simulation_cpp(Rcpp::IntegerVector flags,
   double n = virusPars[5];
   double v = virusPars[6];
   double probMut = virusPars[7];
-  double expDist = virusPars[8];
+  double expDist = 1/virusPars[8];
   double kc = virusPars[9];
   double VtoD = virusPars[10];
 

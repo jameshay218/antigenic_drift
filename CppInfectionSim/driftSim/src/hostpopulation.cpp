@@ -152,6 +152,7 @@ void HostPopulation::grow(){
   /*  poisson_distribution<int> poisson(mu*countN());
       int newBirths = poisson(generator);*/
   int newBirths = R::rpois(mu*countN());
+  
   for(int i = 0; i < newBirths; ++i){
     Host* h = new Host(Susceptible, this);
     new_births.push_back(h);
@@ -163,12 +164,16 @@ void HostPopulation::decline(){
   poisson_distribution<int> poissonI(mu*countInfecteds());
   poisson_distribution<int> poissonR(mu*countRecovereds());
   int newDeaths = poissonS(generator);*/
+  
   int newDeaths = R::rpois(mu*countSusceptibles());
+  
   int totDeaths = 0;
   int index;
   for(int i = 0; i < newDeaths; ++i){
     if(countSusceptibles() > 0){
+      
       index = floor(R::unif_rand()*(countSusceptibles()));
+      
       dead.push_back(susceptibles[index]);
       susceptibles[index]->die(day);
       susceptibles[index] = susceptibles.back();
@@ -176,11 +181,15 @@ void HostPopulation::decline(){
       totDeaths++;
     }
   }
+  
   newDeaths = R::rpois(mu*countInfecteds());
+  
   //  newDeaths = poissonI(generator);
   for(int i = 0; i < newDeaths; ++i){
     if(countInfecteds() > 0){
+      
       index = floor(R::unif_rand()*(countInfecteds()));
+      
       dead.push_back(infecteds[index]);
       infecteds[index]->die(day);
       infecteds[index] = infecteds.back();
@@ -188,11 +197,15 @@ void HostPopulation::decline(){
       totDeaths++;
     }
   }
+  
   newDeaths = R::rpois(mu*countRecovereds());
+  
   //  newDeaths = poissonR(generator);
   for(int i = 0; i < newDeaths; ++i){
     if(countRecovereds() > 0){
+ 
       index = floor(R::unif_rand()*(countRecovereds()));
+  
       dead.push_back(recovereds[index]);
       recovereds[index]->die(day);
       recovereds[index] = recovereds.back();
@@ -204,7 +217,9 @@ void HostPopulation::decline(){
 
 void HostPopulation::contact(){
   // Generate number of contacts between infecteds and susceptibles
+  
   int totalContacts = R::rpois(contactRate*countInfecteds()*countSusceptibles()/countN());
+  
   int index1 = 0;
   int index2 = 0;
   double tmp = 0;
@@ -214,6 +229,7 @@ void HostPopulation::contact(){
      Note that the susceptible may contact multiple infecteds */
   for(int i = 0; i < totalContacts; ++i){
     if(countInfecteds() > 0){
+      
       index1 = floor(R::unif_rand()*(countInfecteds()));
       index2 = floor(R::unif_rand()*(countSusceptibles()));
       tmp = R::unif_rand();
@@ -238,12 +254,17 @@ void HostPopulation::recoveries(){
   // Random number of recoveries of current infecteds
   /*  poisson_distribution<int> poisson(gamma*countInfecteds());
       int noRecovered = poisson(generator);*/
+  
   int noRecovered = R::rpois(gamma*countInfecteds());
+  
+
   int index = 0;
   // For each recovery, choose a random infected individual and add them to the list of newly recovered individuals
   for(int i = 0; i < noRecovered; ++i){
     if(countInfecteds() > 0){
+      
       index = floor(R::unif_rand()*(countInfecteds()));
+      
       // Record the new recovered individual and temporarily delete from the list of infecteds
       new_recovereds.push_back(infecteds[index]);
       infecteds[index]->recover(day);
@@ -258,11 +279,15 @@ void HostPopulation::recoveries(){
 void HostPopulation::waning(){
   /*  poisson_distribution<int> poisson(wane*countRecovereds());
       int noWane = poisson(generator);*/
+  
   int noWane = R::rpois(wane*countRecovereds());
+  
   int index = 0;
   for(int i = 0; i < noWane; ++i){
     if(countRecovereds() > 0){
+      
       index = floor(R::unif_rand()*(countRecovereds()));
+      
       new_susceptibles.push_back(recovereds[index]);
       recovereds[index]->wane();
       recovereds[index] = recovereds.back();

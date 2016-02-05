@@ -92,12 +92,17 @@ double Virus::calculateRho(double distHost, Host* _host){
 void Virus::mutate(int day){
   double bindingAvidChange;
   double change;
+  
   double tmp = R::unif_rand();
+  
   int dayPassed = day-birth;
+
   switch (_scenario){
   case 1: 
     if(dayPassed ==1 && tmp <= _prob_mut){
+      
       change = R::rexp(_exp_dist);
+      
       distanceToParent += change;
       distRoot += change;
       changeFromR += change;
@@ -112,7 +117,9 @@ void Virus::mutate(int day){
     break;
   case 3:
     if(dayPassed ==1 && tmp <= _prob_mut){
+      
       change = R::rexp(_exp_dist);
+      
       distanceToParent += change;
       distRoot += change;
       changeFromR += change;
@@ -125,7 +132,9 @@ void Virus::mutate(int day){
     break;
   case 4:
     if(dayPassed ==1 && tmp <= _prob_mut){
+      
       change = R::rexp(_exp_dist);
+      
       distanceToParent += change;
       distRoot += change;
       changeFromR += change;
