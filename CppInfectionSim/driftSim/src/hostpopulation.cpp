@@ -537,8 +537,8 @@ void HostPopulation::writeViruses(std::ofstream& output, std::string filename, b
       output << viruses[i]->getJ() << ",";
       output << viruses[i]->getDistHost() << ",";
       output << viruses[i]->getDistRoot() << ",";
-      output << seedVirus->getChangeFromV() << ",";
-      output << seedVirus->getChangeFromR();
+      output << viruses[i]->getChangeFromV() << ",";
+      output << viruses[i]->getChangeFromR();
     }
     else {
       output << viruses[i]->getId() << ",";

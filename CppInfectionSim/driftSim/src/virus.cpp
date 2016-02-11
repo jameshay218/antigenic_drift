@@ -349,11 +349,11 @@ int Virus::getLevel(){
 }
 
 double Virus::getChangeFromV(){
-  return(changeFromV);
+  return changeFromV;
 }
 
 double Virus::getChangeFromR(){
-  return(changeFromR);
+  return changeFromR;
 }
 
 double Virus::getDistance(){

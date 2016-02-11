@@ -211,6 +211,13 @@ shinyServer(
                 })
                 values$infections <- infections
             }
+            print("Saving simulation parameters used...")
+            vParNames <- c("p","r","q","a","b","n","v","probMut","expDist","kc","VtoD")
+            hParNames <- c("s0","i0","r0","c","mu","w","g","iniBind","meanBoost","iniDist","saveFreq")
+            allNames <- c(vParNames, hParNames)
+            allPars <- c(viruspars,hostpars)
+            names(allPars) <- allNames
+            write.table(allPars,file=paste(saveDir,"outputs/parameters.csv",sep=""))
         })
 
         output$sim_main_1<- renderPlot({
