@@ -79,6 +79,7 @@ void Host::recover(int cur_t){
   /*  poisson_distribution<int> poisson(10);
       int boost = poisson(popn->generator);*/
   int boost = R::rpois(_meanBoost);
+  //if(boost > 10) boost = 6;
   hostK += boost;
 
   if(currentInfection != NULL){
