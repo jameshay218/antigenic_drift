@@ -52,7 +52,20 @@ Virus::Virus(Virus* _parent, Host* _host, int _t, double _distHost, double _infe
   if(_parent != NULL){
     distRoot = _parent->getDistRoot();
     level = parent->level + 1;
-    bindingavid = bindingavid_ini = _parent->getBindingAvid();
+
+    /* ================================
+       $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ */
+    if(_scenario == 1){
+      if(_t > 1000){
+	bindingavid = bindingavid_ini = 0.1;
+      } else {
+	bindingavid = bindingavid_ini = _parent->getBindingAvid();
+      }
+    }
+    /* ================================
+       $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ */
+
+    //    bindingavid = bindingavid_ini = _parent->getBindingAvid();
   } else { 
     distRoot = 0;
     level = 0;
