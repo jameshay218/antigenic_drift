@@ -80,24 +80,16 @@ void Host::infect(Virus* newInfection, int cur_t){
 
 int Host::decaying_boost(){
   int boost;
-  if(hostK > _maxTitre){
-    boost = 0;
-  } else {
-    boost = R::rpois((-(1/_meanBoost)*hostK + _meanBoost));
-  }
+  double scale = -(1/(double)_meanBoost)*(double)hostK + (double)_meanBoost;
+  boost = R::rpois(scale);
+  if(boost < 0) boost = 0;
   return(boost);
 }
 
 void Host::recover(int cur_t){
   state = Recovered;
-
-  /*  poisson_distribution<int> poisson(10);
-      int boost = poisson(popn->generator);*/
-  
-  //int boost = R::rpois(_meanBoost);
-  //if(boost > 10) boost = 6;
-  //hostK += boost;
-  hostK += decaying_boost();
+  int boost = decaying_boost();
+  hostK += boost;
 
   if(currentInfection != NULL){
     currentInfection->kill(cur_t);

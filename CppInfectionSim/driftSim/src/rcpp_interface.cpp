@@ -99,7 +99,7 @@ int run_simulation_cpp(Rcpp::IntegerVector flags,
   double meanBoost = hostPopn[8];
   double iniDist = hostPopn[9];
   double kSaveFreq = hostPopn[10];
-  int maxTitre = hostPopn[11];
+  double maxTitre = hostPopn[11];
 
   Rcpp::NumericMatrix allCounts(((final_day-day)/kSaveFreq)+1,MAXK);
   double p = virusPars[0];
@@ -146,7 +146,10 @@ int run_simulation_cpp(Rcpp::IntegerVector flags,
   Virus::set_deltaVMat(deltaVMat);
 
   Host::changeMeanBoost(meanBoost);
-  //Host::set_maxTitre(maxTitre);
+  Host::set_maxTitre(maxTitre);
+
+  Rcpp::Rcout << "Max titre: " << maxTitre << endl;
+  Rcpp::Rcout << "Mutation rate: " << probMut << " and " << expDist << endl;
   
   if(VERBOSE){
     Rcpp::Rcout << "###################" << endl;

@@ -14,7 +14,7 @@ private:
   State state;
   std::vector<Virus*> infectionHistory;
   Virus* currentInfection;
-  double hostK;
+  int hostK;
 
 public:
   static int _meanBoost;
