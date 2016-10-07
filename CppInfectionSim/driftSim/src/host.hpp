@@ -18,6 +18,8 @@ private:
 
 public:
   static int _meanBoost;
+  static int _maxTitre;
+
   HostPopulation* popn;
   // Constructors
   Host();
@@ -34,6 +36,7 @@ public:
   void wane();
   void die(int cur_t);
   double get_hostK();
+  int decaying_boost();
 
   bool isInfected();
   bool isDead();
@@ -47,6 +50,7 @@ public:
   std::default_random_engine get_generator();
 
   static void changeMeanBoost(int newBoost);
+  static void set_maxTitre(int newTitre);
 
 };
 

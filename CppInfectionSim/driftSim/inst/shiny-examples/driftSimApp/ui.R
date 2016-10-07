@@ -57,6 +57,9 @@ shinyUI(
                                 column(4, numericInput("iniDist","Ini Distance", 0)),
                                 column(4, numericInput("kSaveFreq","K Save Freq",5))
                             ),
+                            fluidRow(
+                                column(4,numericInput("maxTitre","Maximum Titre",10))
+                            ),
                             h3(strong("Virus Parameters")),
                             fluidRow(
                                 column(6,numericInput("probMut","Probability of a Mutation",0.1)),

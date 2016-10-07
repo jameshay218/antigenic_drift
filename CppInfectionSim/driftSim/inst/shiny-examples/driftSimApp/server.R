@@ -140,10 +140,11 @@ shinyServer(
             gamma <- 1/as.numeric(inputs$gamma)
             iniBind <- as.numeric(inputs$iniBinding)
             meanBoost = as.numeric(inputs$boost)
+            maxTitre = as.numeric(inputs$maxTitre)
             iniDist = as.numeric(inputs$iniDist)
             saveFreq = as.numeric(inputs$kSaveFreq)
             
-            hostpars <- c(S0,I0, R0,contactRate,mu,wane,gamma,iniBind, meanBoost, iniDist,saveFreq)
+            hostpars <- c(S0,I0, R0,contactRate,mu,wane,gamma,iniBind, meanBoost, iniDist,saveFreq,maxTitre)
 
             deltaVMat <- unname(as.matrix(read.csv(paste(saveDir,"outputs/deltaVMat.csv",sep=""),header=FALSE)))
 
@@ -213,7 +214,7 @@ shinyServer(
             }
             print("Saving simulation parameters used...")
             vParNames <- c("p","r","q","a","b","n","v","probMut","expDist","kc","VtoD")
-            hParNames <- c("s0","i0","r0","c","mu","w","g","iniBind","meanBoost","iniDist","saveFreq")
+            hParNames <- c("s0","i0","r0","c","mu","w","g","iniBind","meanBoost","iniDist","saveFreq","maxTitre")
             allNames <- c(vParNames, hParNames)
             allPars <- c(viruspars,hostpars)
             names(allPars) <- allNames

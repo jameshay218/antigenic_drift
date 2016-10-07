@@ -3,9 +3,14 @@
 using namespace std;
 
 int Host::_meanBoost = 10;
+int Host::_maxTitre = 10;
 
 void Host::changeMeanBoost(int newBoost){
   _meanBoost = newBoost;
+}
+
+void Host::set_maxTitre(int newTitre){
+  _maxTitre = newTitre;
 }
 
 Host::Host(){
@@ -73,14 +78,26 @@ void Host::infect(Virus* newInfection, int cur_t){
   currentInfection = newInfection;
 }
 
+int Host::decaying_boost(){
+  int boost;
+  if(hostK > _maxTitre){
+    boost = 0;
+  } else {
+    boost = R::rpois((-(1/_meanBoost)*hostK + _meanBoost));
+  }
+  return(boost);
+}
+
 void Host::recover(int cur_t){
   state = Recovered;
 
   /*  poisson_distribution<int> poisson(10);
       int boost = poisson(popn->generator);*/
-  int boost = R::rpois(_meanBoost);
+  
+  //int boost = R::rpois(_meanBoost);
   //if(boost > 10) boost = 6;
-  hostK += boost;
+  //hostK += boost;
+  hostK += decaying_boost();
 
   if(currentInfection != NULL){
     currentInfection->kill(cur_t);
