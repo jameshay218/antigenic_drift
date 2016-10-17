@@ -80,7 +80,7 @@ void Host::infect(Virus* newInfection, int cur_t){
 
 int Host::decaying_boost(){
   int boost;
-  double scale = -(1/(double)_meanBoost)*(double)hostK + (double)_meanBoost;
+  double scale = (-(double)_meanBoost/(double)_maxTitre)*(double)hostK + (double)_meanBoost;
   boost = R::rpois(scale);
   if(boost < 0) boost = 0;
   return(boost);
