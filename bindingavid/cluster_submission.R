@@ -17,7 +17,15 @@ run_all <- function(runName,runNo,input_pars, deltaVMat,flags,inputK, dur,versio
     
   print("Setup")
   
-  if(!file.exists(paste("outputs/",runName,sep=""))) dir.create(paste("outputs/",runName,sep=""))
+  if(!file.exists("outputs")) {
+    dir.create("outputs")
+  }
+  
+  if(!file.exists(paste("outputs/",runName,sep=""))) {
+    dir.create(paste("outputs/",runName,sep=""))
+  }
+    
+  
     filename1 <- paste("outputs/",runName,"/scenario_SIR_",runNo,".csv",sep="")
     filename2 <- paste("outputs/",runName,"/voutput1_",runNo,".csv",sep="")
     filename3 <- paste("outputs/",runName,"/voutput2_",runNo,".csv",sep="")
