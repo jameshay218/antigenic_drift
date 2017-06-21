@@ -1,0 +1,10 @@
+input_pars=input_pars,deltaVMat=deltaVMat,flags=flags,inputK=inputK,dur=dur,version=version,callback=callback,VERBOSE=VERBOSE
+
+
+
+
+
+run_all(runName=runName,runNo=runNo,input_pars=input_pars,deltaVMat=deltaVMat,flags=flags,inputK=inputK,dur=dur,version=version,callback=callback,VERBOSE=VERBOSE)
+
+
+run_all <- function(runName,runNo,input_pars, deltaVMat,flags,inputK, dur,version, callback,VERBOSE)
