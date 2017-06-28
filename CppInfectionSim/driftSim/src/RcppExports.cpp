@@ -75,3 +75,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+
+static const R_CallMethodDef CallEntries[] = {
+    {"driftSim_generateStartK", (DL_FUNC) &driftSim_generateStartK, 1},
+    {"driftSim_generateKSamples", (DL_FUNC) &driftSim_generateKSamples, 2},
+    {"driftSim_callFunction", (DL_FUNC) &driftSim_callFunction, 3},
+    {"driftSim_countKs", (DL_FUNC) &driftSim_countKs, 2},
+    {"driftSim_run_simulation_cpp", (DL_FUNC) &driftSim_run_simulation_cpp, 12},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_driftSim(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
+}
