@@ -1,11 +1,18 @@
-library("plyr")
-#setwd("~/net/home/bindingavid")
-#setwd("F:/Documents/GitHub/antigenic_drift/bindingavid")
-myhome <- "F:/Documents/GitHub/antigenic_drift/bindingavid"
+myhome <- "~/Documents/Binding Avidity/antigenic_drift/bindingavid/"
 #source("~/net/home/bindingavid/scripts/cluster_setup.R")
 #source("scripts/cluster_setup.R")
 #source("~/net/home/bindingavid/scripts/cluster_submission.R")
+setwd(myhome)
 source(paste(c(myhome,"/cluster_submission.R"),collapse = ''))
+library("plyr")
+library(ggplot2)
+library(reshape2)
+source("plot_SIR.R")
+devtools::load_all("~/Documents/Binding Avidity/antigenic_drift/CppInfectionSim/driftSim/")
+#setwd("~/net/home/bindingavid")
+#setwd("F:/Documents/GitHub/antigenic_drift/bindingavid")
+#myhome <- "F:/Documents/GitHub/antigenic_drift/bindingavid"
+
 
 param.types = c("single_fixed_low","single_fixed_high","single_adaptive","multiple_fixed","multiple_adaptive")      
 param.filenames = c("input_params_se01_SFL.csv","input_params_se01_SFH.csv","input_params_SA.csv","input_params_MF.csv","input_params_MA.csv")
@@ -15,7 +22,7 @@ params.inputFile = c("hosts_1_ini.csv","hosts_1_ini.csv","hosts_1_ini.csv","host
 runName <- "single_fixed_low"
 flag_run <- match(runName,param.types)
 #if (flag_run == 1){
-  inputFile <- paste(c(myhome, "/inputs/", params.inputFile[flag_run]),collapse = '')
+  inputFile <- paste(c(myhome, "inputs/", params.inputFile[flag_run]),collapse = '')
   input_pars <- read.csv(paste(c(myhome,"/inputs/", param.filenames[flag_run]),collapse = ''),stringsAsFactors=FALSE)
 #}
 
@@ -43,8 +50,8 @@ voutput2_flag <- TRUE #' Flag to save pairwise distance matrix
 time_flag <- FALSE #' Flag to record time taken for simulation
 VERBOSE <- FALSE #' Outputs in simulation
 save_state <- TRUE #' Flag to save the final state of the simulation
-input_flag_generated <- FALSE #' Flag to use specified file as input for simulation
-input_flag_saved <- TRUE #' Flag to use specified file as input for simulation
+input_flag_generated <- TRUE #' Flag to use specified file as input for simulation
+input_flag_saved <- FALSE #' Flag to use specified file as input for simulation
 save_k <- TRUE
 flags <- c(SIR_flag, voutput1_flag, voutput2_flag, time_flag, save_state, input_flag_generated, input_flag_saved, save_k)
 flags <- as.numeric(flags)
@@ -52,10 +59,11 @@ flags <- as.numeric(flags)
 
 combos <- expand.grid(runName=runName,runNo=1:runs,stringsAsFactors=FALSE)
 
-if(!file.exists(paste(myhome, "/outputs/",runName,sep=""))) dir.create(paste(myhome, "/outputs/",runName,sep=""))
+if(!file.exists(paste(myhome, "outputs/",runName,sep=""))) dir.create(paste(myhome, "outputs/",runName,sep=""))
 
 for (runNo in 1:runs) {
-  run_all(runName=runName,runNo=runNo,input_pars=input_pars,deltaVMat=deltaVMat,flags=flags,inputK=inputK,dur=dur,version=version,callback=callback,VERBOSE=VERBOSE)
+  run_all(runName=runName,runNo=runNo,input_pars=input_pars,deltaVMat=deltaVMat,
+          flags=flags,inputK=inputK,dur=dur,version=version,callback=callback,VERBOSE=VERBOSE)
 }
 
 #the following code is for cluster at IC

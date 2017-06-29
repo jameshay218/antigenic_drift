@@ -3,6 +3,7 @@
 export(callFunction)
 export(countKs)
 export(generateHostKDist)
+export(generateHostKDist_2)
 export(generateKSamples)
 export(generateStartK)
 export(runSimulationApp)

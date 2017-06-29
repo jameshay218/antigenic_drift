@@ -29,7 +29,21 @@ run_simulation <- function(
         print("Error - attempting binding avidity change with no deltaV matrix. Aborting")
         return(0)
     }
+    print(input_files)
     return(run_simulation_cpp(flags,hostpars,viruspars, deltaVMat, iniKs, start,end,input_files,output_files,VERBOSE,scenario,callback))
+}
+
+
+##' Add this to the source file so that you can access it ie. cluster_submission.R
+##'
+##' @export
+generateHostKDist_2<- function(hostKs, N){
+  countHostK <- count(hostKs)
+  freqs <- countHostK$freq/sum(countHostK$freq)
+  cumSumK <- cumsum(freqs)
+  startingKs <- generateKSamples(cumSumK, N)
+  startingKs <- startingKs + 1
+  return(countHostK$x[startingKs])
 }
 
 ##' moar2
@@ -48,13 +62,9 @@ run_simulation <- function(
 ##' @useDynLib driftSim
 generateHostKDist <- function(hostFile, N){
     hostDat <- read.csv(hostFile)
-    hostKs <- hostDat$hostK  
-    countHostK <- count(hostKs)
-    freqs <- countHostK$freq/sum(countHostK$freq)
-    cumSumK <- cumsum(freqs)
-    startingKs <- generateKSamples(cumSumK, N)
-    startingKs <- startingKs + 1
-    return(countHostK$x[startingKs])
+    hostKs <- hostDat$hostK
+    final <- generateHostKDist_2(hostKs,N)
+    return(final)
 }
 
 ##' moar3

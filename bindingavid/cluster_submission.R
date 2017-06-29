@@ -69,7 +69,7 @@ run_all <- function(runName,runNo,input_pars, deltaVMat,flags,inputK, dur,versio
     N <-hostpars["s0"]+hostpars["i0"]+hostpars["r0"]
     print(N)
     print(N)
-    iniK <- generateHostKDist_2(hostFile,N)
+    iniK <- generateHostKDist_2(hostKs,N)
 
 #################### 
     ## Run simulation
@@ -77,8 +77,10 @@ run_all <- function(runName,runNo,input_pars, deltaVMat,flags,inputK, dur,versio
     print("run simulation")
     #readline()
     #run_simulation(flags=flags,hostpars=hostpars,viruspars=viruspars,deltaVMat=deltaVMat,iniKs=iniK,start=0,end=dur,input_k=unname(as.matrix(inputK)),output_files=filenames,VERBOSE=VERBOSE, scenario=version,callback=callback)
-    save(flags, hostpars, viruspars, deltaVMat, iniK, dur, filenames, VERBOSE, version, callback, file = "runtime_objects.RData")
-    run_simulation(flags=flags,hostpars=hostpars,viruspars=viruspars,deltaVMat=deltaVMat,iniKs=iniK,start=0,end=dur,output_files=filenames,VERBOSE=VERBOSE, scenario=version,callback=callback)
+    #save(flags, hostpars, viruspars, deltaVMat, iniK, dur, filenames, VERBOSE, version, callback, file = "runtime_objects.RData")
+    print(iniK)
+    run_simulation(flags=flags,hostpars=hostpars,viruspars=viruspars,deltaVMat=deltaVMat,iniKs=iniK,
+                   start=0,end=dur,input_files=c(hostFile),output_files=filenames,VERBOSE=VERBOSE, scenario=version,callback=callback)
 
     
 #####################
@@ -94,23 +96,11 @@ run_all <- function(runName,runNo,input_pars, deltaVMat,flags,inputK, dur,versio
       on.exit(dev.off())
       eval.parent(substitute(expr))
     }
-    print("finish ploting");
+    print("finish plotting");
     to.png(plot(plot_SIR(filename1,N)),filename6)
     ####################
-    
-    
-    
     
   
     return(TRUE)
 }
-
-## Add this to the source file so that you can access it ie. cluster_submission.R
-generateHostKDist_2<- function(hostKs, N){
-  countHostK <- count(hostKs)
-  freqs <- countHostK$freq/sum(countHostK$freq)
-  cumSumK <- cumsum(freqs)
-  startingKs <- generateKSamples(cumSumK, N)
-  startingKs <- startingKs + 1
-return(countHostK$x[startingKs])}
 
