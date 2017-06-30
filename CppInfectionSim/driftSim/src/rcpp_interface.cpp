@@ -18,6 +18,8 @@
 
 using namespace std;
 
+//' @export
+//' @useDynLib driftSim
 //[[Rcpp::export]]
 int generateStartK(Rcpp::NumericVector dist){
   double tmp = R::unif_rand();
@@ -28,6 +30,8 @@ int generateStartK(Rcpp::NumericVector dist){
   return(index);
 }
 
+//' @export
+//' @useDynLib driftSim
 //[[Rcpp::export]]
 Rcpp::NumericVector generateKSamples(Rcpp::NumericVector cumSumK, int N){
   Rcpp::NumericVector ks(N);
@@ -36,13 +40,15 @@ Rcpp::NumericVector generateKSamples(Rcpp::NumericVector cumSumK, int N){
   }
   return(ks);
 }
-
+//' @export
+//' @useDynLib driftSim
 //[[Rcpp::export]]
 Rcpp::NumericVector callFunction(std::string filename, int N, Rcpp::Function f){
   Rcpp::NumericVector hostKDist = f(filename, N);
   return(hostKDist);
 }
-
+//' @export
+//' @useDynLib driftSim
 //[[Rcpp::export]]
 Rcpp::NumericVector countKs(Rcpp::NumericVector ks, int N){
   Rcpp::NumericVector counted(N);
@@ -55,7 +61,8 @@ Rcpp::NumericVector countKs(Rcpp::NumericVector ks, int N){
   }
   return(counted);
 }
-
+//' @export
+//' @useDynLib driftSim
 //[[Rcpp::export]]
 int run_simulation_cpp(Rcpp::IntegerVector flags, 
 		       Rcpp::NumericVector hostPopn, 
