@@ -1,0 +1,22 @@
+# ignore all files in the output/ directory
+bindingavid/outputs
+bindingavid/outputs_test
+CppInfectionSim/driftSim/inst/shiny-examples/driftSimApp/outputs
+CppInfectionSim/driftSim/inst/shiny-examples/driftSimApp/outputs/backup/
+
+# ignore all c object files
+*.o
+
+# ignore all documents in the doc- directory
+*.pdf
+*.docx
+*.pptx
+
+# ignore all matlab non source files in the doc- directory
+*.asv
+*.mat
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
