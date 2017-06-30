@@ -1,0 +1,10 @@
+,note:,inifile,p,r,q,a,b,n,v,probMut,expDist,kc,VtoD,s0,i0,r0,c,mu,w,g,iniBind,meanBoost,iniDist,saveFreq,maxTitre
+,Default values,,4,70,1,0.7,3,4,1,0,1.3,0,0,299900,100,0,0.7,1/70*365,1/25,1/3.3,0.45,8,3,5,25
+1,"single  wave, fixed low binding",hosts_1_ini.csv,,,,,,,,,,,,,,,,,,,,,,,
+2,"single wave, fixed high binding",hosts_1_ini.csv,,,,,,,,,,,,,,,,,,,0.65,,,,
+3,"single wave, adaptive from low binding",hosts_1_ini.csv,,,,,,,,,,0.05,,,,,,,,,,,,,
+4,"single wave, adaptive from high binding",hosts_1_ini.csv,,,,,,,,,,0.05,,,,,,,,,0.65,,,,
+5,"multiple seasons, fixed high binding",hosts_3_in2.csv,,,,,,,,0.7,,,,,,,,,,,0.65,,20,,
+6,"multiple seasons, fixed high binding",hosts_3_in2.csv,,,,,,,,0.7,,0.05,0.5,,,,,,,,0.65,,20,,
+,,,,,,,,,,,,,,,,,,,,,,,,,
+,"Note: once you got all the data/figures using s0=299900, you can change s0=1,000,000 with the same parameters.",,,,,,,,,,,"Shape of mutation distribution","Impact of dVon delta",,,,,,,,,,,,

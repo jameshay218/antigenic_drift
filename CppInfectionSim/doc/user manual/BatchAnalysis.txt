@@ -1,0 +1,43 @@
+
+
+> rm(list = ls())
+> setwd("F:/Documents/GitHub/antigenic_drift/CppInfectionSim/driftSim")
+> devtools::load_all()
+> setwd("F:/Documents/GitHub/antigenic_drift/bindingavid")
+> source("cluster_submission.R")
+> source("bindingavid_jobs.R")
+edit input_params.csv in F:\Documents\GitHub\antigenic_drift\bindingavid\inputs
+
+
+Hints from James
+
+The way in which you run batch jobs will depend on the cluster/interface. The storage space is useful though - it means we don't have to worry about the size of the outputs too much.
+
+1. a folder with input files (not all of these will be necessary). "input_params.csv" is the key one, which basically captures all of the parameters from the shiny app and inputs them through a csv file. The "hosts_X_ini.csv" files are host states from previous simulations which can be used as starting states. The deltaVmat.csv is also key, but you might want to use a new one.
+
+2. The file "cluster_submission.R" basically wraps everything into a single R function.
+
+3. The file "bindingavid_jobs.R" is the R script I run to submit jobs to the cluster here. You can probably adapt this to submit jobs to your new cluster. The key thing to follow is how the inputs are created. Ignore the "cluster_setup.R" file - this is specific to submitting jobs here at Imperial.
+
+Sean Y
+My understanding of the flow is:
+1. bindingavid_jobs.R ->?queuer::enqueue_bulk(obj1,combos, "run_all",...)
+2. run_all (degined in cluster_submission.R) ->?run_simulation()
+3.?run_simulation() ->?run_simulation_cpp (defined in rcpp_interface,cpp and RcppExports.cpp)
+My questions are,
+1. can't find the the?cluster_setup.R, which is called in in?bindingavid_jobs.R
+2. If we run the code on a local window-based PC, ?do we still use this command queuer::enqueue_bulk(obj1,combos, "run_all",...), or we just call run_all directly as an R function.
+3. Why we couldn't find the source file for run_all()?
+4. is run_simulation_cpp() produced by cpp file but is treated as an R function here?
+
+
+The flow that you've described is basically correct, but only 2. and 3. are relevant. 1. is specific to running on the DIDE cluster here, so it will need to be replaced with code suited to running jobs on your new cluster.? The `queuer::enqueue_bulk` bit of code is specific to running on the Imperial cluster, so don't worry about this.
+
+WRT to your questions:
+
+1. Cluster_setup.R is code specific to creating a link to the Imperial cluster - you do not need this.
+2. Yes, you should just use run_all directly in this case.
+3. If you run source("cluster_submission.R") this should load the run_all() function into the environment.
+4. Correct - run_simulation_cpp() is an R wrapper to some C++ code, so can be treated as an R function. It is compiled with devtools::load_all().
+
+
