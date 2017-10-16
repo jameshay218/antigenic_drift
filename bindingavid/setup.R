@@ -1,5 +1,7 @@
                                                                                                                                                                                                                                                                                                                     # setup environment
 rm(list = ls())
+library("Rcpp")
+
 #setwd("F:/Documents/GitHub/antigenic_drift/CppInfectionSim/driftSim")
 #devtools::load_all()
 library("reshape")

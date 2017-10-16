@@ -13,8 +13,7 @@ run_all <- function(runName,runNo,input_pars, deltaVMat,flags,inputK, dur,versio
 ####################
     ## Setup some pars
 ####################
-  print(input_pars)
-    
+  #print(input_pars)
   print("Setup")
   
   if(!file.exists("outputs")) {

@@ -17,31 +17,60 @@ source("plot_SIR.R")
 #myhome <- "F:/Documents/GitHub/antigenic_drift/bindingavid"
 
 
-param.types = c("single_fixed_low","single_fixed_high","single_adaptive","multiple_fixed","multiple_adaptive")      
-param.filenames = c("input_params_se01_SFL.csv","input_params_se01_SFH.csv","input_params_SA.csv","input_params_MF.csv","input_params_MA.csv")
-params.inputFile = c("hosts_1_ini.csv","hosts_1_ini.csv","hosts_1_ini.csv","hosts_3_ini2.csv","hosts_3_ini2.csv")
+param.types = c("single_fixed_low","single_fixed_high","single_adaptive_low","single_adaptive_high","multiple_fixed","multiple_adaptive")      
+param.filenames = c("input_params_se01_SFL.csv","input_params_se02_SFH.csv","input_params_se03_SAL.csv","input_params_se04_SAH.csv","input_params_MF.csv","input_params_MA.csv")
+params.inputFile = c("hosts_1_ini.csv","hosts_1_ini.csv","hosts_1_ini.csv","hosts_1_ini.csv","hosts_3_ini2.csv","hosts_3_ini2.csv")
 
 #For single epidemic
-runName <- "single_fixed_low"
+#runName <- "single_fixed_low"
+runName <- "single_fixed_high"
+#runName <- "single_adaptive_low"
+#runName <- "single_adaptive_high"
+
 flag_run <- match(runName,param.types)
-#if (flag_run == 1){
+
+version <- 3 # it represents the scenario case
+# Scenario 1: Random drift; fixed binding avidity
+# Scenario 2: No drift; adaptive binding avidity; adaptive antigenic change
+# Scenario 3: Random drift; adaptive binding avidity; adaptive antigenic change
+# Scenario 4: Random drift; adaptive binding avidity; no adaptive antigenic change
+# Only use sceniario 1 and 3
+
+
+if (flag_run == 1){ #"single_fixed_low" 
+  version <- 1
   inputFile <- paste(c(myhome, "/inputs/", params.inputFile[flag_run]),collapse = '')
   input_pars <- read.csv(paste(c(myhome,"/inputs/", param.filenames[flag_run]),collapse = ''),stringsAsFactors=FALSE)
-#}
+}
 
-#if (flag_run == 2){
-#  inputFile <- paste(c(myhome, "/inputs/hosts_1_ini.csv"),collapse = '')
-#  input_pars <- read.csv(paste(c(myhome,"/inputs/", param.filenames[flag_run]),collapse = ''),stringsAsFactors=FALSE)
-#}
+if (flag_run == 2){ #"single_fixed_high" 
+  version <- 1
+  print("single_fixed_high")
+  inputFile <- paste(c(myhome, "/inputs/", params.inputFile[flag_run]),collapse = '')
+  input_pars <- read.csv(paste(c(myhome,"/inputs/", param.filenames[flag_run]),collapse = ''),stringsAsFactors=FALSE)
+}
+
+if (flag_run == 3){ #"single_adaptive_low" 
+  version <- 3
+  inputFile <- paste(c(myhome, "/inputs/", params.inputFile[flag_run]),collapse = '')
+  input_pars <- read.csv(paste(c(myhome,"/inputs/", param.filenames[flag_run]),collapse = ''),stringsAsFactors=FALSE)
+}
+
+if (flag_run == 4){ #"single_adaptive_high" 
+  version <- 3
+  inputFile <- paste(c(myhome, "/inputs/", params.inputFile[flag_run]),collapse = '')
+  input_pars <- read.csv(paste(c(myhome,"/inputs/", param.filenames[flag_run]),collapse = ''),stringsAsFactors=FALSE)
+}
 
 deltaVMat <- unname(as.matrix(read.csv(paste(c(myhome,"/inputs/deltaVMat.csv"),collapse = ''),sep=",",stringsAsFactors=FALSE),header=FALSE))
 inputK <- read.csv(inputFile,stringsAsFactors=FALSE)
 
-version <- 1
-dur <- 800
+
+
+dur <- 1000
 callback <- NULL
 
-runs <- 1
+runs <- 200
 
 #################
 ## Setup output flags
