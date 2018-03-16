@@ -1,6 +1,15 @@
+<<<<<<< HEAD
 The steps to run shiny app
 
 1. Clone the github repository
 2. Once you have all of the files, go into the CppInfectionSim/driftSim folder
 3. In R, install the "shiny" package
 4. There is a subfolder of the R package, "inst/shiny-examples/driftSimApp". Go into this folder in R and then type the following command: shiny::runApp(). This should run the simulation shiny app. If it doesn't work there are likely some dependency issues or compiler issues - you will have to address these yourself I'm afraid, as everything works as intended on my linux machine at home.
+=======
+The steps to run shiny app
+
+1. Clone the github repository
+2. Once you have all of the files, go into the CppInfectionSim/driftSim folder
+3. In R, install the "shiny" package
+4. There is a subfolder of the R package, "inst/shiny-examples/driftSimApp". Go into this folder in R and then type the following command: shiny::runApp(). This should run the simulation shiny app. If it doesn't work there are likely some dependency issues or compiler issues - you will have to address these yourself I'm afraid, as everything works as intended on my linux machine at home.
+>>>>>>> 20279a449d1ab5922b984792b494dae6bd7d6198
