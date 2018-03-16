@@ -1,3 +1,5 @@
+# Test different Kc values for single_adaptive_high
+# Kc = seq(0, 0.6, by=0.05)
 #update myhome according to your system
 #myhome <- "~/Documents/Binding Avidity/antigenic_drift/bindingavid/"
 

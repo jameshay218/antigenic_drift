@@ -23,8 +23,8 @@ source(paste(c(myhome,"/saveoutput.R"),collapse = ''))
 # start batch analysis with different scenarios
 # (1)single_fixed_low, (2)single_fixed_high
 # (3)single_adaptive_low, (4)single_adaptive_high, (5)multiple peaks
-# source(paste(c(myhome,"/bindingavid_jobs1_pc.R"),collapse = '')) #(1)
-# source(paste(c(myhome,"/bindingavid_jobs2_pc.R"),collapse = '')) #(2)
-# source(paste(c(myhome,"/bindingavid_jobs3_pc.R"),collapse = '')) #(3)
-# source(paste(c(myhome,"/bindingavid_jobs4_pc.R"),collapse = '')) #(4)
- source(paste(c(myhome,"/bindingavid_jobs6_2_pc.R"),collapse = '')) #(5)
+ source(paste(c(myhome,"/jobs/bindingavid_jobs1_pc.R"),collapse = '')) #(1)
+# source(paste(c(myhome,"/jobs/bindingavid_jobs2_pc.R"),collapse = '')) #(2)
+# source(paste(c(myhome,"/jobs/bindingavid_jobs3_pc.R"),collapse = '')) #(3)
+# source(paste(c(myhome,"/jobs/bindingavid_jobs4_pc.R"),collapse = '')) #(4)
+# source(paste(c(myhome,"/jobs/bindingavid_jobs6_2_pc.R"),collapse = '')) #(5)
