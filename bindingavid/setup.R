@@ -63,4 +63,3 @@ source(paste(c(myhome,"/jobs/bindingavid_jobs1_pc.R"),collapse = '')) #(1)
 # source(paste(c(myhome,"/jobs/bindingavid_jobs4_pc.R"),collapse = '')) #(4)
 # source(paste(c(myhome,"/jobs/bindingavid_jobs4_allbind_pc.R"),collapse = '')) #(4.1)
 # source(paste(c(myhome,"/jobs/bindingavid_jobs6_2_pc.R"),collapse = '')) #(6)
->>>>>>> 20279a449d1ab5922b984792b494dae6bd7d6198
