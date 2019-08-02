@@ -1,5 +1,6 @@
 #update myhome according to your system
 #myhome <- "~/Documents/Binding Avidity/antigenic_drift/bindingavid/"
+myhome <- "~/R/antigenic_drift-master/bindingavid"
 
 #source("~/net/home/bindingavid/scripts/cluster_setup.R")
 #source("scripts/cluster_setup.R")
@@ -9,6 +10,7 @@ source(paste(c(myhome,"/cluster_submission.R"),collapse = ''))
 library("plyr")
 library(ggplot2)
 library(reshape2)
+library(driftSim)
 source("plot_SIR.R")
 #devtools::load_all("~/Documents/Binding Avidity/antigenic_drift/CppInfectionSim/driftSim/")
 
@@ -17,15 +19,17 @@ source("plot_SIR.R")
 #myhome <- "F:/Documents/GitHub/antigenic_drift/bindingavid"
 
 
-param.types = c("single_fixed_low","single_fixed_high","single_adaptive_low","single_adaptive_high","multiple_fixed","multiple_adaptive")      
-param.filenames = c("input_params_se01_SFL.csv","input_params_se02_SFH.csv","input_params_se03_SAL.csv","input_params_se04_SAH.csv","input_params_MF.csv","input_params_MA.csv")
-params.inputFile = c("hosts_1_ini.csv","hosts_1_ini.csv","hosts_1_ini.csv","hosts_1_ini.csv","hosts_3_ini2.csv","hosts_3_ini2.csv")
+param.types = c("single_fixed_low","single_fixed_high","single_adaptive_low","single_adaptive_high","single_adaptive_high_custom1","single_adaptive_high_custom2","multiple_fixed","multiple_adaptive")      
+param.filenames = c("input_params_se01_SFL.csv","input_params_se02_SFH.csv","input_params_se03_SAL.csv","input_params_se04_SAH.csv","input_params_se04_1_SAH.csv","input_params_se04_2_SAH.csv","input_params_MF.csv","input_params_MA.csv")
+params.inputFile = c("hosts_1_ini.csv","hosts_1_ini.csv","hosts_1_ini.csv","hosts_1_ini.csv","hosts_1_ini.csv","hosts_1_ini.csv","hosts_3_ini2.csv","hosts_3_ini2.csv")
 
 #For single epidemic
 #runName <- "single_fixed_low"
-runName <- "single_fixed_high"
+#runName <- "single_fixed_high"
 #runName <- "single_adaptive_low"
 #runName <- "single_adaptive_high"
+#runName <- "single_adaptive_high_custom1"
+runName <- "single_adaptive_high_custom2"
 
 flag_run <- match(runName,param.types)
 
@@ -60,6 +64,18 @@ if (flag_run == 4){ #"single_adaptive_high"
   version <- 3
   inputFile <- paste(c(myhome, "/inputs/", params.inputFile[flag_run]),collapse = '')
   input_pars <- read.csv(paste(c(myhome,"/inputs/", param.filenames[flag_run]),collapse = ''),stringsAsFactors=FALSE)
+}
+
+if (flag_run == 5) { #"single_adaptive_high_custom1"
+  version <- 3
+  inputFile <- paste(c(myhome, "/inputs/", params.inputFile[flag_run]), collapse='')
+  input_pars <- read.csv(paste(c(myhome,"/inputs/", param.filenames[flag_run]), collapse=''), stringsAsFactors=FALSE)
+}
+
+if (flag_run == 6) { #"single_adaptive_high_custom2"
+  version <- 3
+  inputFile <- paste(c(myhome, "/inputs/", params.inputFile[flag_run]), collapse='')
+  input_pars <- read.csv(paste(c(myhome,"/inputs/", param.filenames[flag_run]), collapse=''), stringsAsFactors=FALSE)
 }
 
 deltaVMat <- unname(as.matrix(read.csv(paste(c(myhome,"/inputs/deltaVMat.csv"),collapse = ''),sep=",",stringsAsFactors=FALSE),header=FALSE))
