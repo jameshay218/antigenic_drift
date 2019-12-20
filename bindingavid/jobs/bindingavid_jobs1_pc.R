@@ -4,12 +4,15 @@
 #source("~/net/home/bindingavid/scripts/cluster_setup.R")
 #source("scripts/cluster_setup.R")
 #source("~/net/home/bindingavid/scripts/cluster_submission.R")
+
+myhome <- "E:/James/Documents/antigenic_drift/bindingavid"
 setwd(myhome)
 source(paste(c(myhome,"/cluster_submission.R"),collapse = ''))
 library("plyr")
 library(ggplot2)
 library(reshape2)
 source("plot_SIR.R")
+devtools::load_all("E:/James/Documents/driftSim/")
 #devtools::load_all("~/Documents/Binding Avidity/antigenic_drift/CppInfectionSim/driftSim/")
 
 #setwd("~/net/home/bindingavid")
@@ -67,7 +70,7 @@ inputK <- read.csv(inputFile,stringsAsFactors=FALSE)
 
 
 
-dur <- 2000
+dur <- 1000
 callback <- NULL
 
 runs <- 200

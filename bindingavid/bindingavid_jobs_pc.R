@@ -1,6 +1,6 @@
 #update myhome according to your system
 #myhome <- "~/Documents/Binding Avidity/antigenic_drift/bindingavid/"
-
+myhome <- "E:/James/Documents/antigenic_drift/bindingavid/"
 #source("~/net/home/bindingavid/scripts/cluster_setup.R")
 #source("scripts/cluster_setup.R")
 #source("~/net/home/bindingavid/scripts/cluster_submission.R")
@@ -10,6 +10,7 @@ library("plyr")
 library(ggplot2)
 library(reshape2)
 source("plot_SIR.R")
+devtools::load_all("E:/James/Documents/driftSim")
 #devtools::load_all("~/Documents/Binding Avidity/antigenic_drift/CppInfectionSim/driftSim/")
 
 #setwd("~/net/home/bindingavid")
@@ -29,7 +30,7 @@ runName <- "single_fixed_high"
 
 flag_run <- match(runName,param.types)
 
-version <- 3 # it represents the scenario case
+version <- 1 # it represents the scenario case
 # Scenario 1: Random drift; fixed binding avidity
 # Scenario 2: No drift; adaptive binding avidity; adaptive antigenic change
 # Scenario 3: Random drift; adaptive binding avidity; adaptive antigenic change
@@ -70,7 +71,7 @@ inputK <- read.csv(inputFile,stringsAsFactors=FALSE)
 dur <- 1000
 callback <- NULL
 
-runs <- 200
+runs <- 1
 
 #################
 ## Setup output flags
@@ -91,7 +92,7 @@ flags <- as.numeric(flags)
 
 combos <- expand.grid(runName=runName,runNo=1:runs,stringsAsFactors=FALSE)
 
-if(!file.exists(paste(myhome, "/outputs/",runName,sep=""))) dir.create(paste(myhome, "outputs/",runName,sep=""))
+if(!file.exists(paste(myhome, "/outputs/",runName,sep=""))) dir.create(paste(myhome, "outputs/",runName,sep=""),recursive = TRUE)
 
 for (runNo in 1:runs) {
   run_all(runName=runName,runNo=runNo,input_pars=input_pars,deltaVMat=deltaVMat,

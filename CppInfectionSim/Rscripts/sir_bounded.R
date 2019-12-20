@@ -1,8 +1,9 @@
-library(driftSim)
+#library(driftSim)
+devtools::load_all("E:/James/Documents/driftSim")
+#setwd("~/tmp/scripts/")
+setwd("E:/James/Documents/tmp")
 
-setwd("~/tmp/scripts/")
-
-runs <- 100
+runs <- 25
 
 SIR_flag <- 1
 voutput1_flag <- 0 #' Flag to save virus information for Sean's phylogenetic tree
@@ -16,8 +17,8 @@ save_k <- 0
 
 flags <- c(SIR_flag, voutput1_flag, voutput2_flag, time_flag, save_state, input_flagA, input_flagB, save_k)
 
-S0 <- 999900
-I0 <- 100
+S0 <- 99990
+I0 <- 10
 R0 <- 0
 
 contactRate <- 0.7
@@ -31,11 +32,12 @@ iniBindB <- 0.6
 meanBoost <- 6
 iniDist <- 2
 saveFreq <- 5
+maxTitre <- 40
 
 duration <- 1000
 
 
-deltaVMat <- unname(as.matrix(read.csv("deltaVMat.csv",header=FALSE)))
+deltaVMat <- unname(as.matrix(read.csv("E:/James/Documents/antigenic_drift/CppInfectionSim/Rscripts/deltaVMat.csv",header=FALSE)))
 
 p <- 4
 q <- 1
@@ -54,11 +56,11 @@ VtoD <- 0.1
 
 viruspars <- c(p,r,q,a,b,n,v,probMut,expDist,kc,VtoD)
 
-inputFiles <- c("iniK.csv")
+inputFiles <- c("E:/James/Documents/antigenic_drift/CppInfectionSim/Rscripts/iniK.csv")
 iniK <- read.csv(inputFiles[1],header=FALSE)[,1]
 
 for(i in 1:runs){
-    hostpars <- c(S0,I0, R0,contactRate,mu,wane,gamma,iniBindA, meanBoost, iniDist,saveFreq)
+    hostpars <- c(S0,I0, R0,contactRate,mu,wane,gamma,iniBindA, meanBoost, iniDist,saveFreq, maxTitre)
     print(paste("Run number: ", i,sep=""))
     filename1 <- paste("out/SIRfixed_low_",i,".csv",sep="")
     filename2 <- paste("voutput1_",i,".csv",sep="")
@@ -72,7 +74,7 @@ for(i in 1:runs){
     print("Adaptive V low...")
     y <- run_simulation(flags,hostpars,viruspars,deltaVMat,iniK,0,duration,inputFiles,filenames,VERBOSE, 2,NULL)
     
-    hostpars <- c(S0,I0, R0,contactRate,mu,wane,gamma,iniBindB, meanBoost, iniDist,saveFreq)
+    hostpars <- c(S0,I0, R0,contactRate,mu,wane,gamma,iniBindB, meanBoost, iniDist,saveFreq, maxTitre)
      print("Fixed V high...")
     filenames[1] <- paste("out/SIRfixed_high_",i,".csv",sep="")
     y <- run_simulation(flags,hostpars,viruspars,deltaVMat,iniK,0,duration,inputFiles,filenames,VERBOSE, 1,NULL)

@@ -5,7 +5,7 @@
 library(graphics)
 library(ggplot2)
 
-runs <- 200
+runs <- 5
 duration <- 750
 max_xlim <- 700
 duration <- max_xlim
@@ -34,13 +34,14 @@ meanBb <- NULL
 
 for(i in 1:runs){
     #
+    print(i)
     IBb <- numeric()
-    myhome <- "D:/Dropbox (NHRI Taiwan)/Workspace/GitHub/antigenic_drift/bindingavid"
+    myhome <- "E:/James/Documents/antigenic_drift/bindingavid"
     # file for single epidemic adaptive binding with high initial binding
-    inputBb <- paste(myhome, "/outputs/single_adaptive_high/.004/voutput1_",i,".csv",sep="")
+    inputBb <- paste(myhome, "/outputs/single_adaptive_high/.001/voutput1_",i,".csv",sep="")
     
     #datBb <- read.csv(inputBb,header=TRUE,nrows=duration+1)
-    datBb <- read.csv(inputBb,header=TRUE)
+    datBb <- data.table::fread(inputBb,header=TRUE,data.table=FALSE)
     datBbBirth <- datBb[,c("birth","bindingAvidityIni","bindingAvidityFinal")]
     #transform into date and value
     for (day in 1:max_xlim+1) {
@@ -66,7 +67,7 @@ for(i in 1:runs){
     }
     
     #
-    allDatBb[i,] <- IBb 
+    allDatBb[i,1:length(IBb)] <- IBb 
 }
 
 allDataBb <- allDatBb[,1:duration+1]

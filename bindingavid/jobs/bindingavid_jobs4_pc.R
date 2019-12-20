@@ -4,22 +4,27 @@
 #source("~/net/home/bindingavid/scripts/cluster_setup.R")
 #source("scripts/cluster_setup.R")
 #source("~/net/home/bindingavid/scripts/cluster_submission.R")
+myhome <- "E:/James/Documents/antigenic_drift/bindingavid"
 setwd(myhome)
 source(paste(c(myhome,"/cluster_submission.R"),collapse = ''))
 library("plyr")
 library(ggplot2)
 library(reshape2)
 source("plot_SIR.R")
-#devtools::load_all("~/Documents/Binding Avidity/antigenic_drift/CppInfectionSim/driftSim/")
+#devtools::load_all("E:/James/Documents/antigenic_drift/CppInfectionSim/driftSim/")
+devtools::load_all("E:/James/Documents/driftSim/")
 
 #setwd("~/net/home/bindingavid")
 #setwd("F:/Documents/GitHub/antigenic_drift/bindingavid")
 #myhome <- "F:/Documents/GitHub/antigenic_drift/bindingavid"
 
 
-param.types = c("single_fixed_low","single_fixed_high","single_adaptive_low","single_adaptive_high","multiple_fixed","multiple_adaptive")      
-param.filenames = c("input_params_se01_SFL.csv","input_params_se02_SFH.csv","input_params_se03_SAL.csv","input_params_se04_SAH.csv","input_params_MF.csv","input_params_MA.csv")
-params.inputFile = c("hosts_1_ini.csv","hosts_1_ini.csv","hosts_1_ini.csv","hosts_1_ini.csv","hosts_3_ini2.csv","hosts_3_ini2.csv")
+param.types = c("single_fixed_low","single_fixed_high","single_adaptive_low",
+                "single_adaptive_high","multiple_fixed","multiple_adaptive")      
+param.filenames = c("input_params_se01_SFL.csv","input_params_se02_SFH.csv","input_params_se03_SAL.csv",
+                    "input_params_se04_SAH.csv","input_params_MF.csv","input_params_MA.csv")
+params.inputFile = c("hosts_1_ini.csv","hosts_1_ini.csv","hosts_1_ini.csv",
+                     "hosts_1_ini.csv","hosts_3_ini2.csv","hosts_3_ini2.csv")
 
 #For single epidemic
 #runName <- "single_fixed_low"
@@ -67,7 +72,7 @@ inputK <- read.csv(inputFile,stringsAsFactors=FALSE)
 
 
 
-dur <- 2000
+dur <- 1000
 callback <- NULL
 
 runs <- 200
